@@ -60,12 +60,20 @@ export function PassportHeader({
                 sizes="(min-width: 1120px) 1120px, 100vw"
                 style={{
                   objectFit: "cover",
-                  objectPosition: "center 38%",
-                  opacity: 0.22,
+                  objectPosition: "center 40%",
+                  opacity: 0.24,
+                  // Compose two masks so the photo concentrates on the title
+                  // side (left, top) and fades cleanly on the trust side (right
+                  // column where the seal sits) and at the bottom (above the
+                  // table of contents rule). Asymmetry is deliberate, the
+                  // photo belongs to the document title plate, the right
+                  // column lives on clean parchment.
                   maskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,0) 100%), linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 58%, rgba(0,0,0,0) 82%)",
                   WebkitMaskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,0) 100%), linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 58%, rgba(0,0,0,0) 82%)",
+                  maskComposite: "intersect",
+                  WebkitMaskComposite: "source-in",
                 }}
               />
             </div>
