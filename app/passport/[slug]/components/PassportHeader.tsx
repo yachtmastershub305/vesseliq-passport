@@ -37,7 +37,10 @@ export function PassportHeader({
 
   return (
     <section className="relative">
-      <div className="border-t border-b py-2" style={{ borderColor: "var(--brand-line-strong)" }}>
+      <div
+        className="border-t border-b py-2"
+        style={{ borderColor: "var(--brand-line-strong)" }}
+      >
         <div className="flex items-center justify-between gap-4 text-[10.5px]">
           <span className="folio">Passport no. {data._meta.passport_id}</span>
           <span className="folio hidden sm:inline">Schema {data._meta.schema_version}</span>
@@ -45,50 +48,43 @@ export function PassportHeader({
         </div>
       </div>
 
-      <div className="relative pt-5 pb-10 overflow-hidden">
-        {heroImage && (
-          <>
-            <div
-              className="hero-watermark absolute inset-0 pointer-events-none z-0"
-              aria-hidden="true"
+      {heroImage && (
+        <figure
+          className="hero-photo-band relative w-full overflow-hidden border-b"
+          style={{
+            height: "280px",
+            borderColor: "var(--brand-line-strong)",
+          }}
+        >
+          <Image
+            src={heroImage}
+            alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
+            fill
+            priority
+            sizes="(min-width: 1120px) 1120px, 100vw"
+            style={{
+              objectFit: "cover",
+              objectPosition: "center 42%",
+            }}
+          />
+          {heroCredit && (
+            <figcaption
+              className="absolute right-3 bottom-3 z-10 label-ink px-2.5 py-1"
+              style={{
+                backgroundColor: "rgba(250, 246, 236, 0.92)",
+                border: "1px solid var(--brand-line-strong)",
+                backdropFilter: "blur(2px)",
+                WebkitBackdropFilter: "blur(2px)",
+              }}
             >
-              <Image
-                src={heroImage}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 1120px) 1120px, 100vw"
-                style={{
-                  objectFit: "cover",
-                  objectPosition: "center 40%",
-                  opacity: 0.24,
-                  // Compose two masks so the photo concentrates on the title
-                  // side (left, top) and fades cleanly on the trust side (right
-                  // column where the seal sits) and at the bottom (above the
-                  // table of contents rule). Asymmetry is deliberate, the
-                  // photo belongs to the document title plate, the right
-                  // column lives on clean parchment.
-                  maskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,0) 100%), linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 58%, rgba(0,0,0,0) 82%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 70%, rgba(0,0,0,0) 100%), linear-gradient(to right, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 58%, rgba(0,0,0,0) 82%)",
-                  maskComposite: "intersect",
-                  WebkitMaskComposite: "source-in",
-                }}
-              />
-            </div>
-            {heroCredit && (
-              <span
-                className="absolute right-0 top-2 label z-10"
-                style={{ opacity: 0.55 }}
-              >
-                {heroCredit}
-              </span>
-            )}
-          </>
-        )}
+              {heroCredit}
+            </figcaption>
+          )}
+        </figure>
+      )}
 
-        <div className="relative z-10 grid grid-cols-12 gap-x-6 gap-y-10 items-start">
+      <div className="pt-10 pb-10">
+        <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-start">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="label">{typeDisplay}</span>
@@ -134,9 +130,7 @@ export function PassportHeader({
           <div className="col-span-12 lg:col-span-4">
             <div className="flex flex-col items-start lg:items-end">
               <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
-
               <SnapshotAnchor data={data} />
-
               <ScoreWeighting weights={data.scoring.weights} />
               {data.signature && (
                 <VerificationBlock slug={slug} signature={data.signature} />
@@ -262,10 +256,7 @@ function SnapshotAnchor({ data }: { data: Passport }) {
         {versionId && (
           <>
             Anchored to vessel version{" "}
-            <span
-              className="font-mono text-ink"
-              title={versionId}
-            >
+            <span className="font-mono text-ink" title={versionId}>
               {versionShort}…
             </span>
           </>
