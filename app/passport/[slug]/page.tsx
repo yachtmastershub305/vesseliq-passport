@@ -32,12 +32,16 @@ export function generateStaticParams() {
 export default async function PassportPage(props: PageProps<"/passport/[slug]">) {
   const { slug } = await props.params;
   const sp = await props.searchParams;
-  const view = parseViewState(sp.view);
 
   const data = getPassportBySlug(slug);
   if (!data) notFound();
 
   const isSample = data._meta.is_sample === true;
+  // Real Passports default to preview (the buyer's first encounter).
+  // Sample Passports default to full, the locked treatment makes no sense
+  // when there is nothing to unlock. The DemoSwitcher still lets the
+  // founder flip to preview or transfer to show brokers what those look like.
+  const view = parseViewState(sp.view, isSample ? "full" : "preview");
   const showAcquireFlow = view === "preview" && !isSample;
 
   const lockedTabs: TabKey[] =
