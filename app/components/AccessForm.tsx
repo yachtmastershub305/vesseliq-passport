@@ -64,7 +64,7 @@ export function AccessForm({
         <p className="mt-4 text-[15px] text-ink/70 max-w-md">
           In the meantime,{" "}
           <a
-            href="/passport/meridian"
+            href="/passport/bruce-wayne"
             className="border-b border-ink/60 hover:border-ink"
           >
             view a live Passport

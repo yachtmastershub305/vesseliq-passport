@@ -1,8 +1,17 @@
+import Image from "next/image";
 import type { Passport } from "@/lib/passport-types";
 import type { ViewState } from "@/lib/passport-view";
 import { fmtDate } from "@/lib/format";
 import { SealStamp } from "@/app/components/SealStamp";
 import { StateChip } from "./StateChip";
+
+const VESSEL_TYPE_DISPLAY: Record<string, string> = {
+  powerboat: "Motor Yacht",
+  motor_yacht: "Motor Yacht",
+  sailboat: "Sailing Yacht",
+  sailing_yacht: "Sailing Yacht",
+  catamaran: "Catamaran",
+};
 
 export function PassportHeader({
   data,
@@ -15,6 +24,14 @@ export function PassportHeader({
 }) {
   const v = data.vessel;
   const provenanceCount = data.provenance.length;
+  const typeDisplay = VESSEL_TYPE_DISPLAY[v.vessel_type] ?? "Vessel of record";
+
+  const heroImage =
+    typeof v.attributes?.hero_image === "string" ? (v.attributes.hero_image as string) : null;
+  const heroCredit =
+    typeof v.attributes?.hero_image_credit === "string"
+      ? (v.attributes.hero_image_credit as string)
+      : null;
 
   return (
     <section className="relative">
@@ -26,11 +43,36 @@ export function PassportHeader({
         </div>
       </div>
 
-      <div className="pt-12 pb-10">
+      {heroImage && (
+        <figure className="mt-8">
+          <div
+            className="overflow-hidden border"
+            style={{ borderColor: "var(--brand-line-strong)" }}
+          >
+            <Image
+              src={heroImage}
+              alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
+              width={1672}
+              height={941}
+              priority
+              sizes="(min-width: 1120px) 1056px, 100vw"
+              className="block w-full h-auto"
+            />
+          </div>
+          {heroCredit && (
+            <figcaption className="mt-2 flex items-baseline justify-between gap-3">
+              <span className="label">{typeDisplay} · {v.make} {v.model}</span>
+              <span className="label text-right">{heroCredit}</span>
+            </figcaption>
+          )}
+        </figure>
+      )}
+
+      <div className="pt-10 pb-10">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-end">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="label">Vessel of record</span>
+              <span className="label">{typeDisplay}</span>
               <StateChip state={view} />
               {isSample && (
                 <span
