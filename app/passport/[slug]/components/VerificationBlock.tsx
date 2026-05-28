@@ -70,7 +70,7 @@ export function VerificationBlock({
 
       <div className="mt-4 no-print">
         {phase.status === "idle" && (
-          <button type="button" onClick={verify} className="cta-secondary">
+          <button type="button" onClick={verify} className="cta-secondary cta-verify">
             <ShieldGlyph />
             Verify authenticity
           </button>
