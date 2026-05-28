@@ -3,6 +3,7 @@ export type PassportMeta = {
   schema_version: string;
   passport_id: string;
   issued: string;
+  is_sample?: boolean;
 };
 
 export type Vessel = {

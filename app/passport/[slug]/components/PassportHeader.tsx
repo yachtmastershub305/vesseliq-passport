@@ -7,9 +7,11 @@ import { StateChip } from "./StateChip";
 export function PassportHeader({
   data,
   view,
+  isSample = false,
 }: {
   data: Passport;
   view: ViewState;
+  isSample?: boolean;
 }) {
   const v = data.vessel;
   const provenanceCount = data.provenance.length;
@@ -30,6 +32,15 @@ export function PassportHeader({
             <div className="flex items-center gap-3 flex-wrap">
               <span className="label">Vessel of record</span>
               <StateChip state={view} />
+              {isSample && (
+                <span
+                  className="stamp-chip"
+                  style={{ borderStyle: "dashed", borderColor: "var(--brand-line-strong)" }}
+                  title="Illustrative Passport for product demonstration"
+                >
+                  Sample
+                </span>
+              )}
             </div>
             <h1 className="mt-4 display text-[68px] sm:text-[96px] text-ink leading-[0.92]">
               {v.name}
