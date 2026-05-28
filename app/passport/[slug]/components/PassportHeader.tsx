@@ -171,12 +171,16 @@ function SnapshotAnchor({ data }: { data: Passport }) {
   if (!mintTs && !versionId) return null;
 
   const ts = mintTs ? new Date(mintTs) : null;
-  const tsDisplay = ts
+  const datePart = ts
     ? ts.toLocaleString("en-US", {
-        weekday: "short",
         day: "2-digit",
         month: "short",
         year: "numeric",
+        timeZone: "UTC",
+      })
+    : null;
+  const timePart = ts
+    ? ts.toLocaleString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         timeZone: "UTC",
@@ -193,9 +197,9 @@ function SnapshotAnchor({ data }: { data: Passport }) {
     >
       <div className="label">Snapshot anchor</div>
       <p className="mt-2 text-[12px] leading-[1.55] text-ink/85">
-        {tsDisplay && (
+        {datePart && timePart && (
           <>
-            Taken <span className="font-mono">{tsDisplay}</span>.<br />
+            Taken <span className="font-mono">{datePart} · {timePart}</span>.<br />
           </>
         )}
         {versionId && (
@@ -207,12 +211,8 @@ function SnapshotAnchor({ data }: { data: Passport }) {
             >
               {versionShort}…
             </span>
-            .
           </>
         )}
-      </p>
-      <p className="mt-2 text-[10.5px] text-muted leading-[1.5]">
-        This Passport is a point in time. Edits after this timestamp do not change this record.
       </p>
     </div>
   );
