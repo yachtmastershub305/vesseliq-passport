@@ -119,6 +119,9 @@ export function PassportHeader({
           <div className="col-span-12 lg:col-span-4">
             <div className="flex flex-col items-start lg:items-end">
               <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
+
+              <SnapshotAnchor data={data} />
+
               <div className="mt-5 max-w-[260px] lg:text-right">
                 <div className="label">Score weighting</div>
                 <p className="mt-2 text-[12px] leading-[1.6] text-ink/70">
@@ -149,6 +152,59 @@ function Field({ label, value, mono }: { label: string; value: string; mono?: bo
       <div className={`mt-2 text-ink ${mono ? "font-mono text-[13px]" : "text-[15px]"}`}>
         {value}
       </div>
+    </div>
+  );
+}
+
+function SnapshotAnchor({ data }: { data: Passport }) {
+  const mintTs = data.signature?.mint_timestamp;
+  const versionId = data.vessel.vessel_version_id;
+  if (!mintTs && !versionId) return null;
+
+  const ts = mintTs ? new Date(mintTs) : null;
+  const tsDisplay = ts
+    ? ts.toLocaleString("en-US", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+        hour12: false,
+      }) + " UTC"
+    : null;
+
+  const versionShort = versionId ? versionId.slice(0, 8) : null;
+
+  return (
+    <div
+      className="mt-5 max-w-[260px] lg:text-right border-t pt-4"
+      style={{ borderColor: "var(--brand-line-strong)" }}
+    >
+      <div className="label">Snapshot anchor</div>
+      <p className="mt-2 text-[12px] leading-[1.55] text-ink/85">
+        {tsDisplay && (
+          <>
+            Taken <span className="font-mono">{tsDisplay}</span>.<br />
+          </>
+        )}
+        {versionId && (
+          <>
+            Anchored to vessel version{" "}
+            <span
+              className="font-mono text-ink"
+              title={versionId}
+            >
+              {versionShort}…
+            </span>
+            .
+          </>
+        )}
+      </p>
+      <p className="mt-2 text-[10.5px] text-muted leading-[1.5]">
+        This Passport is a point in time. Edits after this timestamp do not change this record.
+      </p>
     </div>
   );
 }

@@ -40,6 +40,14 @@ export function IdentityTab({ data }: { data: Passport }) {
               <LedgerRow k="Manufacturer MIC" v={v.manufacturer_mic} mono meta={m("vessel.manufacturer_mic")} />
               <LedgerRow k="Catalog ID" v={v.catalog_id} mono meta={m("vessel.catalog_id")} />
               <LedgerRow k="Vessel ID" v={v.vessel_id} mono meta={m("vessel.vessel_id")} />
+              {v.vessel_version_id && (
+                <LedgerRow
+                  k="Vessel version"
+                  v={v.vessel_version_id}
+                  mono
+                  meta={m("vessel.vessel_id")}
+                />
+              )}
             </dl>
           </div>
 
