@@ -50,7 +50,7 @@ export function PassportHeader({
         {heroImage && (
           <>
             <div
-              className="absolute inset-0 pointer-events-none z-0"
+              className="hero-watermark absolute inset-0 pointer-events-none z-0"
               aria-hidden="true"
             >
               <Image
