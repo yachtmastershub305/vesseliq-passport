@@ -439,9 +439,12 @@ textarea.uinput:focus-visible {
     color: black !important;
   }
   .no-print { display: none !important; }
-  /* Photo band (new) and watermark (legacy) both hidden in print so
-     the printed Passport is clean ink on parchment. The .hero-watermark
-     rule stays defensively in case a future surface reuses that class. */
+  /* Photo treatments hidden in print so the Passport is clean ink on
+     parchment. .hero-photo-contained is the current treatment (left
+     column contained block). .hero-photo-band and .hero-watermark are
+     legacy classes from prior layouts, kept defensively in case a
+     future surface reuses them. */
+  .hero-photo-contained { display: none !important; }
   .hero-photo-band { display: none !important; }
   .hero-watermark { display: none !important; }
   .seal-rotating { animation: none !important; }
