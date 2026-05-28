@@ -1,7 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  type ReactNode,
+} from "react";
 import { PRICING } from "@/lib/pricing";
 
 type GatePhase = "closed" | "request" | "submitted" | "authorized";
@@ -13,8 +19,43 @@ const STEPS: { key: GatePhase | "transfer"; label: string }[] = [
   { key: "transfer", label: "Transfer complete" },
 ];
 
-export function AcquirePanel({ vesselName, slug }: { vesselName: string; slug: string }) {
+type GateCtx = {
+  phase: GatePhase;
+  setPhase: (p: GatePhase) => void;
+  slug: string;
+  vesselName: string;
+};
+
+const GateContext = createContext<GateCtx | null>(null);
+
+function useGate(): GateCtx {
+  const ctx = useContext(GateContext);
+  if (!ctx) {
+    throw new Error("AcquireFlow components must be used inside <AcquireFlowProvider>");
+  }
+  return ctx;
+}
+
+export function AcquireFlowProvider({
+  slug,
+  vesselName,
+  children,
+}: {
+  slug: string;
+  vesselName: string;
+  children: ReactNode;
+}) {
   const [phase, setPhase] = useState<GatePhase>("closed");
+  return (
+    <GateContext.Provider value={{ phase, setPhase, slug, vesselName }}>
+      {children}
+      {phase !== "closed" && <GateSheet />}
+    </GateContext.Provider>
+  );
+}
+
+export function AcquirePanel() {
+  const { setPhase } = useGate();
 
   return (
     <section
@@ -60,30 +101,54 @@ export function AcquirePanel({ vesselName, slug }: { vesselName: string; slug: s
           </div>
         </div>
       </div>
-
-      {phase !== "closed" && (
-        <GateSheet
-          phase={phase}
-          setPhase={setPhase}
-          slug={slug}
-          vesselName={vesselName}
-        />
-      )}
     </section>
   );
 }
 
-function GateSheet({
-  phase,
-  setPhase,
-  slug,
-  vesselName,
-}: {
-  phase: GatePhase;
-  setPhase: (p: GatePhase) => void;
-  slug: string;
-  vesselName: string;
-}) {
+export function StickyAcquireBar() {
+  const { phase, setPhase } = useGate();
+  if (phase !== "closed") return null;
+
+  return (
+    <div
+      className="fixed bottom-0 inset-x-0 z-30 no-print"
+      role="region"
+      aria-label="Unlock action"
+    >
+      <div
+        className="border-t backdrop-blur-md"
+        style={{
+          backgroundColor: "rgba(245,240,227,0.94)",
+          borderColor: "var(--brand-line-strong)",
+          boxShadow: "0 -4px 20px -10px rgba(12, 17, 23, 0.18)",
+        }}
+      >
+        <div className="container-doc py-3 flex items-center justify-between gap-4">
+          <div className="min-w-0 flex items-baseline gap-3 sm:gap-4">
+            <span className="label hidden sm:inline">Locked</span>
+            <span className="text-[13.5px] text-ink/85 truncate">
+              <span className="hidden sm:inline">Full record and ownership transfer, </span>
+              <span className="font-mono text-ink/85">{PRICING.transfer.headline}</span>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setPhase("request")}
+            className="cta-primary shrink-0"
+          >
+            Unlock and transfer
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+              <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GateSheet() {
+  const { phase, setPhase, slug, vesselName } = useGate();
   const router = useRouter();
 
   useEffect(() => {

@@ -17,7 +17,11 @@ import {
   LockedTelemetry,
   LockedProvenance,
 } from "./components/LockedPanels";
-import { AcquirePanel } from "./components/AcquirePanel";
+import {
+  AcquireFlowProvider,
+  AcquirePanel,
+  StickyAcquireBar,
+} from "./components/AcquirePanel";
 import { TransferBand } from "./components/TransferBand";
 import { DemoSwitcher } from "./components/DemoSwitcher";
 
@@ -49,7 +53,7 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   };
 
   return (
-    <>
+    <AcquireFlowProvider slug={slug} vesselName={data.vessel.name}>
       <SiteNav />
       <main className="flex-1 container-doc">
         <div className="pt-8 pb-2 no-print">
@@ -67,12 +71,12 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
           <TransferBand slug={slug} fromParty="Recorded holder" toParty="Acquiring party" />
         )}
 
-        {view === "preview" && <AcquirePanel slug={slug} vesselName={data.vessel.name} />}
+        {view === "preview" && <AcquirePanel />}
 
         <PassportTabs panels={panels} lockedTabs={lockedTabs} />
 
         <aside
-          className="mt-10 mb-4 border-t pt-5"
+          className={`mt-10 ${view === "preview" ? "mb-24" : "mb-4"} border-t pt-5`}
           style={{ borderColor: "var(--brand-line-strong)" }}
         >
           <div className="grid grid-cols-12 gap-x-6 gap-y-3 items-baseline">
@@ -87,7 +91,8 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
         </aside>
       </main>
       <SiteFooter />
-      <DemoSwitcher slug={slug} active={view} />
-    </>
+      <DemoSwitcher slug={slug} active={view} liftedForStickyBar={view === "preview"} />
+      {view === "preview" && <StickyAcquireBar />}
+    </AcquireFlowProvider>
   );
 }

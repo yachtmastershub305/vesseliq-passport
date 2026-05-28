@@ -3,10 +3,18 @@
 import Link from "next/link";
 import { VIEW_LABELS, VIEW_STATES, type ViewState } from "@/lib/passport-view";
 
-export function DemoSwitcher({ slug, active }: { slug: string; active: ViewState }) {
+export function DemoSwitcher({
+  slug,
+  active,
+  liftedForStickyBar = false,
+}: {
+  slug: string;
+  active: ViewState;
+  liftedForStickyBar?: boolean;
+}) {
   return (
     <div
-      className="fixed bottom-5 right-5 z-40 no-print"
+      className={`fixed right-5 z-40 no-print ${liftedForStickyBar ? "bottom-24" : "bottom-5"}`}
       aria-label="Demo state switcher"
     >
       <div
