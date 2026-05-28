@@ -1,8 +1,14 @@
 import type { EquipmentInstance, Passport, SystemRecord } from "@/lib/passport-types";
 import { fmtDate, fmtNumber, titleCase } from "@/lib/format";
-import { Chip, VerifiedMark } from "./Primitives";
+import { SectionTitle, Subhead, VerifiedMark } from "./Primitives";
 
 const SYSTEM_ORDER = ["PROPULSION", "ELECTRICAL", "NAVIGATION"] as const;
+
+const SYSTEM_NUMERAL: Record<string, string> = {
+  PROPULSION: "ii.a",
+  ELECTRICAL: "ii.b",
+  NAVIGATION: "ii.c",
+};
 
 export function EquipmentTab({ data }: { data: Passport }) {
   const systems = [...data.systems].sort((a, b) => {
@@ -12,10 +18,17 @@ export function EquipmentTab({ data }: { data: Passport }) {
   });
 
   return (
-    <div className="space-y-10">
-      {systems.map((sys) => (
-        <SystemSection key={sys.system_id} system={sys} />
-      ))}
+    <div>
+      <SectionTitle
+        numeral="II"
+        eyebrow="Equipment"
+        title="What is fitted, signed at install."
+      />
+      <div className="space-y-16">
+        {systems.map((sys) => (
+          <SystemSection key={sys.system_id} system={sys} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -23,20 +36,13 @@ export function EquipmentTab({ data }: { data: Passport }) {
 function SystemSection({ system }: { system: SystemRecord }) {
   return (
     <div>
-      <div className="flex items-baseline justify-between border-b hairline-strong pb-3 mb-5">
-        <div>
-          <div className="font-mono text-[10.5px] tracking-wider uppercase text-teal-deep">
-            {system.system_type}
-          </div>
-          <h3 className="mt-1 text-[20px] tracking-tight text-ink">{system.name}</h3>
-        </div>
-        <span className="font-mono text-[11px] text-muted">
-          {system.equipment.length} {system.equipment.length === 1 ? "item" : "items"}
-        </span>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Subhead
+        numeral={SYSTEM_NUMERAL[system.system_type] ?? "ii"}
+        label={`${titleCase(system.system_type)} · ${system.name}`}
+      />
+      <div className="space-y-8">
         {system.equipment.map((eq) => (
-          <EquipmentCard key={eq.equipment_instance_id} eq={eq} />
+          <EquipmentEntry key={eq.equipment_instance_id} eq={eq} />
         ))}
       </div>
     </div>
@@ -87,52 +93,53 @@ function fmtSpec(key: string, value: string | number | boolean | null): string {
   return String(value);
 }
 
-function EquipmentCard({ eq }: { eq: EquipmentInstance }) {
+function EquipmentEntry({ eq }: { eq: EquipmentInstance }) {
   const m = eq.model;
   const attrEntries = Object.entries(eq.attributes).filter(([, v]) => v !== null && v !== undefined);
   const specEntries = Object.entries(m.specs).filter(([, v]) => v !== null && v !== undefined);
 
   return (
-    <article className="rounded-xl border hairline bg-paper p-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <div className="font-mono text-[10.5px] tracking-wider uppercase text-muted">
-            {titleCase(m.equipment_type)}
-          </div>
-          <h4 className="mt-1 text-[16.5px] tracking-tight text-ink leading-snug">
-            {m.manufacturer} {m.model_number}
-          </h4>
+    <article
+      className="grid grid-cols-12 gap-x-6 gap-y-4 border-t pt-6"
+      style={{ borderColor: "var(--brand-line-strong)" }}
+    >
+      <div className="col-span-12 md:col-span-5">
+        <div className="label">{titleCase(m.equipment_type)}</div>
+        <h4 className="mt-3 font-serif-italic text-[26px] leading-[1.1] text-ink">
+          {m.manufacturer} {m.model_number}
+        </h4>
+        <div className="mt-3">
+          <VerifiedMark note="At commissioning" />
         </div>
-        <VerifiedMark />
+        <div className="mt-4 font-mono text-[11.5px] text-muted leading-[1.6]">
+          {eq.equipment_instance_id}
+          <br />
+          Node, {eq.subsystem_node_id}
+        </div>
       </div>
 
-      <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
-        <KV k="Serial" v={<span className="font-mono text-[12px]">{eq.serial_number}</span>} />
-        <KV k="Installed" v={fmtDate(eq.installed_at)} />
-        {attrEntries.map(([k, v]) => (
-          <KV key={k} k={ATTRIBUTE_LABELS[k] ?? titleCase(k)} v={fmtAttr(k, v)} />
-        ))}
-      </dl>
+      <div className="col-span-12 md:col-span-4">
+        <div className="label">Install record</div>
+        <dl className="mt-3 space-y-1.5">
+          <KV k="Serial" v={<span className="font-mono text-[12.5px]">{eq.serial_number}</span>} />
+          <KV k="Installed" v={fmtDate(eq.installed_at)} />
+          {attrEntries.map(([k, v]) => (
+            <KV key={k} k={ATTRIBUTE_LABELS[k] ?? titleCase(k)} v={fmtAttr(k, v)} />
+          ))}
+        </dl>
+      </div>
 
-      {specEntries.length > 0 && (
-        <div className="mt-4 pt-4 border-t hairline">
-          <div className="font-mono text-[10.5px] tracking-wider uppercase text-muted mb-2">
-            Specs
-          </div>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-[12.5px] text-ink/80">
-            {specEntries.map(([k, v]) => (
-              <li key={k} className="flex items-baseline justify-between gap-2">
-                <span className="text-muted">{SPEC_LABELS[k] ?? titleCase(k)}</span>
-                <span>{fmtSpec(k, v)}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div className="mt-4 pt-3 border-t hairline flex items-center justify-between">
-        <Chip>{eq.subsystem_node_id}</Chip>
-        <span className="font-mono text-[10.5px] text-muted">{eq.equipment_instance_id}</span>
+      <div className="col-span-12 md:col-span-3">
+        {specEntries.length > 0 && (
+          <>
+            <div className="label">Specs</div>
+            <dl className="mt-3 space-y-1.5">
+              {specEntries.map(([k, v]) => (
+                <KV key={k} k={SPEC_LABELS[k] ?? titleCase(k)} v={fmtSpec(k, v)} />
+              ))}
+            </dl>
+          </>
+        )}
       </div>
     </article>
   );
@@ -140,9 +147,9 @@ function EquipmentCard({ eq }: { eq: EquipmentInstance }) {
 
 function KV({ k, v }: { k: string; v: React.ReactNode }) {
   return (
-    <div className="flex items-baseline justify-between gap-2">
-      <span className="font-mono text-[10.5px] tracking-wider uppercase text-muted">{k}</span>
-      <span className="text-ink">{v}</span>
+    <div className="flex items-baseline justify-between gap-3 text-[13px]">
+      <span className="text-muted">{k}</span>
+      <span className="text-ink text-right">{v}</span>
     </div>
   );
 }

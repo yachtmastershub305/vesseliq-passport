@@ -1,17 +1,27 @@
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t hairline">
-      <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between text-[13px] text-muted">
-        <div className="flex items-center gap-2 text-ink/80">
-          <span>VesselIQ</span>
-          <span className="font-serif-italic">Passport</span>
-          <span className="text-muted">, the verified history that travels with the hull.</span>
+    <footer className="mt-24 border-t no-print" style={{ borderColor: "var(--brand-line-strong)" }}>
+      <div className="container-doc py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-[13px]">
+        <div className="space-y-2">
+          <div className="label">Imprint</div>
+          <div className="text-ink">
+            VesselIQ <span className="font-serif-italic">Passport</span>
+          </div>
+          <div className="text-muted leading-relaxed max-w-xs">
+            The verified history that travels with the hull.
+          </div>
         </div>
-        <div className="flex items-center gap-5">
-          <span className="font-mono text-[11px] tracking-wider uppercase text-muted">
-            Schema 2026.05.25
-          </span>
-          <span className="text-muted">© {new Date().getFullYear()} VesselIQ</span>
+        <div className="space-y-2">
+          <div className="label">Schema</div>
+          <div className="font-mono text-[12px] text-ink">2026.05.25</div>
+          <div className="text-muted leading-relaxed">
+            Field names match the production database, no remapping.
+          </div>
+        </div>
+        <div className="space-y-2 sm:text-right">
+          <div className="label">Folio</div>
+          <div className="font-mono text-[12px] text-ink">© {new Date().getFullYear()} VesselIQ</div>
+          <div className="text-muted">All marks owner authorized.</div>
         </div>
       </div>
     </footer>

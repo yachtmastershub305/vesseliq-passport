@@ -2,33 +2,39 @@
 
 :root {
   --brand-ink: #0c1117;
+  --brand-ink-2: #1a212b;
   --brand-teal: #0a8a78;
   --brand-teal-deep: #086a5d;
-  --brand-canvas: #f6f4ef;
-  --brand-paper: #ffffff;
-  --brand-line: rgba(12, 17, 23, 0.08);
-  --brand-line-strong: rgba(12, 17, 23, 0.16);
-  --brand-muted: rgba(12, 17, 23, 0.62);
-  --brand-soft: rgba(12, 17, 23, 0.04);
+  --brand-paper: #efe9da;
+  --brand-paper-2: #f5f0e3;
+  --brand-paper-3: #faf6ec;
+  --brand-line: rgba(12, 17, 23, 0.12);
+  --brand-line-strong: rgba(12, 17, 23, 0.28);
+  --brand-line-soft: rgba(12, 17, 23, 0.06);
+  --brand-muted: rgba(12, 17, 23, 0.58);
+  --brand-muted-2: rgba(12, 17, 23, 0.42);
 }
 
 @theme inline {
   --color-ink: var(--brand-ink);
+  --color-ink-2: var(--brand-ink-2);
   --color-teal: var(--brand-teal);
   --color-teal-deep: var(--brand-teal-deep);
-  --color-canvas: var(--brand-canvas);
   --color-paper: var(--brand-paper);
+  --color-paper-2: var(--brand-paper-2);
+  --color-paper-3: var(--brand-paper-3);
   --color-line: var(--brand-line);
   --color-line-strong: var(--brand-line-strong);
+  --color-line-soft: var(--brand-line-soft);
   --color-muted: var(--brand-muted);
-  --color-soft: var(--brand-soft);
+  --color-muted-2: var(--brand-muted-2);
   --font-sans: var(--font-instrument-sans);
   --font-serif: var(--font-instrument-serif);
   --font-mono: var(--font-jetbrains-mono);
 }
 
 html, body {
-  background: var(--brand-canvas);
+  background: var(--brand-paper);
   color: var(--brand-ink);
 }
 
@@ -37,10 +43,15 @@ body {
   font-feature-settings: "ss01", "cv11";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  background-image:
+    radial-gradient(rgba(12, 17, 23, 0.04) 1px, transparent 1px),
+    radial-gradient(rgba(12, 17, 23, 0.025) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 1px;
 }
 
 ::selection {
-  background: var(--brand-teal);
+  background: var(--brand-ink);
   color: var(--brand-paper);
 }
 
@@ -49,23 +60,191 @@ body {
   font-feature-settings: "ss01", "ss02", "zero";
 }
 
+.font-serif {
+  font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
+}
+
 .font-serif-italic {
   font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
   font-style: italic;
 }
 
-.eyebrow {
+/* Display, the registry document title style */
+.display {
+  font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 0.95;
+}
+
+.display-italic {
+  font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.022em;
+  line-height: 0.95;
+}
+
+/* Mono label, used everywhere for marginalia, numbers, tags */
+.label {
   font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--brand-muted);
 }
 
-.hairline {
-  border-color: var(--brand-line);
+.label-ink {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
 }
 
-.hairline-strong {
-  border-color: var(--brand-line-strong);
+/* Page rule, a single hairline horizontal divider */
+.rule {
+  border: 0;
+  border-top: 1px solid var(--brand-line);
+  margin: 0;
+  height: 0;
+}
+
+.rule-strong {
+  border: 0;
+  border-top: 1px solid var(--brand-line-strong);
+  margin: 0;
+  height: 0;
+}
+
+/* Folio rail at the top of pages */
+.folio {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+}
+
+/* Section numeral in the margin */
+.numeral {
+  font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  font-style: italic;
+  font-size: 13.5px;
+  letter-spacing: 0.02em;
+  color: var(--brand-muted);
+}
+
+/* Underline only input */
+.uinput {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--brand-line-strong);
+  padding: 0.4rem 0;
+  font-size: 16px;
+  color: var(--brand-ink);
+  outline: none;
+  transition: border-color 0.15s ease;
+  font-family: var(--font-instrument-sans), sans-serif;
+}
+
+.uinput::placeholder {
+  color: rgba(12, 17, 23, 0.32);
+}
+
+.uinput:focus {
+  border-bottom-color: var(--brand-ink);
+}
+
+textarea.uinput {
+  resize: none;
+  border: 1px solid var(--brand-line-strong);
+  padding: 0.75rem;
+}
+
+textarea.uinput:focus {
+  border-color: var(--brand-ink);
+}
+
+/* The certified stamp text-on-path rotates slowly on hover */
+@keyframes seal-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.seal-rotating {
+  animation: seal-rotate 32s linear infinite;
+  transform-origin: center;
+}
+
+/* Subtle hand-stamped offset for chips that look like ink stamps */
+.stamp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px solid var(--brand-line-strong);
+  color: var(--brand-ink);
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.stamp-chip-teal {
+  border-color: var(--brand-teal);
+  color: var(--brand-teal-deep);
+}
+
+/* Vertical column rule used in ledger layouts */
+.col-rule {
+  border-right: 1px solid var(--brand-line);
+}
+
+/* Container width */
+.container-doc {
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container-doc {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+}
+
+/* Smooth links */
+a {
+  color: inherit;
+}
+
+/* Tab-of-contents item underline */
+.toc-active {
+  position: relative;
+}
+.toc-active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--brand-ink);
+}
+
+/* Print rules. The full state should print clean. */
+@media print {
+  html, body {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+  .no-print { display: none !important; }
+  .seal-rotating { animation: none !important; }
+  a { color: inherit; text-decoration: none; }
 }
