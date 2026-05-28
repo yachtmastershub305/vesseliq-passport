@@ -4,6 +4,7 @@ import { SiteFooter } from "./components/SiteFooter";
 import { AccessForm } from "./components/AccessForm";
 import { SealStamp } from "./components/SealStamp";
 import { CornerMark } from "./components/CornerMark";
+import { HinLookup } from "./components/HinLookup";
 import { PRICING } from "@/lib/pricing";
 
 export default function Home() {
@@ -64,26 +65,31 @@ function Hero() {
               the hull.
             </h1>
 
-            <div className="mt-10 grid grid-cols-12 gap-x-6">
+            <div className="mt-10 grid grid-cols-12 gap-x-6 gap-y-10">
               <div className="col-span-12 lg:col-span-7">
                 <p className="text-[18px] leading-[1.5] text-ink/80">
                   One canonical record per vessel, sourced from government registries and signed
                   service history, owner authorized. Built for brokers who need to close, buyers
                   who need to trust, and insurers who need to underwrite.
                 </p>
-                <div className="mt-10 flex flex-wrap items-baseline gap-x-8 gap-y-3">
+
+                <div className="mt-10">
+                  <HinLookup />
+                </div>
+
+                <div className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
                   <Link
-                    href="/passport/meridian"
-                    className="inline-flex items-baseline gap-3 text-[16px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep transition-colors pb-0.5"
+                    href="/passport/meridian?view=preview"
+                    className="inline-flex items-baseline gap-3 text-[15px] text-ink/80 border-b border-ink/40 hover:border-ink hover:text-ink transition-colors pb-0.5"
                   >
-                    View a live Passport
-                    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                    Or open a sample Passport
+                    <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
                       <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </Link>
                   <Link
                     href="#access"
-                    className="inline-flex items-baseline text-[16px] text-ink/70 border-b border-transparent hover:border-ink/70 hover:text-ink transition-colors pb-0.5"
+                    className="inline-flex items-baseline text-[15px] text-ink/65 border-b border-transparent hover:border-ink/65 hover:text-ink transition-colors pb-0.5"
                   >
                     Have your Passport created
                   </Link>

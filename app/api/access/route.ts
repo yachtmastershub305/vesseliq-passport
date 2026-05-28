@@ -16,7 +16,10 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: "Invalid payload." }, { status: 400 });
   }
 
-  const { name, email, role, message, offer } = body as Record<string, unknown>;
+  const { name, email, role, message, offer, hin, passportSlug } = body as Record<
+    string,
+    unknown
+  >;
 
   if (typeof name !== "string" || name.trim().length < 1) {
     return Response.json({ error: "Name is required." }, { status: 400 });
@@ -30,6 +33,12 @@ export async function POST(request: NextRequest) {
   if (message !== undefined && typeof message !== "string") {
     return Response.json({ error: "Message must be text." }, { status: 400 });
   }
+  if (hin !== undefined && typeof hin !== "string") {
+    return Response.json({ error: "HIN must be text." }, { status: 400 });
+  }
+  if (passportSlug !== undefined && typeof passportSlug !== "string") {
+    return Response.json({ error: "Passport slug must be text." }, { status: 400 });
+  }
 
   const offerKey: OfferKey =
     typeof offer === "string" && ALLOWED_OFFERS.has(offer as OfferKey)
@@ -42,6 +51,8 @@ export async function POST(request: NextRequest) {
     name: name.trim(),
     email: email.trim().toLowerCase(),
     role,
+    hin: typeof hin === "string" && hin.trim() ? hin.trim().toUpperCase() : undefined,
+    passport_slug: typeof passportSlug === "string" && passportSlug ? passportSlug : undefined,
     message_length: typeof message === "string" ? message.length : 0,
   });
 

@@ -20,11 +20,16 @@ export const PRICING = {
   },
 } as const;
 
-export type OfferKey = "create" | "acquire";
+export type OfferKey = "create" | "acquire" | "transfer_access_request";
 
-export const OFFER_LEAD_TYPES = ["create", "acquire"] as const;
+export const OFFER_LEAD_TYPES = [
+  "create",
+  "acquire",
+  "transfer_access_request",
+] as const;
 
 export const OFFER_LABELS: Record<OfferKey, string> = {
   create: "Create a Passport",
   acquire: "Acquire a Passport",
+  transfer_access_request: "Transfer access request",
 };

@@ -54,13 +54,28 @@ export function TransferBand({
             Buyer identity is held in escrow until settlement, this is a placeholder for the
             demo.
           </p>
-          <div className="mt-5">
-            <Link
-              href={`/passport/${slug}?view=preview`}
-              className="inline-flex items-baseline gap-2 label hover:text-ink transition-colors"
-            >
-              ← Return to preview
-            </Link>
+          <div
+            className="mt-5 border-t border-dashed pt-4 no-print"
+            style={{ borderColor: "var(--brand-line-strong)" }}
+          >
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="label">Demo affordance</span>
+              <span className="font-mono text-[10px] text-muted">internal only</span>
+            </div>
+            <div className="mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-3">
+              <Link
+                href={`/passport/${slug}?view=full&from=completion`}
+                className="inline-flex items-baseline gap-2 text-[13.5px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
+              >
+                Simulate completion, advance to full
+              </Link>
+              <Link
+                href={`/passport/${slug}?view=preview`}
+                className="inline-flex items-baseline gap-2 label hover:text-ink transition-colors"
+              >
+                ← Return to preview
+              </Link>
+            </div>
           </div>
         </div>
       </div>
