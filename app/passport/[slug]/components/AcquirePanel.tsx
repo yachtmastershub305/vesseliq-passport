@@ -46,16 +46,18 @@ export function AcquirePanel({ vesselName, slug }: { vesselName: string; slug: s
           <div className="mt-1 text-[12.5px] text-muted leading-[1.5] max-w-xs lg:ml-auto">
             {PRICING.transfer.suffix}
           </div>
-          <button
-            type="button"
-            onClick={() => setPhase("request")}
-            className="mt-5 inline-flex items-baseline gap-3 text-[16px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
-          >
-            Request access
-            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+          <div className="mt-5 flex lg:justify-end">
+            <button
+              type="button"
+              onClick={() => setPhase("request")}
+              className="cta-primary cta-primary-lg"
+            >
+              Unlock and transfer
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -311,14 +313,10 @@ function RequestStep({
         <p className="text-[11.5px] text-muted max-w-[15rem] leading-[1.5]">
           The broker is the only party who can release access.
         </p>
-        <button
-          type="submit"
-          disabled={submitting}
-          className="inline-flex items-baseline gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors disabled:opacity-60"
-        >
+        <button type="submit" disabled={submitting} className="cta-primary">
           {submitting ? "Submitting." : "Submit request"}
           <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
-            <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
       </div>

@@ -84,13 +84,10 @@ export function LockedSection({
                 shown above.
               </p>
               <div className="mt-5">
-                <a
-                  href="#acquire"
-                  className="inline-flex items-baseline gap-2 text-[14.5px] text-ink border-b border-ink/70 hover:border-ink hover:text-ink pb-0.5 transition-colors"
-                >
+                <a href="#acquire" className="cta-secondary">
                   See the acquire offer
                   <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
-                    <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </a>
               </div>

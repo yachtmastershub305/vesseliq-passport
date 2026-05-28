@@ -78,19 +78,13 @@ function Hero() {
                 </div>
 
                 <div className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
-                  <Link
-                    href="/passport/meridian?view=preview"
-                    className="inline-flex items-baseline gap-3 text-[15px] text-ink/80 border-b border-ink/40 hover:border-ink hover:text-ink transition-colors pb-0.5"
-                  >
+                  <Link href="/passport/meridian?view=preview" className="cta-secondary">
                     Or open a sample Passport
-                    <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
-                      <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                      <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </Link>
-                  <Link
-                    href="#access"
-                    className="inline-flex items-baseline text-[15px] text-ink/65 border-b border-transparent hover:border-ink/65 hover:text-ink transition-colors pb-0.5"
-                  >
+                  <Link href="#access" className="cta-quiet">
                     Have your Passport created
                   </Link>
                 </div>
@@ -417,15 +411,14 @@ function AcquireCallout() {
             <div className="mt-1 text-[12px] text-muted leading-[1.5] max-w-xs lg:ml-auto">
               {PRICING.transfer.suffix}
             </div>
-            <Link
-              href="/passport/meridian"
-              className="mt-5 inline-flex items-baseline gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
-            >
-              See a live Passport
-              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
-                <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
+            <div className="mt-5 flex lg:justify-end">
+              <Link href="/passport/meridian" className="cta-secondary">
+                See a live Passport
+                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                  <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -139,14 +139,10 @@ export function AccessForm({
         <p className="text-[12px] text-muted max-w-xs">
           We will reply from a verified VesselIQ address.
         </p>
-        <button
-          type="submit"
-          disabled={status === "submitting"}
-          className="inline-flex items-center gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep transition-colors disabled:opacity-60"
-        >
+        <button type="submit" disabled={status === "submitting"} className="cta-primary">
           {status === "submitting" ? "Sending." : submitLabel}
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-            <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </button>
       </div>
