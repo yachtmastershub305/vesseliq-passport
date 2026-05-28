@@ -4,11 +4,14 @@ export function TransferBand({
   slug,
   fromParty = "Current holder",
   toParty = "Acquiring party",
+  demoEnabled = false,
 }: {
   slug: string;
   fromParty?: string;
   toParty?: string;
+  demoEnabled?: boolean;
 }) {
+  const demoSuffix = demoEnabled ? "&demo=1" : "";
   const today = new Date();
   const expected = new Date(today);
   expected.setDate(expected.getDate() + 7);
@@ -64,13 +67,13 @@ export function TransferBand({
             </div>
             <div className="mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-3">
               <Link
-                href={`/passport/${slug}?view=full&from=completion`}
+                href={`/passport/${slug}?view=full&from=completion${demoSuffix}`}
                 className="inline-flex items-baseline gap-2 text-[13.5px] text-ink/85 border-b border-dashed border-ink/60 hover:border-solid hover:border-ink hover:text-ink pb-0.5 transition-colors"
               >
                 Simulate completion, advance to full
               </Link>
               <Link
-                href={`/passport/${slug}?view=preview`}
+                href={`/passport/${slug}?view=preview${demoSuffix}`}
                 className="inline-flex items-baseline gap-2 label hover:text-ink transition-colors"
               >
                 ← Return to preview

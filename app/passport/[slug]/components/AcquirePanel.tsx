@@ -24,6 +24,7 @@ type GateCtx = {
   setPhase: (p: GatePhase) => void;
   slug: string;
   vesselName: string;
+  demoEnabled: boolean;
 };
 
 const GateContext = createContext<GateCtx | null>(null);
@@ -39,15 +40,17 @@ function useGate(): GateCtx {
 export function AcquireFlowProvider({
   slug,
   vesselName,
+  demoEnabled = false,
   children,
 }: {
   slug: string;
   vesselName: string;
+  demoEnabled?: boolean;
   children: ReactNode;
 }) {
   const [phase, setPhase] = useState<GatePhase>("closed");
   return (
-    <GateContext.Provider value={{ phase, setPhase, slug, vesselName }}>
+    <GateContext.Provider value={{ phase, setPhase, slug, vesselName, demoEnabled }}>
       {children}
       {phase !== "closed" && <GateSheet />}
     </GateContext.Provider>
@@ -148,8 +151,9 @@ export function StickyAcquireBar() {
 }
 
 function GateSheet() {
-  const { phase, setPhase, slug, vesselName } = useGate();
+  const { phase, setPhase, slug, vesselName, demoEnabled } = useGate();
   const router = useRouter();
+  const demoSuffix = demoEnabled ? "&demo=1" : "";
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -211,7 +215,7 @@ function GateSheet() {
             <PaymentStep
               onSimulatePayment={() => {
                 setPhase("closed");
-                router.push(`/passport/${slug}?view=transfer&from=gate`);
+                router.push(`/passport/${slug}?view=transfer&from=gate${demoSuffix}`);
               }}
               onClose={() => setPhase("closed")}
             />
