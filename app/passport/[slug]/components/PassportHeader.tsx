@@ -170,7 +170,7 @@ function SnapshotAnchor({ data }: { data: Passport }) {
 
   const ts = mintTs ? new Date(mintTs) : null;
   const datePart = ts
-    ? ts.toLocaleString("en-US", {
+    ? ts.toLocaleString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",
