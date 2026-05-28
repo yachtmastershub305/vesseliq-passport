@@ -1,6 +1,7 @@
 import type { Passport, ServiceEvent } from "@/lib/passport-types";
 import { fmtDate, fmtMoney, fmtNumber } from "@/lib/format";
-import { Chip, SectionTitle, Subhead } from "./Primitives";
+import { getFactMeta } from "@/lib/passport-data";
+import { Chip, SectionTitle, Subhead, TierBadge } from "./Primitives";
 
 export function MaintenanceTab({ data }: { data: Passport }) {
   const events = [...data.service_events].sort(
@@ -19,14 +20,15 @@ export function MaintenanceTab({ data }: { data: Passport }) {
 
       <ol className="space-y-12">
         {events.map((ev) => (
-          <ServiceEventRow key={ev.service_event_id} ev={ev} />
+          <ServiceEventRow key={ev.service_event_id} ev={ev} data={data} />
         ))}
       </ol>
     </div>
   );
 }
 
-function ServiceEventRow({ ev }: { ev: ServiceEvent }) {
+function ServiceEventRow({ ev, data }: { ev: ServiceEvent; data: Passport }) {
+  const meta = getFactMeta(data, `service.${ev.service_event_id}`);
   return (
     <li
       className="grid grid-cols-12 gap-x-6 gap-y-5 border-t pt-6"
@@ -44,6 +46,7 @@ function ServiceEventRow({ ev }: { ev: ServiceEvent }) {
           {ev.meter_reading_hrs !== null && (
             <Chip>{fmtNumber(ev.meter_reading_hrs)} h</Chip>
           )}
+          <TierBadge meta={meta} />
         </div>
         <div className="mt-4 font-mono text-[10.5px] text-muted leading-[1.7]">
           {ev.service_event_id}

@@ -1,6 +1,7 @@
 import type { EquipmentInstance, Passport, SystemRecord } from "@/lib/passport-types";
 import { fmtDate, fmtNumber, titleCase } from "@/lib/format";
-import { SectionTitle, Subhead, VerifiedMark } from "./Primitives";
+import { getFactMeta } from "@/lib/passport-data";
+import { SectionTitle, Subhead, TierBadge, VerifiedMark } from "./Primitives";
 
 const SYSTEM_ORDER = ["PROPULSION", "ELECTRICAL", "NAVIGATION"] as const;
 
@@ -26,14 +27,14 @@ export function EquipmentTab({ data }: { data: Passport }) {
       />
       <div className="space-y-16">
         {systems.map((sys) => (
-          <SystemSection key={sys.system_id} system={sys} />
+          <SystemSection key={sys.system_id} system={sys} data={data} />
         ))}
       </div>
     </div>
   );
 }
 
-function SystemSection({ system }: { system: SystemRecord }) {
+function SystemSection({ system, data }: { system: SystemRecord; data: Passport }) {
   return (
     <div>
       <Subhead
@@ -42,7 +43,7 @@ function SystemSection({ system }: { system: SystemRecord }) {
       />
       <div className="space-y-8">
         {system.equipment.map((eq) => (
-          <EquipmentEntry key={eq.equipment_instance_id} eq={eq} />
+          <EquipmentEntry key={eq.equipment_instance_id} eq={eq} data={data} />
         ))}
       </div>
     </div>
@@ -93,10 +94,13 @@ function fmtSpec(key: string, value: string | number | boolean | null): string {
   return String(value);
 }
 
-function EquipmentEntry({ eq }: { eq: EquipmentInstance }) {
+function EquipmentEntry({ eq, data }: { eq: EquipmentInstance; data: Passport }) {
   const m = eq.model;
   const attrEntries = Object.entries(eq.attributes).filter(([, v]) => v !== null && v !== undefined);
   const specEntries = Object.entries(m.specs).filter(([, v]) => v !== null && v !== undefined);
+  const serialMeta = getFactMeta(data, `equipment.${eq.equipment_instance_id}.serial_number`);
+  const installMeta = getFactMeta(data, `equipment.${eq.equipment_instance_id}.installed_at`);
+  const hoursMeta = getFactMeta(data, `equipment.${eq.equipment_instance_id}.current_hours`);
 
   return (
     <article
@@ -108,8 +112,9 @@ function EquipmentEntry({ eq }: { eq: EquipmentInstance }) {
         <h4 className="mt-3 font-serif-italic text-[26px] leading-[1.1] text-ink">
           {m.manufacturer} {m.model_number}
         </h4>
-        <div className="mt-3">
+        <div className="mt-3 flex items-center gap-3 flex-wrap">
           <VerifiedMark note="At commissioning" />
+          <TierBadge meta={serialMeta} />
         </div>
         <div className="mt-4 font-mono text-[11.5px] text-muted leading-[1.6]">
           {eq.equipment_instance_id}
@@ -121,10 +126,19 @@ function EquipmentEntry({ eq }: { eq: EquipmentInstance }) {
       <div className="col-span-12 md:col-span-4">
         <div className="label">Install record</div>
         <dl className="mt-3 space-y-1.5">
-          <KV k="Serial" v={<span className="font-mono text-[12.5px]">{eq.serial_number}</span>} />
-          <KV k="Installed" v={fmtDate(eq.installed_at)} />
+          <KV
+            k="Serial"
+            v={<span className="font-mono text-[12.5px]">{eq.serial_number}</span>}
+            meta={serialMeta}
+          />
+          <KV k="Installed" v={fmtDate(eq.installed_at)} meta={installMeta} />
           {attrEntries.map(([k, v]) => (
-            <KV key={k} k={ATTRIBUTE_LABELS[k] ?? titleCase(k)} v={fmtAttr(k, v)} />
+            <KV
+              key={k}
+              k={ATTRIBUTE_LABELS[k] ?? titleCase(k)}
+              v={fmtAttr(k, v)}
+              meta={k === "current_hours" ? hoursMeta : undefined}
+            />
           ))}
         </dl>
       </div>
@@ -145,11 +159,22 @@ function EquipmentEntry({ eq }: { eq: EquipmentInstance }) {
   );
 }
 
-function KV({ k, v }: { k: string; v: React.ReactNode }) {
+function KV({
+  k,
+  v,
+  meta,
+}: {
+  k: string;
+  v: React.ReactNode;
+  meta?: import("@/lib/passport-types").FactMeta | null;
+}) {
   return (
     <div className="flex items-baseline justify-between gap-3 text-[13px]">
       <span className="text-muted">{k}</span>
-      <span className="text-ink text-right">{v}</span>
+      <span className="text-ink text-right flex items-baseline justify-end gap-2">
+        {v}
+        {meta && <TierBadge meta={meta} />}
+      </span>
     </div>
   );
 }

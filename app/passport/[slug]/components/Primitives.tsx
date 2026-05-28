@@ -1,22 +1,53 @@
 import type { ReactNode } from "react";
+import type { FactMeta, Tier, VerificationStatus } from "@/lib/passport-types";
+
+const TIER_LABEL: Record<Tier, string> = {
+  1: "Government registry",
+  2: "OEM commissioning",
+  3: "Verified partner",
+  4: "Owner submitted",
+};
+
+const VERIFICATION_LABEL: Record<VerificationStatus, string> = {
+  EXPERT_VALIDATED: "Expert validated",
+  USER_CONFIRMED: "User confirmed",
+  UNVERIFIED: "Unverified",
+};
+
+export function TierBadge({ meta }: { meta: FactMeta | null | undefined }) {
+  if (!meta) return null;
+  const tierTitle = `Tier ${meta.tier}, ${TIER_LABEL[meta.tier]} · ${VERIFICATION_LABEL[meta.verification_status]}`;
+  const tierClass = `tier-pill tier-${meta.tier}`;
+  return (
+    <span className={tierClass} title={tierTitle}>
+      <span className="tier-dot" aria-hidden="true" />
+      <span className="tier-num">T{meta.tier}</span>
+    </span>
+  );
+}
 
 export function LedgerRow({
   k,
   v,
   mono,
+  meta,
 }: {
   k: string;
   v: ReactNode;
   mono?: boolean;
+  meta?: FactMeta | null;
 }) {
   return (
     <div
-      className="grid grid-cols-[140px_1fr] gap-6 items-baseline py-3 border-b"
+      className="grid grid-cols-[120px_1fr_auto] gap-x-5 gap-y-1 items-baseline py-3 border-b"
       style={{ borderColor: "var(--brand-line)" }}
     >
       <dt className="label">{k}</dt>
       <dd className={`text-ink text-[14.5px] ${mono ? "font-mono text-[13px]" : ""}`}>
         {v ?? <span className="text-muted">—</span>}
+      </dd>
+      <dd className="justify-self-end">
+        <TierBadge meta={meta} />
       </dd>
     </div>
   );
