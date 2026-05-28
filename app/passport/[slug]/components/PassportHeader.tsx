@@ -46,7 +46,7 @@ export function PassportHeader({
         </div>
       </div>
 
-      <div className="relative pt-12 pb-10 overflow-hidden">
+      <div className="relative pt-5 pb-10 overflow-hidden">
         {heroImage && (
           <>
             <div
@@ -64,9 +64,9 @@ export function PassportHeader({
                   objectPosition: "center 38%",
                   opacity: 0.22,
                   maskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 7%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
                   WebkitMaskImage:
-                    "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 7%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                    "linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
                 }}
               />
             </div>
