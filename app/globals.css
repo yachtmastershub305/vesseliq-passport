@@ -274,11 +274,22 @@ a {
   font-size: 16px;
 }
 
-/* Verify variant of the primary CTA, used in the signature block. Slightly
-   shorter, sized for a sidebar column. */
+/* Verify modifier, applied alongside cta-secondary on the Verify
+   Authenticity button. Stays secondary (no filled teal, action color
+   stays reserved for transactional CTAs) but gives the button a touch
+   more presence so the eye can find it without hunting. Larger font,
+   thicker underline, more space around the glyph. */
 .cta-verify {
-  padding: 0.6rem 1rem;
-  font-size: 13.5px;
+  font-size: 15.5px;
+  padding-bottom: 3px;
+  border-bottom-width: 1.5px;
+  gap: 0.55rem;
+  letter-spacing: -0.005em;
+}
+
+.cta-verify svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Tier pills, per-fact provenance grade indicator. Uses ink intensity
