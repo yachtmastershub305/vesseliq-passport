@@ -26,7 +26,6 @@ export function PassportHeader({
   slug: string;
 }) {
   const v = data.vessel;
-  const provenanceCount = data.provenance.length;
   const typeDisplay = VESSEL_TYPE_DISPLAY[v.vessel_type] ?? "Vessel of record";
 
   const heroImage =
@@ -121,7 +120,6 @@ export function PassportHeader({
               {v.doc_expiration_date && (
                 <span className="stamp-chip">Expires {fmtDate(v.doc_expiration_date)}</span>
               )}
-              <span className="stamp-chip">{provenanceCount} verified sources</span>
             </div>
           </div>
 
