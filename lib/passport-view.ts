@@ -2,11 +2,15 @@ export type ViewState = "preview" | "full" | "transfer";
 
 export const VIEW_STATES: ViewState[] = ["preview", "full", "transfer"];
 
-export function parseViewState(raw: string | string[] | undefined): ViewState {
+export function parseViewState(
+  raw: string | string[] | undefined,
+  fallback: ViewState = "preview"
+): ViewState {
   const v = Array.isArray(raw) ? raw[0] : raw;
+  if (v === "preview") return "preview";
   if (v === "full") return "full";
   if (v === "transfer") return "transfer";
-  return "preview";
+  return fallback;
 }
 
 export const VIEW_LABELS: Record<ViewState, string> = {

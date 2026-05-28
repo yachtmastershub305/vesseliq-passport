@@ -78,7 +78,7 @@ function Hero() {
                 </div>
 
                 <div className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
-                  <Link href="/passport/meridian?view=preview" className="cta-secondary">
+                  <Link href="/passport/meridian" className="cta-secondary">
                     Or open a sample Passport
                     <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                       <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -412,7 +412,7 @@ function AcquireCallout() {
               {PRICING.transfer.suffix}
             </div>
             <div className="mt-5 flex lg:justify-end">
-              <Link href="/passport/meridian?view=preview" className="cta-secondary">
+              <Link href="/passport/meridian" className="cta-secondary">
                 Open the sample Passport
                 <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                   <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
