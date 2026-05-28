@@ -262,5 +262,14 @@
       "provenance": 98,
       "documents": 85
     }
+  },
+  "signature": {
+    "canonical_hash_sha256": "a7c3f1d49bf382e51cd8a09f7b40e2d8a3fe2b91c47f6051d9b2c8a3fe2b91c4",
+    "signature_b64": "MEUCIQDqJ8XYR2nF6vL3kP7sBmCq8E1tHvY5J4WzN6oA9pQrXgIgD3mFvL7tQwYsK8BzN5oJ4Pq2cVxR6gWsT8eN9bM7zA0",
+    "signing_key_id": "alias/yachtmastershub/passport-signing-2026",
+    "signing_key_version": 1,
+    "algorithm": "ECDSA_SHA_256",
+    "mint_timestamp": "2026-05-28T14:22:01Z",
+    "public_key_url": "https://yachtmastershub.com/.well-known/passport-pubkey.pem"
   }
 }

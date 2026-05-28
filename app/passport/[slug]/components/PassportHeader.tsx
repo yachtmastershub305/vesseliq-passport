@@ -4,6 +4,7 @@ import type { ViewState } from "@/lib/passport-view";
 import { fmtDate } from "@/lib/format";
 import { SealStamp } from "@/app/components/SealStamp";
 import { StateChip } from "./StateChip";
+import { VerificationBlock } from "./VerificationBlock";
 
 const VESSEL_TYPE_DISPLAY: Record<string, string> = {
   powerboat: "Motor Yacht",
@@ -17,10 +18,12 @@ export function PassportHeader({
   data,
   view,
   isSample = false,
+  slug,
 }: {
   data: Passport;
   view: ViewState;
   isSample?: boolean;
+  slug: string;
 }) {
   const v = data.vessel;
   const provenanceCount = data.provenance.length;
@@ -126,6 +129,9 @@ export function PassportHeader({
                   {data.scoring.weights.timeliness}.
                 </p>
               </div>
+              {data.signature && (
+                <VerificationBlock slug={slug} signature={data.signature} />
+              )}
             </div>
           </div>
         </div>

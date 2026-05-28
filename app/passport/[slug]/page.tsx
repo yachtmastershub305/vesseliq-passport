@@ -88,7 +88,7 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
           </Link>
         </div>
 
-        <PassportHeader data={data} view={view} isSample={isSample} />
+        <PassportHeader data={data} view={view} isSample={isSample} slug={slug} />
 
         {view === "transfer" && (
           <TransferBand
