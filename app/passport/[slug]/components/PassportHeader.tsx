@@ -1,9 +1,19 @@
 import type { Passport } from "@/lib/passport-types";
+import type { ViewState } from "@/lib/passport-view";
 import { fmtDate } from "@/lib/format";
 import { SealStamp } from "@/app/components/SealStamp";
+import { StateChip } from "./StateChip";
 
-export function PassportHeader({ data }: { data: Passport }) {
+export function PassportHeader({
+  data,
+  view,
+}: {
+  data: Passport;
+  view: ViewState;
+}) {
   const v = data.vessel;
+  const provenanceCount = data.provenance.length;
+
   return (
     <section className="relative">
       <div className="border-t border-b py-2" style={{ borderColor: "var(--brand-line-strong)" }}>
@@ -17,7 +27,10 @@ export function PassportHeader({ data }: { data: Passport }) {
       <div className="pt-12 pb-10">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-end">
           <div className="col-span-12 lg:col-span-8">
-            <div className="label">Vessel of record</div>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="label">Vessel of record</span>
+              <StateChip state={view} />
+            </div>
             <h1 className="mt-4 display text-[68px] sm:text-[96px] text-ink leading-[0.92]">
               {v.name}
             </h1>
@@ -33,7 +46,7 @@ export function PassportHeader({ data }: { data: Passport }) {
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
-              {v.verification_status === "verified" && (
+              {v.verification_status === "verified" && view !== "transfer" && (
                 <span className="stamp-chip stamp-chip-teal">Verified</span>
               )}
               {v.flag_state && <span className="stamp-chip">{v.flag_state}</span>}
@@ -46,6 +59,7 @@ export function PassportHeader({ data }: { data: Passport }) {
               {v.doc_expiration_date && (
                 <span className="stamp-chip">Expires {fmtDate(v.doc_expiration_date)}</span>
               )}
+              <span className="stamp-chip">{provenanceCount} verified sources</span>
             </div>
           </div>
 

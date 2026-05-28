@@ -15,15 +15,18 @@ const ENTRIES: { key: TabKey; numeral: string; label: string }[] = [
 
 export function PassportTabs({
   panels,
+  lockedTabs,
 }: {
   panels: Record<TabKey, ReactNode>;
+  lockedTabs?: TabKey[];
 }) {
   const [active, setActive] = useState<TabKey>("identity");
+  const lockedSet = new Set(lockedTabs ?? []);
 
   return (
     <div>
       <div
-        className="sticky top-0 z-20 backdrop-blur-md border-b"
+        className="sticky top-0 z-20 backdrop-blur-md border-b no-print"
         style={{
           backgroundColor: "rgba(239,233,218,0.88)",
           borderColor: "var(--brand-line-strong)",
@@ -34,6 +37,7 @@ export function PassportTabs({
             <span className="label hidden sm:inline">Table of contents</span>
             {ENTRIES.map((entry) => {
               const isActive = active === entry.key;
+              const isLocked = lockedSet.has(entry.key);
               return (
                 <button
                   key={entry.key}
@@ -48,11 +52,12 @@ export function PassportTabs({
                     § {entry.numeral}
                   </span>
                   <span
-                    className={`text-[14.5px] tracking-tight relative ${
+                    className={`text-[14.5px] tracking-tight relative inline-flex items-baseline gap-1.5 ${
                       isActive ? "toc-active" : ""
                     }`}
                   >
                     {entry.label}
+                    {isLocked && <TabLock />}
                   </span>
                 </button>
               );
@@ -64,5 +69,20 @@ export function PassportTabs({
         {panels[active]}
       </div>
     </div>
+  );
+}
+
+function TabLock() {
+  return (
+    <svg
+      width="10"
+      height="10"
+      viewBox="0 0 14 14"
+      aria-hidden="true"
+      style={{ transform: "translateY(1px)" }}
+    >
+      <rect x="3" y="6" width="8" height="6" rx="0.75" fill="none" stroke="currentColor" strokeWidth="1.1" />
+      <path d="M5 6V4.5a2 2 0 0 1 4 0V6" fill="none" stroke="currentColor" strokeWidth="1.1" />
+    </svg>
   );
 }
