@@ -1,7 +1,7 @@
 import type { EquipmentInstance, Passport, SystemRecord } from "@/lib/passport-types";
 import { fmtDate, fmtNumber, titleCase } from "@/lib/format";
 import { getFactMeta } from "@/lib/passport-data";
-import { SectionTitle, Subhead, TierBadge, VerifiedMark } from "./Primitives";
+import { SectionTitle, Subhead, TierBadge } from "./Primitives";
 
 const SYSTEM_ORDER = ["PROPULSION", "ELECTRICAL", "NAVIGATION"] as const;
 
@@ -113,7 +113,6 @@ function EquipmentEntry({ eq, data }: { eq: EquipmentInstance; data: Passport })
           {m.manufacturer} {m.model_number}
         </h4>
         <div className="mt-3 flex items-center gap-3 flex-wrap">
-          <VerifiedMark note="At commissioning" />
           <TierBadge meta={serialMeta} />
         </div>
         <div className="mt-4 font-mono text-[11.5px] text-muted leading-[1.6]">
