@@ -40,13 +40,18 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
 
   const isSample = data._meta.is_sample === true;
   const demoEnabled = sp.demo === "1";
+  // Sample Passport normally hides the acquire flow because nothing real
+  // can be transacted on a sample. But for a broker walk through we want
+  // the full flow (AcquirePanel + gate modal + StatusSequence + simulate
+  // transitions) reachable. ?demo=1 unlocks the flow on sample.
+  const acquireUnlocked = !isSample || demoEnabled;
   // Real Passports default to preview (the buyer's first encounter).
   // Sample Passports default to full, the locked treatment makes no sense
   // when there is nothing to unlock. The DemoSwitcher still lets the
   // founder flip to preview, transfer, archived, or revoked to show what
   // those look like.
   const view = parseViewState(sp.view, isSample ? "full" : "preview");
-  const showAcquireFlow = view === "preview" && !isSample;
+  const showAcquireFlow = view === "preview" && acquireUnlocked;
   const isRevoked = view === "revoked";
 
   const lockedTabs: TabKey[] =
@@ -81,7 +86,7 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   };
 
   return (
-    <AcquireFlowProvider slug={slug} vesselName={data.vessel.name}>
+    <AcquireFlowProvider slug={slug} vesselName={data.vessel.name} demoEnabled={demoEnabled}>
       <SiteNav />
       <main className="flex-1 container-doc">
         <div className="pt-8 pb-2 no-print">
@@ -100,12 +105,17 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
             slug={slug}
             fromParty={isSample ? "Illustrative seller" : "Recorded holder"}
             toParty={isSample ? "Illustrative buyer" : "Acquiring party"}
+            demoEnabled={demoEnabled}
           />
         )}
 
-        {view === "archived" && <ArchivedBand slug={slug} isSample={isSample} />}
+        {view === "archived" && (
+          <ArchivedBand slug={slug} isSample={isSample} demoEnabled={demoEnabled} />
+        )}
 
-        {isRevoked && <RevokedBand slug={slug} isSample={isSample} />}
+        {isRevoked && (
+          <RevokedBand slug={slug} isSample={isSample} demoEnabled={demoEnabled} />
+        )}
 
         {showAcquireFlow && <AcquirePanel />}
 

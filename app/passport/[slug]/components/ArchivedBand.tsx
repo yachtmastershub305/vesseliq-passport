@@ -3,10 +3,13 @@ import Link from "next/link";
 export function ArchivedBand({
   slug,
   isSample = false,
+  demoEnabled = false,
 }: {
   slug: string;
   isSample?: boolean;
+  demoEnabled?: boolean;
 }) {
+  const demoSuffix = demoEnabled ? "&demo=1" : "";
   return (
     <section
       className="border-t border-b py-9"
@@ -57,7 +60,7 @@ export function ArchivedBand({
               </svg>
             </Link>
             <Link
-              href={`/passport/${slug}?view=full`}
+              href={`/passport/${slug}?view=full${demoSuffix}`}
               className="label hover:text-ink transition-colors"
             >
               ← View as full record

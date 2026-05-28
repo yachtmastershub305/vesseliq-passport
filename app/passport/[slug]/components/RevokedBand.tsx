@@ -3,10 +3,13 @@ import Link from "next/link";
 export function RevokedBand({
   slug,
   isSample = false,
+  demoEnabled = false,
 }: {
   slug: string;
   isSample?: boolean;
+  demoEnabled?: boolean;
 }) {
+  const demoSuffix = demoEnabled ? "&demo=1" : "";
   return (
     <section
       className="border-t border-b py-9"
@@ -70,7 +73,7 @@ export function RevokedBand({
               </svg>
             </Link>
             <Link
-              href={`/passport/${slug}?view=preview`}
+              href={`/passport/${slug}?view=preview${demoSuffix}`}
               className="label hover:text-ink transition-colors"
             >
               ← Return to preview
