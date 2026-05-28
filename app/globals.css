@@ -281,6 +281,69 @@ a {
   font-size: 13.5px;
 }
 
+/* Tier pills, per-fact provenance grade indicator. Uses ink intensity
+   gradient, no teal so the action color stays scarce. T1 is the strongest
+   (government registry), T4 the weakest (owner submitted). */
+.tier-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.18rem 0.45rem;
+  border: 1px solid var(--brand-line-strong);
+  border-radius: 2px;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.tier-pill .tier-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--brand-ink);
+}
+
+.tier-pill.tier-1 {
+  background: var(--brand-ink);
+  color: var(--brand-paper);
+  border-color: var(--brand-ink);
+}
+.tier-pill.tier-1 .tier-dot {
+  background: var(--brand-paper);
+}
+
+.tier-pill.tier-2 {
+  background: transparent;
+  color: var(--brand-ink);
+  border-color: var(--brand-ink);
+}
+
+.tier-pill.tier-3 {
+  background: transparent;
+  color: rgba(12, 17, 23, 0.72);
+  border-color: rgba(12, 17, 23, 0.4);
+}
+.tier-pill.tier-3 .tier-dot {
+  background: rgba(12, 17, 23, 0.6);
+}
+
+.tier-pill.tier-4 {
+  background: transparent;
+  color: rgba(12, 17, 23, 0.55);
+  border-color: rgba(12, 17, 23, 0.25);
+  border-style: dashed;
+}
+.tier-pill.tier-4 .tier-dot {
+  background: transparent;
+  border: 1px solid rgba(12, 17, 23, 0.4);
+  width: 4px;
+  height: 4px;
+}
+
 /* Secondary action, teal underline, no fill. Reads interactive without
    competing with primary. */
 .cta-secondary {

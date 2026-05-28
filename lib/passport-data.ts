@@ -1,5 +1,5 @@
 import data from "@/data/passport-demo-data-v2.json";
-import type { Passport } from "./passport-types";
+import type { FactMeta, Passport } from "./passport-types";
 
 const passport = data as unknown as Passport;
 
@@ -21,6 +21,10 @@ export function getPassportBySlug(slug: string): Passport | null {
 
 export function getAllPassportSlugs(): string[] {
   return [PASSPORT_SLUG];
+}
+
+export function getFactMeta(p: Passport, path: string): FactMeta | null {
+  return p.fact_metadata?.[path] ?? null;
 }
 
 export { passport, PASSPORT_SLUG };

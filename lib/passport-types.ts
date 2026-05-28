@@ -133,6 +133,22 @@ export type Scoring = {
   breakdown: ScoringBreakdown;
 };
 
+export type Tier = 1 | 2 | 3 | 4;
+
+export type VerificationStatus =
+  | "UNVERIFIED"
+  | "USER_CONFIRMED"
+  | "EXPERT_VALIDATED";
+
+export type FactMeta = {
+  tier: Tier;
+  verification_status: VerificationStatus;
+  confidence_pct?: number;
+  provenance_id?: string;
+};
+
+export type FactMetadataMap = Record<string, FactMeta>;
+
 export type PassportSignature = {
   canonical_hash_sha256: string;
   signature_b64: string;
@@ -152,4 +168,5 @@ export type Passport = {
   provenance: ProvenanceRecord[];
   scoring: Scoring;
   signature?: PassportSignature;
+  fact_metadata?: FactMetadataMap;
 };
