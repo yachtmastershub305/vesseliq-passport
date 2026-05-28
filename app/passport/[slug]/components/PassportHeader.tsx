@@ -137,16 +137,7 @@ export function PassportHeader({
 
               <SnapshotAnchor data={data} />
 
-              <div className="mt-5 max-w-[260px] lg:text-right">
-                <div className="label">Score weighting</div>
-                <p className="mt-2 text-[12px] leading-[1.6] text-ink/70">
-                  Accuracy {data.scoring.weights.accuracy}, provenance{" "}
-                  {data.scoring.weights.provenance}, completeness{" "}
-                  {data.scoring.weights.completeness}, consistency{" "}
-                  {data.scoring.weights.consistency}, timeliness{" "}
-                  {data.scoring.weights.timeliness}.
-                </p>
-              </div>
+              <ScoreWeighting weights={data.scoring.weights} />
               {data.signature && (
                 <VerificationBlock slug={slug} signature={data.signature} />
               )}
@@ -167,6 +158,66 @@ function Field({ label, value, mono }: { label: string; value: string; mono?: bo
       <div className={`mt-2 text-ink ${mono ? "font-mono text-[13px]" : "text-[15px]"}`}>
         {value}
       </div>
+    </div>
+  );
+}
+
+function ScoreWeighting({
+  weights,
+}: {
+  weights: Passport["scoring"]["weights"];
+}) {
+  const entries: { label: string; value: number; alpha: number }[] = [
+    { label: "Accuracy", value: weights.accuracy, alpha: 1.0 },
+    { label: "Provenance", value: weights.provenance, alpha: 0.78 },
+    { label: "Completeness", value: weights.completeness, alpha: 0.58 },
+    { label: "Consistency", value: weights.consistency, alpha: 0.4 },
+    { label: "Timeliness", value: weights.timeliness, alpha: 0.25 },
+  ];
+
+  let offset = 0;
+  const segments = entries.map((e) => {
+    const segment = { ...e, x: offset };
+    offset += e.value;
+    return segment;
+  });
+
+  return (
+    <div
+      className="mt-5 w-full max-w-[280px] lg:text-right border-t pt-4"
+      style={{ borderColor: "var(--brand-line-strong)" }}
+    >
+      <div className="label">Score weighting</div>
+      <svg
+        className="mt-3 block w-full"
+        height="6"
+        viewBox="0 0 100 6"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+        role="img"
+      >
+        {segments.map((s) => (
+          <rect
+            key={s.label}
+            x={s.x}
+            y={0}
+            width={Math.max(0, s.value - 0.5)}
+            height={6}
+            fill={`rgba(12, 17, 23, ${s.alpha})`}
+          />
+        ))}
+      </svg>
+      <dl className="mt-3 space-y-1">
+        {entries.map((e) => (
+          <div
+            key={e.label}
+            className="flex items-baseline justify-between gap-3 text-[11.5px]"
+          >
+            <dt className="text-ink/80">{e.label}</dt>
+            <dd className="font-mono text-ink">{e.value}</dd>
+          </div>
+        ))}
+      </dl>
     </div>
   );
 }
