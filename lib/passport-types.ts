@@ -9,6 +9,7 @@ export type PassportMeta = {
 
 export type Vessel = {
   vessel_id: string;
+  vessel_version_id?: string;
   catalog_id: string;
   hin: string;
   imo_number: string | null;
