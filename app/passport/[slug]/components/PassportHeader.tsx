@@ -46,33 +46,42 @@ export function PassportHeader({
         </div>
       </div>
 
-      {heroImage && (
-        <figure className="mt-8">
-          <div
-            className="overflow-hidden border"
-            style={{ borderColor: "var(--brand-line-strong)" }}
-          >
-            <Image
-              src={heroImage}
-              alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
-              width={1672}
-              height={941}
-              priority
-              sizes="(min-width: 1120px) 1056px, 100vw"
-              className="block w-full h-auto"
-            />
-          </div>
-          {heroCredit && (
-            <figcaption className="mt-2 flex items-baseline justify-between gap-3">
-              <span className="label">{typeDisplay} · {v.make} {v.model}</span>
-              <span className="label text-right">{heroCredit}</span>
-            </figcaption>
-          )}
-        </figure>
-      )}
+      <div className="relative pt-12 pb-10 overflow-hidden">
+        {heroImage && (
+          <>
+            <div
+              className="absolute inset-0 pointer-events-none z-0"
+              aria-hidden="true"
+            >
+              <Image
+                src={heroImage}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 1120px) 1120px, 100vw"
+                style={{
+                  objectFit: "cover",
+                  objectPosition: "center 38%",
+                  opacity: 0.22,
+                  maskImage:
+                    "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 7%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.95) 7%, rgba(0,0,0,0.95) 72%, rgba(0,0,0,0) 100%)",
+                }}
+              />
+            </div>
+            {heroCredit && (
+              <span
+                className="absolute right-0 top-2 label z-10"
+                style={{ opacity: 0.55 }}
+              >
+                {heroCredit}
+              </span>
+            )}
+          </>
+        )}
 
-      <div className="pt-10 pb-10">
-        <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-end">
+        <div className="relative z-10 grid grid-cols-12 gap-x-6 gap-y-10 items-end">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="label">{typeDisplay}</span>
