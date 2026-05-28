@@ -25,7 +25,7 @@ export function TelemetryTab({ data }: { data: Passport }) {
           <div className="border-t pt-6" style={{ borderColor: "var(--brand-line-strong)" }}>
             <div className="flex items-baseline justify-between gap-3">
               <span className="label-ink">Status</span>
-              <Chip tone="teal">Coming soon</Chip>
+              <Chip>Coming soon</Chip>
             </div>
             <p className="mt-5 font-serif-italic text-[24px] leading-[1.25] text-ink">
               Live telemetry is rolling out with VesselIQ Pro hardware.

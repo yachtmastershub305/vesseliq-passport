@@ -355,7 +355,7 @@ function AwaitingBrokerStep({
           <button
             type="button"
             onClick={onSimulateAuthorize}
-            className="inline-flex items-baseline gap-2 text-[14px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
+            className="inline-flex items-baseline gap-2 text-[14px] text-ink/85 border-b border-dashed border-ink/60 hover:border-solid hover:border-ink hover:text-ink pb-0.5 transition-colors"
           >
             Simulate broker authorization
           </button>
@@ -413,7 +413,7 @@ function PaymentStep({
           <button
             type="button"
             onClick={onSimulatePayment}
-            className="inline-flex items-baseline gap-2 text-[14px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
+            className="inline-flex items-baseline gap-2 text-[14px] text-ink/85 border-b border-dashed border-ink/60 hover:border-solid hover:border-ink hover:text-ink pb-0.5 transition-colors"
           >
             Simulate payment, advance to transfer pending
           </button>

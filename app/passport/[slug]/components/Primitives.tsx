@@ -57,10 +57,10 @@ export function Chip({ children, tone = "neutral" }: { children: ReactNode; tone
 
 export function VerifiedMark({ note }: { note?: string }) {
   return (
-    <span className="inline-flex items-baseline gap-1.5 label-ink text-teal-deep" title="Verified at commissioning">
+    <span className="inline-flex items-baseline gap-1.5 label" title="Verified at commissioning">
       <svg width="10" height="10" viewBox="0 0 14 14" aria-hidden="true">
-        <circle cx="7" cy="7" r="6" fill="var(--brand-teal)" />
-        <path d="M4.5 7.2l1.6 1.6 3.4-3.6" stroke="white" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="7" cy="7" r="6" fill="none" stroke="var(--brand-ink)" strokeWidth="1" />
+        <path d="M4.5 7.2l1.6 1.6 3.4-3.6" stroke="var(--brand-ink)" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       Verified{note ? ` · ${note}` : ""}
     </span>
