@@ -223,6 +223,119 @@ a {
   color: inherit;
 }
 
+/* Action affordances. Teal is the action color, used only on things the
+   user can act on. Scarcity gives the color meaning. */
+
+.cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.72rem 1.2rem;
+  background: var(--brand-teal);
+  color: #fdfaf2;
+  border: 1px solid var(--brand-teal-deep);
+  border-radius: 2px;
+  font-family: var(--font-instrument-sans), sans-serif;
+  font-size: 15px;
+  line-height: 1;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    transform 0.05s ease, box-shadow 0.15s ease;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(12, 17, 23, 0.04);
+}
+
+.cta-primary:hover {
+  background: var(--brand-teal-deep);
+  border-color: #064c43;
+  box-shadow: 0 1px 0 rgba(12, 17, 23, 0.06), 0 4px 10px -6px rgba(10, 138, 120, 0.45);
+}
+
+.cta-primary:active {
+  transform: translateY(0.5px);
+  box-shadow: 0 1px 0 rgba(12, 17, 23, 0.04);
+}
+
+.cta-primary:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+.cta-primary:disabled,
+.cta-primary[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cta-primary-lg {
+  padding: 0.85rem 1.4rem;
+  font-size: 16px;
+}
+
+/* Secondary action, teal underline, no fill. Reads interactive without
+   competing with primary. */
+.cta-secondary {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--brand-teal-deep);
+  border-bottom: 1px solid var(--brand-teal);
+  padding-bottom: 2px;
+  font-size: 15px;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  text-decoration: none;
+}
+
+.cta-secondary:hover {
+  color: var(--brand-ink);
+  border-bottom-color: var(--brand-ink);
+}
+
+.cta-secondary:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+/* Quiet, ink-only link. No color until hover hints. */
+.cta-quiet {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: rgba(12, 17, 23, 0.7);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  text-decoration: none;
+}
+
+.cta-quiet:hover {
+  color: var(--brand-ink);
+  border-bottom-color: rgba(12, 17, 23, 0.45);
+}
+
+.cta-quiet:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 3px;
+}
+
+/* Stronger input focus ring on the underline-only inputs */
+.uinput:focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 4px;
+  outline-style: solid;
+  border-bottom-color: var(--brand-ink);
+}
+
+textarea.uinput:focus-visible {
+  outline-offset: 2px;
+}
+
 /* Tab-of-contents item underline */
 .toc-active {
   position: relative;

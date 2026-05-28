@@ -65,7 +65,7 @@ export function TransferBand({
             <div className="mt-3 flex flex-wrap items-baseline gap-x-5 gap-y-3">
               <Link
                 href={`/passport/${slug}?view=full&from=completion`}
-                className="inline-flex items-baseline gap-2 text-[13.5px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
+                className="inline-flex items-baseline gap-2 text-[13.5px] text-ink/85 border-b border-dashed border-ink/60 hover:border-solid hover:border-ink hover:text-ink pb-0.5 transition-colors"
               >
                 Simulate completion, advance to full
               </Link>

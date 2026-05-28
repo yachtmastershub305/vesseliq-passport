@@ -52,7 +52,7 @@ export function ProvenanceTab({ data }: { data: Passport }) {
             </dl>
             <div className="mt-5 flex flex-wrap gap-x-2 gap-y-2">
               {Object.keys(byType).map((t) => (
-                <Chip key={t} tone="teal">
+                <Chip key={t}>
                   {SOURCE_TYPE_LABEL[t] ?? titleCase(t)}
                 </Chip>
               ))}
@@ -99,7 +99,7 @@ function ProvenanceCitation({ r, index }: { r: ProvenanceRecord; index: number }
         <div className="label">Covers {entityLabel}</div>
         <h3 className="mt-3 font-serif-italic text-[22px] leading-[1.2] text-ink">{r.payload_summary}</h3>
         <div className="mt-4">
-          <Chip tone="teal">{sourceLabel}</Chip>
+          <Chip>{sourceLabel}</Chip>
         </div>
       </div>
 

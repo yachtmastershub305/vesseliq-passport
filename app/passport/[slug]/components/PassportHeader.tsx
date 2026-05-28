@@ -46,9 +46,6 @@ export function PassportHeader({
             </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2">
-              {v.verification_status === "verified" && view !== "transfer" && (
-                <span className="stamp-chip stamp-chip-teal">Verified</span>
-              )}
               {v.flag_state && <span className="stamp-chip">{v.flag_state}</span>}
               {v.classification_society && (
                 <span className="stamp-chip">Class · {v.classification_society}</span>

@@ -40,7 +40,7 @@ function ServiceEventRow({ ev }: { ev: ServiceEvent }) {
           {ev.event_type}
         </div>
         <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1.5">
-          <Chip tone="teal">{ev.task_code}</Chip>
+          <Chip>{ev.task_code}</Chip>
           {ev.meter_reading_hrs !== null && (
             <Chip>{fmtNumber(ev.meter_reading_hrs)} h</Chip>
           )}
