@@ -20,6 +20,35 @@ export function StateChip({ state }: { state: ViewState }) {
       </span>
     );
   }
+  if (state === "archived") {
+    return (
+      <span
+        className="stamp-chip"
+        style={{
+          color: "rgba(12, 17, 23, 0.65)",
+          borderColor: "rgba(12, 17, 23, 0.35)",
+        }}
+      >
+        <ArchiveGlyph />
+        Archived
+      </span>
+    );
+  }
+  if (state === "revoked") {
+    return (
+      <span
+        className="stamp-chip"
+        style={{
+          backgroundColor: "rgb(150, 25, 25)",
+          color: "var(--brand-paper)",
+          borderColor: "rgb(120, 20, 20)",
+        }}
+      >
+        <CrossGlyph />
+        Revoked
+      </span>
+    );
+  }
   return (
     <span className="stamp-chip">
       <LockMark />
@@ -58,5 +87,28 @@ function PulseDot() {
     <span className="relative inline-flex items-center" aria-hidden="true">
       <span className="block h-1.5 w-1.5 rounded-full bg-ink" />
     </span>
+  );
+}
+
+function ArchiveGlyph() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 14 14" aria-hidden="true">
+      <rect x="2" y="3" width="10" height="2.5" fill="none" stroke="currentColor" strokeWidth="1" />
+      <rect x="3" y="5.5" width="8" height="6.5" fill="none" stroke="currentColor" strokeWidth="1" />
+      <line x1="5.5" y1="8.5" x2="8.5" y2="8.5" stroke="currentColor" strokeWidth="1.2" />
+    </svg>
+  );
+}
+
+function CrossGlyph() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 14 14" aria-hidden="true">
+      <path
+        d="M4.6 4.6l4.8 4.8M9.4 4.6l-4.8 4.8"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
