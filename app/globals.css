@@ -236,3 +236,15 @@ a {
   height: 1px;
   background: var(--brand-ink);
 }
+
+/* Print rules. The full state should print clean. */
+@media print {
+  html, body {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+  .no-print { display: none !important; }
+  .seal-rotating { animation: none !important; }
+  a { color: inherit; text-decoration: none; }
+}

@@ -1,6 +1,6 @@
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t" style={{ borderColor: "var(--brand-line-strong)" }}>
+    <footer className="mt-24 border-t no-print" style={{ borderColor: "var(--brand-line-strong)" }}>
       <div className="container-doc py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-[13px]">
         <div className="space-y-2">
           <div className="label">Imprint</div>

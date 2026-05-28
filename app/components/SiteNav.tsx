@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteNav() {
   return (
-    <header className="border-b border-line-strong/60" style={{ borderColor: "var(--brand-line-strong)" }}>
+    <header className="border-b border-line-strong/60 no-print" style={{ borderColor: "var(--brand-line-strong)" }}>
       <div className="container-doc flex items-center justify-between py-5">
         <Link href="/" className="flex items-baseline gap-2 text-ink">
           <span className="font-serif text-[22px] tracking-tight leading-none">VesselIQ</span>
