@@ -39,6 +39,7 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   if (!data) notFound();
 
   const isSample = data._meta.is_sample === true;
+  const demoEnabled = sp.demo === "1";
   // Real Passports default to preview (the buyer's first encounter).
   // Sample Passports default to full, the locked treatment makes no sense
   // when there is nothing to unlock. The DemoSwitcher still lets the
@@ -136,7 +137,9 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
         </aside>
       </main>
       <SiteFooter />
-      <DemoSwitcher slug={slug} active={view} liftedForStickyBar={showAcquireFlow} />
+      {demoEnabled && (
+        <DemoSwitcher slug={slug} active={view} liftedForStickyBar={showAcquireFlow} />
+      )}
       {showAcquireFlow && <StickyAcquireBar />}
     </AcquireFlowProvider>
   );
