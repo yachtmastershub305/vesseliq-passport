@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --brand-ink: #0c1117;
+  --brand-teal: #0a8a78;
+  --brand-teal-deep: #086a5d;
+  --brand-canvas: #f6f4ef;
+  --brand-paper: #ffffff;
+  --brand-line: rgba(12, 17, 23, 0.08);
+  --brand-line-strong: rgba(12, 17, 23, 0.16);
+  --brand-muted: rgba(12, 17, 23, 0.62);
+  --brand-soft: rgba(12, 17, 23, 0.04);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--brand-ink);
+  --color-teal: var(--brand-teal);
+  --color-teal-deep: var(--brand-teal-deep);
+  --color-canvas: var(--brand-canvas);
+  --color-paper: var(--brand-paper);
+  --color-line: var(--brand-line);
+  --color-line-strong: var(--brand-line-strong);
+  --color-muted: var(--brand-muted);
+  --color-soft: var(--brand-soft);
+  --font-sans: var(--font-instrument-sans);
+  --font-serif: var(--font-instrument-serif);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  background: var(--brand-canvas);
+  color: var(--brand-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-instrument-sans), ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--brand-teal);
+  color: var(--brand-paper);
+}
+
+.font-mono, code, kbd, samp {
+  font-family: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-feature-settings: "ss01", "ss02", "zero";
+}
+
+.font-serif-italic {
+  font-family: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  font-style: italic;
+}
+
+.eyebrow {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+}
+
+.hairline {
+  border-color: var(--brand-line);
+}
+
+.hairline-strong {
+  border-color: var(--brand-line-strong);
 }
