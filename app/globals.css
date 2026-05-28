@@ -428,6 +428,7 @@ textarea.uinput:focus-visible {
     color: black !important;
   }
   .no-print { display: none !important; }
+  .hero-watermark { display: none !important; }
   .seal-rotating { animation: none !important; }
   a { color: inherit; text-decoration: none; }
 }

@@ -42,7 +42,7 @@ export function DemoSwitcher({
             return (
               <Link
                 key={state}
-                href={`/passport/${slug}?view=${state}`}
+                href={`/passport/${slug}?view=${state}&demo=1`}
                 className={`px-2.5 py-2 text-[12.5px] tracking-tight transition-colors ${
                   isActive ? "text-ink" : "text-ink/55 hover:text-ink/85"
                 }`}

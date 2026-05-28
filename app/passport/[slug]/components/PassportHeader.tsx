@@ -26,7 +26,6 @@ export function PassportHeader({
   slug: string;
 }) {
   const v = data.vessel;
-  const provenanceCount = data.provenance.length;
   const typeDisplay = VESSEL_TYPE_DISPLAY[v.vessel_type] ?? "Vessel of record";
 
   const heroImage =
@@ -50,7 +49,7 @@ export function PassportHeader({
         {heroImage && (
           <>
             <div
-              className="absolute inset-0 pointer-events-none z-0"
+              className="hero-watermark absolute inset-0 pointer-events-none z-0"
               aria-hidden="true"
             >
               <Image
@@ -121,7 +120,6 @@ export function PassportHeader({
               {v.doc_expiration_date && (
                 <span className="stamp-chip">Expires {fmtDate(v.doc_expiration_date)}</span>
               )}
-              <span className="stamp-chip">{provenanceCount} verified sources</span>
             </div>
           </div>
 
@@ -171,12 +169,16 @@ function SnapshotAnchor({ data }: { data: Passport }) {
   if (!mintTs && !versionId) return null;
 
   const ts = mintTs ? new Date(mintTs) : null;
-  const tsDisplay = ts
-    ? ts.toLocaleString("en-US", {
-        weekday: "short",
+  const datePart = ts
+    ? ts.toLocaleString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",
+        timeZone: "UTC",
+      })
+    : null;
+  const timePart = ts
+    ? ts.toLocaleString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         timeZone: "UTC",
@@ -193,9 +195,9 @@ function SnapshotAnchor({ data }: { data: Passport }) {
     >
       <div className="label">Snapshot anchor</div>
       <p className="mt-2 text-[12px] leading-[1.55] text-ink/85">
-        {tsDisplay && (
+        {datePart && timePart && (
           <>
-            Taken <span className="font-mono">{tsDisplay}</span>.<br />
+            Taken <span className="font-mono">{datePart} · {timePart}</span>.<br />
           </>
         )}
         {versionId && (
@@ -207,12 +209,8 @@ function SnapshotAnchor({ data }: { data: Passport }) {
             >
               {versionShort}…
             </span>
-            .
           </>
         )}
-      </p>
-      <p className="mt-2 text-[10.5px] text-muted leading-[1.5]">
-        This Passport is a point in time. Edits after this timestamp do not change this record.
       </p>
     </div>
   );

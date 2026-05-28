@@ -39,6 +39,7 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   if (!data) notFound();
 
   const isSample = data._meta.is_sample === true;
+  const demoEnabled = sp.demo === "1";
   // Real Passports default to preview (the buyer's first encounter).
   // Sample Passports default to full, the locked treatment makes no sense
   // when there is nothing to unlock. The DemoSwitcher still lets the
@@ -111,14 +112,17 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
         {!isRevoked && <PassportTabs panels={panels} lockedTabs={lockedTabs} />}
 
         <aside
-          className={`mt-10 ${showAcquireFlow ? "mb-24" : "mb-4"} border-t pt-5`}
-          style={{ borderColor: "var(--brand-line-strong)" }}
+          className={`mt-10 ${showAcquireFlow ? "mb-24" : "mb-4"} border-t border-b py-5`}
+          style={{
+            borderColor: "var(--brand-line-strong)",
+            backgroundColor: "rgba(12, 17, 23, 0.035)",
+          }}
         >
           <div className="grid grid-cols-12 gap-x-6 gap-y-3 items-baseline">
             <div className="col-span-12 md:col-span-2">
-              <span className="label">Notice</span>
+              <span className="label-ink">Notice</span>
             </div>
-            <p className="col-span-12 md:col-span-10 text-[12.5px] text-muted leading-[1.7] max-w-3xl">
+            <p className="col-span-12 md:col-span-10 text-[14px] text-ink/85 leading-[1.6] max-w-3xl">
               Demonstration record. All data is illustrative. Field names and types match the
               VesselIQ production schema, so a real query drops into this view without remapping.
               {isSample && (
@@ -133,7 +137,9 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
         </aside>
       </main>
       <SiteFooter />
-      <DemoSwitcher slug={slug} active={view} liftedForStickyBar={showAcquireFlow} />
+      {demoEnabled && (
+        <DemoSwitcher slug={slug} active={view} liftedForStickyBar={showAcquireFlow} />
+      )}
       {showAcquireFlow && <StickyAcquireBar />}
     </AcquireFlowProvider>
   );
