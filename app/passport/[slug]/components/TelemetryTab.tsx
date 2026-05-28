@@ -1,116 +1,131 @@
 import type { Passport } from "@/lib/passport-types";
 import { fmtDate } from "@/lib/format";
-import { Chip } from "./Primitives";
+import { Chip, SectionTitle, Subhead } from "./Primitives";
 
 export function TelemetryTab({ data }: { data: Passport }) {
   const loggers = data.systems
     .flatMap((s) => s.equipment.map((e) => ({ system: s.name, eq: e })))
-    .filter(({ eq }) => /telemetry|gateway|logger/i.test(eq.model.equipment_type) || /telemetry/i.test(eq.model.model_number) || /canedge/i.test(eq.model.model_number));
+    .filter(
+      ({ eq }) =>
+        /telemetry|gateway|logger/i.test(eq.model.equipment_type) ||
+        /telemetry/i.test(eq.model.model_number) ||
+        /canedge/i.test(eq.model.model_number)
+    );
 
   return (
-    <div className="space-y-8">
-      <header className="rounded-xl border hairline bg-paper p-7">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <div className="font-mono text-[10.5px] tracking-wider uppercase text-teal-deep">
-              Live telemetry, status
+    <div>
+      <SectionTitle
+        numeral="IV"
+        eyebrow="Telemetry"
+        title="Live channels, rolling out."
+      />
+
+      <div className="grid grid-cols-12 gap-x-10 gap-y-12">
+        <div className="col-span-12 lg:col-span-7">
+          <div className="border-t pt-6" style={{ borderColor: "var(--brand-line-strong)" }}>
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="label-ink">Status</span>
+              <Chip tone="teal">Coming soon</Chip>
             </div>
-            <h3 className="mt-2 text-[22px] tracking-tight text-ink leading-[1.2]">
+            <p className="mt-5 font-serif-italic text-[24px] leading-[1.25] text-ink">
               Live telemetry is rolling out with VesselIQ Pro hardware.
-            </h3>
+            </p>
+            <p className="mt-5 text-[15.5px] leading-[1.6] text-ink/80 max-w-xl">
+              The Passport does not show fabricated telemetry. When the live channels activate on
+              this hull, signed engine, battery, and navigation data will attach to this record at
+              source. Until then, this section confirms the hardware is in place and lists what
+              will appear.
+            </p>
           </div>
-          <Chip tone="teal">Coming soon</Chip>
-        </div>
-        <p className="mt-4 text-[14.5px] leading-[1.6] text-ink/75 max-w-2xl">
-          The Passport does not show fabricated telemetry. When the live channels activate on this
-          hull, signed engine, battery, and navigation data will attach to this record at source.
-          Until then, this tab confirms the hardware is in place and lists what will appear.
-        </p>
-      </header>
 
-      {loggers.length > 0 && (
-        <section className="rounded-xl border hairline bg-paper p-6">
-          <div className="font-mono text-[10.5px] tracking-wider uppercase text-teal-deep">
-            Hardware in place
-          </div>
-          <h4 className="mt-2 text-[17px] tracking-tight text-ink">
-            Telemetry logger commissioned on this vessel
-          </h4>
-          <div className="mt-5 space-y-3">
-            {loggers.map(({ system, eq }) => (
-              <div
-                key={eq.equipment_instance_id}
-                className="rounded-lg border hairline p-4 bg-canvas flex flex-wrap items-baseline gap-x-6 gap-y-2"
-              >
-                <div>
-                  <div className="font-mono text-[10.5px] tracking-wider uppercase text-muted">
-                    {system}
+          {loggers.length > 0 && (
+            <div className="mt-12">
+              <Subhead numeral="iv.a" label="Hardware in place" />
+              <div className="space-y-6">
+                {loggers.map(({ system, eq }) => (
+                  <div
+                    key={eq.equipment_instance_id}
+                    className="border-t pt-5 grid grid-cols-12 gap-x-6 gap-y-2"
+                    style={{ borderColor: "var(--brand-line)" }}
+                  >
+                    <div className="col-span-12 md:col-span-5">
+                      <div className="label">{system}</div>
+                      <div className="mt-2 font-serif-italic text-[20px] leading-[1.2] text-ink">
+                        {eq.model.manufacturer} {eq.model.model_number}
+                      </div>
+                    </div>
+                    <div className="col-span-6 md:col-span-3">
+                      <div className="label">Serial</div>
+                      <div className="mt-2 font-mono text-[12.5px] text-ink">{eq.serial_number}</div>
+                    </div>
+                    <div className="col-span-6 md:col-span-2">
+                      <div className="label">Installed</div>
+                      <div className="mt-2 text-[13.5px] text-ink">{fmtDate(eq.installed_at)}</div>
+                    </div>
+                    <div className="col-span-12 md:col-span-2">
+                      <div className="label">Node</div>
+                      <div className="mt-2 font-mono text-[12.5px] text-ink">{eq.subsystem_node_id}</div>
+                    </div>
                   </div>
-                  <div className="mt-1 text-[15px] text-ink">
-                    {eq.model.manufacturer} {eq.model.model_number}
-                  </div>
-                </div>
-                <div className="text-[12.5px] text-muted">
-                  Serial <span className="font-mono text-ink/80">{eq.serial_number}</span>
-                </div>
-                <div className="text-[12.5px] text-muted">
-                  Installed <span className="text-ink/80">{fmtDate(eq.installed_at)}</span>
-                </div>
-                <div className="text-[12.5px] text-muted">
-                  Node <span className="font-mono text-ink/80">{eq.subsystem_node_id}</span>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-      )}
+            </div>
+          )}
+        </div>
 
-      <section className="rounded-xl border hairline bg-paper p-6">
-        <div className="font-mono text-[10.5px] tracking-wider uppercase text-teal-deep">Roadmap</div>
-        <h4 className="mt-2 text-[17px] tracking-tight text-ink">
-          What will attach to this Passport when channels go live
-        </h4>
-        <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <RoadmapItem
-            title="Engine telemetry, signed at source"
-            body="RPM, fuel flow, coolant, load, total hours from the J1939 bus through the CANedge3 gateway."
-          />
-          <RoadmapItem
-            title="Fuel burn and range"
-            body="Per leg fuel burn, season cumulative, range projections based on the active route."
-          />
-          <RoadmapItem
-            title="Fault codes"
-            body="Active and historical DTCs, OEM resolved fault names, captured with engine hours at occurrence."
-          />
-          <RoadmapItem
-            title="House battery cycles"
-            body="State of charge, depth of discharge cycles, charge sources, time at float, on the Mastervolt bank."
-          />
-          <RoadmapItem
-            title="Voyage record"
-            body="Position, speed, distance run, attached as a signed voyage event on this Passport."
-          />
-          <RoadmapItem
-            title="Owner controlled visibility"
-            body="The owner authorizes who sees live channels and at what resolution, per buyer or insurer."
-          />
-        </ul>
-        <p className="mt-6 pt-4 border-t hairline text-[12.5px] text-muted leading-relaxed">
-          When asked by an insurer, this is the honest answer, the hardware is in place, the data
-          contract is defined, and the live channel will attach the moment it activates on this
-          hull.
-        </p>
-      </section>
+        <div className="col-span-12 lg:col-span-5">
+          <Subhead numeral="iv.b" label="What will attach when live" />
+          <ol className="space-y-5">
+            <Roadmap
+              n="01"
+              title="Engine telemetry, signed at source"
+              body="RPM, fuel flow, coolant, load, total hours from the J1939 bus through the CANedge3 gateway."
+            />
+            <Roadmap
+              n="02"
+              title="Fuel burn and range"
+              body="Per leg fuel burn, season cumulative, range projections based on the active route."
+            />
+            <Roadmap
+              n="03"
+              title="Fault codes"
+              body="Active and historical DTCs, OEM resolved fault names, captured with engine hours at occurrence."
+            />
+            <Roadmap
+              n="04"
+              title="House battery cycles"
+              body="State of charge, depth of discharge cycles, charge sources, time at float, on the Mastervolt bank."
+            />
+            <Roadmap
+              n="05"
+              title="Voyage record"
+              body="Position, speed, distance run, attached as a signed voyage event on this Passport."
+            />
+            <Roadmap
+              n="06"
+              title="Owner controlled visibility"
+              body="The owner authorizes who sees live channels and at what resolution, per buyer or insurer."
+            />
+          </ol>
+          <p className="mt-8 pt-5 border-t text-[12.5px] text-muted leading-[1.6] max-w-md" style={{ borderColor: "var(--brand-line)" }}>
+            When asked by an insurer, this is the honest answer, the hardware is in place, the
+            data contract is defined, the live channel will attach the moment it activates on this
+            hull.
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
 
-function RoadmapItem({ title, body }: { title: string; body: string }) {
+function Roadmap({ n, title, body }: { n: string; title: string; body: string }) {
   return (
-    <li className="rounded-lg border hairline p-4 bg-canvas">
-      <div className="text-[14.5px] tracking-tight text-ink">{title}</div>
-      <p className="mt-1.5 text-[13px] leading-[1.55] text-ink/70">{body}</p>
+    <li className="grid grid-cols-[36px_1fr] gap-x-3 items-baseline border-b pb-4" style={{ borderColor: "var(--brand-line)" }}>
+      <span className="font-mono text-[10.5px] tracking-wider text-muted">{n}</span>
+      <div>
+        <div className="text-[15px] tracking-tight text-ink">{title}</div>
+        <p className="mt-2 text-[13px] leading-[1.55] text-ink/70">{body}</p>
+      </div>
     </li>
   );
 }

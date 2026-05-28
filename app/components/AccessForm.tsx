@@ -42,16 +42,17 @@ export function AccessForm() {
 
   if (status === "success") {
     return (
-      <div className="rounded-xl bg-paper border hairline p-8">
-        <div className="font-mono text-[11px] tracking-wider uppercase text-teal">
-          Request received
-        </div>
-        <h3 className="mt-3 text-xl tracking-tight">
+      <div className="border-t border-b py-10" style={{ borderColor: "var(--brand-line-strong)" }}>
+        <div className="label">Request received</div>
+        <div className="mt-3 font-serif-italic text-[28px] leading-tight text-ink">
           Thank you. We will be in touch within one business day.
-        </h3>
-        <p className="mt-3 text-muted text-[15px] leading-relaxed">
-          In the meantime, you can{" "}
-          <a href="/passport/meridian" className="underline decoration-teal underline-offset-4">
+        </div>
+        <p className="mt-4 text-[15px] text-ink/70 max-w-md">
+          In the meantime,{" "}
+          <a
+            href="/passport/meridian"
+            className="border-b border-ink/60 hover:border-ink"
+          >
             view a live Passport
           </a>{" "}
           to see what a verified vessel record looks like.
@@ -61,32 +62,18 @@ export function AccessForm() {
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="rounded-xl bg-paper border hairline p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-4"
-    >
-      <Field label="Name">
-        <input
-          required
-          name="name"
-          type="text"
-          autoComplete="name"
-          className="input"
-          placeholder="Jane Mariner"
-        />
-      </Field>
-      <Field label="Email">
-        <input
-          required
-          name="email"
-          type="email"
-          autoComplete="email"
-          className="input"
-          placeholder="jane@example.com"
-        />
-      </Field>
-      <Field label="Role" full>
-        <div className="flex flex-wrap gap-2">
+    <form onSubmit={onSubmit} className="space-y-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
+        <Field label="Name">
+          <input required name="name" type="text" autoComplete="name" className="uinput" placeholder="Jane Mariner" />
+        </Field>
+        <Field label="Email">
+          <input required name="email" type="email" autoComplete="email" className="uinput" placeholder="jane@example.com" />
+        </Field>
+      </div>
+
+      <Field label="Role">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
           {(["Broker", "Buyer", "Insurer", "Builder", "Other"] as Role[]).map((role, idx) => (
             <label key={role} className="inline-flex items-center gap-2 cursor-pointer">
               <input
@@ -96,72 +83,51 @@ export function AccessForm() {
                 defaultChecked={idx === 0}
                 className="peer sr-only"
               />
-              <span className="px-3 h-8 inline-flex items-center rounded-full border hairline text-[13px] text-ink/80 peer-checked:bg-ink peer-checked:text-canvas peer-checked:border-ink transition-colors">
-                {role}
-              </span>
+              <span className="h-4 w-4 inline-block rounded-full border border-ink/40 peer-checked:bg-ink peer-checked:border-ink transition-colors" />
+              <span className="text-[14px] text-ink/85 peer-checked:text-ink">{role}</span>
             </label>
           ))}
         </div>
       </Field>
-      <Field label="Message, optional" full>
+
+      <Field label="Message, optional">
         <textarea
           name="message"
           rows={3}
-          className="input resize-none"
+          className="uinput"
           placeholder="A line on your use case helps us route the conversation."
         />
       </Field>
-      <div className="sm:col-span-2 flex items-center justify-between gap-4 mt-2">
-        <p className="text-[12px] text-muted">
+
+      <div className="flex items-center justify-between gap-4 pt-2">
+        <p className="text-[12px] text-muted max-w-xs">
           We will reply from a verified VesselIQ address.
         </p>
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="inline-flex items-center h-10 px-5 rounded-full bg-ink text-canvas text-[14px] hover:bg-teal-deep transition-colors disabled:opacity-60"
+          className="inline-flex items-center gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep transition-colors disabled:opacity-60"
         >
           {status === "submitting" ? "Sending." : "Request access"}
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
       </div>
+
       {status === "error" && (
-        <div className="sm:col-span-2 text-[13px] text-red-700 bg-red-50 rounded-md px-3 py-2 border border-red-200">
+        <div className="text-[13px] text-red-800 border-t border-red-300 pt-3">
           {errorMsg}
         </div>
       )}
-      <style>{`
-        .input {
-          width: 100%;
-          padding: 0.6rem 0.75rem;
-          border-radius: 8px;
-          background: var(--brand-canvas);
-          border: 1px solid var(--brand-line);
-          font-size: 14px;
-          color: var(--brand-ink);
-          outline: none;
-          transition: border-color 0.15s ease, background 0.15s ease;
-        }
-        .input::placeholder { color: rgba(12,17,23,0.4); }
-        .input:focus {
-          border-color: var(--brand-teal);
-          background: var(--brand-paper);
-        }
-      `}</style>
     </form>
   );
 }
 
-function Field({
-  label,
-  children,
-  full,
-}: {
-  label: string;
-  children: React.ReactNode;
-  full?: boolean;
-}) {
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className={`block ${full ? "sm:col-span-2" : ""}`}>
-      <span className="font-mono text-[10.5px] tracking-wider uppercase text-muted">{label}</span>
+    <label className="block">
+      <span className="label">{label}</span>
       <div className="mt-2">{children}</div>
     </label>
   );
