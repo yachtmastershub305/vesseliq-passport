@@ -23,6 +23,8 @@ import {
   StickyAcquireBar,
 } from "./components/AcquirePanel";
 import { TransferBand } from "./components/TransferBand";
+import { ArchivedBand } from "./components/ArchivedBand";
+import { RevokedBand } from "./components/RevokedBand";
 import { DemoSwitcher } from "./components/DemoSwitcher";
 
 export function generateStaticParams() {
@@ -40,9 +42,11 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   // Real Passports default to preview (the buyer's first encounter).
   // Sample Passports default to full, the locked treatment makes no sense
   // when there is nothing to unlock. The DemoSwitcher still lets the
-  // founder flip to preview or transfer to show brokers what those look like.
+  // founder flip to preview, transfer, archived, or revoked to show what
+  // those look like.
   const view = parseViewState(sp.view, isSample ? "full" : "preview");
   const showAcquireFlow = view === "preview" && !isSample;
+  const isRevoked = view === "revoked";
 
   const lockedTabs: TabKey[] =
     view === "preview" ? ["equipment", "maintenance", "telemetry", "provenance"] : [];
@@ -98,9 +102,13 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
           />
         )}
 
+        {view === "archived" && <ArchivedBand slug={slug} isSample={isSample} />}
+
+        {isRevoked && <RevokedBand slug={slug} isSample={isSample} />}
+
         {showAcquireFlow && <AcquirePanel />}
 
-        <PassportTabs panels={panels} lockedTabs={lockedTabs} />
+        {!isRevoked && <PassportTabs panels={panels} lockedTabs={lockedTabs} />}
 
         <aside
           className={`mt-10 ${showAcquireFlow ? "mb-24" : "mb-4"} border-t pt-5`}
