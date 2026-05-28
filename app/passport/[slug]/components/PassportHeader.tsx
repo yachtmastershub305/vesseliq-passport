@@ -48,41 +48,6 @@ export function PassportHeader({
         </div>
       </div>
 
-      {heroImage && (
-        <figure
-          className="hero-photo-band relative w-full overflow-hidden border-b"
-          style={{
-            height: "280px",
-            borderColor: "var(--brand-line-strong)",
-          }}
-        >
-          <Image
-            src={heroImage}
-            alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
-            fill
-            priority
-            sizes="(min-width: 1120px) 1120px, 100vw"
-            style={{
-              objectFit: "cover",
-              objectPosition: "center 42%",
-            }}
-          />
-          {heroCredit && (
-            <figcaption
-              className="absolute right-3 bottom-3 z-10 label-ink px-2.5 py-1"
-              style={{
-                backgroundColor: "rgba(250, 246, 236, 0.92)",
-                border: "1px solid var(--brand-line-strong)",
-                backdropFilter: "blur(2px)",
-                WebkitBackdropFilter: "blur(2px)",
-              }}
-            >
-              {heroCredit}
-            </figcaption>
-          )}
-        </figure>
-      )}
-
       <div className="pt-10 pb-10">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-start">
           <div className="col-span-12 lg:col-span-8">
@@ -125,6 +90,41 @@ export function PassportHeader({
                 <span className="stamp-chip">Expires {fmtDate(v.doc_expiration_date)}</span>
               )}
             </div>
+
+            {heroImage && (
+              <figure
+                className="hero-photo-contained mt-10 relative w-full overflow-hidden border"
+                style={{
+                  aspectRatio: "16 / 9",
+                  borderColor: "var(--brand-line-strong)",
+                }}
+              >
+                <Image
+                  src={heroImage}
+                  alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
+                  fill
+                  priority
+                  sizes="(min-width: 1120px) 720px, 100vw"
+                  style={{
+                    objectFit: "cover",
+                    objectPosition: "center 42%",
+                  }}
+                />
+                {heroCredit && (
+                  <figcaption
+                    className="absolute right-3 bottom-3 z-10 label-ink px-2.5 py-1"
+                    style={{
+                      backgroundColor: "rgba(250, 246, 236, 0.92)",
+                      border: "1px solid var(--brand-line-strong)",
+                      backdropFilter: "blur(2px)",
+                      WebkitBackdropFilter: "blur(2px)",
+                    }}
+                  >
+                    {heroCredit}
+                  </figcaption>
+                )}
+              </figure>
+            )}
           </div>
 
           <div className="col-span-12 lg:col-span-4">
