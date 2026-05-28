@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import { PRICING } from "@/lib/pricing";
+import type { ViewState } from "@/lib/passport-view";
 
 type GatePhase = "closed" | "request" | "submitted" | "authorized";
 
@@ -25,6 +26,7 @@ type GateCtx = {
   slug: string;
   vesselName: string;
   demoEnabled: boolean;
+  view: ViewState;
 };
 
 const GateContext = createContext<GateCtx | null>(null);
@@ -41,16 +43,18 @@ export function AcquireFlowProvider({
   slug,
   vesselName,
   demoEnabled = false,
+  view,
   children,
 }: {
   slug: string;
   vesselName: string;
   demoEnabled?: boolean;
+  view: ViewState;
   children: ReactNode;
 }) {
   const [phase, setPhase] = useState<GatePhase>("closed");
   return (
-    <GateContext.Provider value={{ phase, setPhase, slug, vesselName, demoEnabled }}>
+    <GateContext.Provider value={{ phase, setPhase, slug, vesselName, demoEnabled, view }}>
       {children}
       {phase !== "closed" && <GateSheet />}
     </GateContext.Provider>
@@ -105,6 +109,68 @@ export function AcquirePanel() {
         </div>
       </div>
     </section>
+  );
+}
+
+// Persistent top banner that shows the 4-step status sequence whenever a
+// transfer flow is active. Active means the gate modal is open (phase in
+// request, submitted, authorized) OR the Passport is in transfer pending
+// view. The banner gives the buyer continuous visibility of where they
+// are in the process, even after they close the modal.
+export function TransferProgressBanner() {
+  const { phase, view } = useGate();
+
+  const inGateFlow = phase !== "closed";
+  const inTransferPending = view === "transfer";
+  if (!inGateFlow && !inTransferPending) return null;
+
+  let currentStep = 0;
+  if (phase === "request") currentStep = 0;
+  else if (phase === "submitted") currentStep = 1;
+  else if (phase === "authorized") currentStep = 2;
+  else if (inTransferPending) currentStep = 3;
+
+  return (
+    <div
+      className="sticky top-0 z-30 backdrop-blur-md border-t border-b no-print"
+      style={{
+        backgroundColor: "rgba(250, 246, 236, 0.94)",
+        borderColor: "var(--brand-line-strong)",
+      }}
+      role="region"
+      aria-label="Transfer progress"
+    >
+      <div className="container-doc py-2.5 flex items-center justify-between gap-4 flex-wrap">
+        <span className="label-ink shrink-0">Transfer in progress</span>
+        <ol className="flex items-center gap-x-1 sm:gap-x-2 gap-y-2 flex-wrap">
+          {STEPS.map((step, i) => {
+            const isDone = i < currentStep;
+            const isCurrent = i === currentStep;
+            const labelClass = isDone
+              ? "text-ink/70"
+              : isCurrent
+              ? "text-ink"
+              : "text-muted-2";
+            return (
+              <li key={step.key} className="flex items-center gap-1.5">
+                <StepDot done={isDone} current={isCurrent} />
+                <span className={`text-[12px] sm:text-[12.5px] ${labelClass}`}>
+                  {step.label}
+                </span>
+                {i < STEPS.length - 1 && (
+                  <span
+                    aria-hidden="true"
+                    className="text-muted-2 px-1 sm:px-1.5 text-[10px]"
+                  >
+                    →
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
   );
 }
 

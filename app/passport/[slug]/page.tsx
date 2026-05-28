@@ -21,6 +21,7 @@ import {
   AcquireFlowProvider,
   AcquirePanel,
   StickyAcquireBar,
+  TransferProgressBanner,
 } from "./components/AcquirePanel";
 import { TransferBand } from "./components/TransferBand";
 import { ArchivedBand } from "./components/ArchivedBand";
@@ -86,8 +87,14 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   };
 
   return (
-    <AcquireFlowProvider slug={slug} vesselName={data.vessel.name} demoEnabled={demoEnabled}>
+    <AcquireFlowProvider
+      slug={slug}
+      vesselName={data.vessel.name}
+      demoEnabled={demoEnabled}
+      view={view}
+    >
       <SiteNav />
+      <TransferProgressBanner />
       <main className="flex-1 container-doc">
         <div className="pt-8 pb-2 no-print">
           <Link
