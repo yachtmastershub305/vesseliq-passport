@@ -249,7 +249,7 @@ function SnapshotAnchor({ data }: { data: Passport }) {
 
   return (
     <div
-      className="mt-5 max-w-[260px] lg:text-right border-t pt-4"
+      className="mt-5 w-full max-w-[280px] lg:text-right border-t pt-4"
       style={{ borderColor: "var(--brand-line-strong)" }}
     >
       <div className="label">Snapshot anchor</div>

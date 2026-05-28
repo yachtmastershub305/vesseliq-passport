@@ -52,7 +52,7 @@ export function VerificationBlock({
 
   return (
     <div
-      className="mt-6 lg:mt-7 w-full max-w-[300px] border-t pt-4"
+      className="mt-5 w-full max-w-[280px] lg:text-right border-t pt-4"
       style={{ borderColor: "var(--brand-line-strong)" }}
     >
       <div className="label">Cryptographic signature</div>
