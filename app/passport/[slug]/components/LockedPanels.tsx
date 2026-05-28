@@ -2,7 +2,7 @@ import type { Passport } from "@/lib/passport-types";
 import { fmtDate, fmtNumber } from "@/lib/format";
 import { LockedSection, type TeaserStat } from "./LockedSection";
 
-export function LockedEquipment({ data }: { data: Passport }) {
+export function LockedEquipment({ data, isSample = false }: { data: Passport; isSample?: boolean }) {
   const allEquipment = data.systems.flatMap((s) => s.equipment);
   const installs = allEquipment
     .map((e) => e.installed_at)
@@ -21,11 +21,12 @@ export function LockedEquipment({ data }: { data: Passport }) {
       title="What is fitted, signed at install."
       blurb="Propulsion, electrical, and navigation equipment captured at commissioning. Each instance carries its OEM signature, serial number, and install record. The detail opens to the new holder on transfer."
       stats={stats}
+      isSample={isSample}
     />
   );
 }
 
-export function LockedMaintenance({ data }: { data: Passport }) {
+export function LockedMaintenance({ data, isSample = false }: { data: Passport; isSample?: boolean }) {
   const events = [...data.service_events].sort(
     (a, b) => new Date(b.event_date).getTime() - new Date(a.event_date).getTime()
   );
@@ -45,11 +46,12 @@ export function LockedMaintenance({ data }: { data: Passport }) {
       title="The service ledger, signed and dated."
       blurb="A tamper evident timeline of every maintenance event, submitted by verified service partners with work order references and itemized parts. The full ledger opens to the new holder on transfer."
       stats={stats}
+      isSample={isSample}
     />
   );
 }
 
-export function LockedTelemetry({ data }: { data: Passport }) {
+export function LockedTelemetry({ data, isSample = false }: { data: Passport; isSample?: boolean }) {
   const loggers = data.systems
     .flatMap((s) => s.equipment)
     .filter(
@@ -72,11 +74,12 @@ export function LockedTelemetry({ data }: { data: Passport }) {
       title="Live channels, rolling out."
       blurb="Engine, fuel, fault codes, and battery cycles will attach to this Passport when the live channel activates on this hull. The hardware roster and the channel roadmap open to the new holder on transfer."
       stats={stats}
+      isSample={isSample}
     />
   );
 }
 
-export function LockedProvenance({ data }: { data: Passport }) {
+export function LockedProvenance({ data, isSample = false }: { data: Passport; isSample?: boolean }) {
   const records = data.provenance;
   const byType = records.reduce<Record<string, number>>((acc, r) => {
     acc[r.source_type] = (acc[r.source_type] ?? 0) + 1;
@@ -96,6 +99,7 @@ export function LockedProvenance({ data }: { data: Passport }) {
       title="Where every fact came from."
       blurb="Every fact on this Passport traces to a source, a license, and a capture timestamp. The full citation index opens to the new holder on transfer."
       stats={stats}
+      isSample={isSample}
     />
   );
 }

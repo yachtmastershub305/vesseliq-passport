@@ -37,19 +37,38 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   const data = getPassportBySlug(slug);
   if (!data) notFound();
 
+  const isSample = data._meta.is_sample === true;
+  const showAcquireFlow = view === "preview" && !isSample;
+
   const lockedTabs: TabKey[] =
     view === "preview" ? ["equipment", "maintenance", "telemetry", "provenance"] : [];
 
   const panels: Record<TabKey, React.ReactNode> = {
     identity: <IdentityTab data={data} />,
     equipment:
-      view === "preview" ? <LockedEquipment data={data} /> : <EquipmentTab data={data} />,
+      view === "preview" ? (
+        <LockedEquipment data={data} isSample={isSample} />
+      ) : (
+        <EquipmentTab data={data} />
+      ),
     maintenance:
-      view === "preview" ? <LockedMaintenance data={data} /> : <MaintenanceTab data={data} />,
+      view === "preview" ? (
+        <LockedMaintenance data={data} isSample={isSample} />
+      ) : (
+        <MaintenanceTab data={data} />
+      ),
     telemetry:
-      view === "preview" ? <LockedTelemetry data={data} /> : <TelemetryTab data={data} />,
+      view === "preview" ? (
+        <LockedTelemetry data={data} isSample={isSample} />
+      ) : (
+        <TelemetryTab data={data} />
+      ),
     provenance:
-      view === "preview" ? <LockedProvenance data={data} /> : <ProvenanceTab data={data} />,
+      view === "preview" ? (
+        <LockedProvenance data={data} isSample={isSample} />
+      ) : (
+        <ProvenanceTab data={data} />
+      ),
   };
 
   return (
@@ -65,18 +84,22 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
           </Link>
         </div>
 
-        <PassportHeader data={data} view={view} />
+        <PassportHeader data={data} view={view} isSample={isSample} />
 
         {view === "transfer" && (
-          <TransferBand slug={slug} fromParty="Recorded holder" toParty="Acquiring party" />
+          <TransferBand
+            slug={slug}
+            fromParty={isSample ? "Illustrative seller" : "Recorded holder"}
+            toParty={isSample ? "Illustrative buyer" : "Acquiring party"}
+          />
         )}
 
-        {view === "preview" && <AcquirePanel />}
+        {showAcquireFlow && <AcquirePanel />}
 
         <PassportTabs panels={panels} lockedTabs={lockedTabs} />
 
         <aside
-          className={`mt-10 ${view === "preview" ? "mb-24" : "mb-4"} border-t pt-5`}
+          className={`mt-10 ${showAcquireFlow ? "mb-24" : "mb-4"} border-t pt-5`}
           style={{ borderColor: "var(--brand-line-strong)" }}
         >
           <div className="grid grid-cols-12 gap-x-6 gap-y-3 items-baseline">
@@ -86,13 +109,20 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
             <p className="col-span-12 md:col-span-10 text-[12.5px] text-muted leading-[1.7] max-w-3xl">
               Demonstration record. All data is illustrative. Field names and types match the
               VesselIQ production schema, so a real query drops into this view without remapping.
+              {isSample && (
+                <>
+                  {" "}
+                  This Passport is a sample for product demonstration. The unlock and transfer
+                  flow appears only on Passports for listed vessels.
+                </>
+              )}
             </p>
           </div>
         </aside>
       </main>
       <SiteFooter />
-      <DemoSwitcher slug={slug} active={view} liftedForStickyBar={view === "preview"} />
-      {view === "preview" && <StickyAcquireBar />}
+      <DemoSwitcher slug={slug} active={view} liftedForStickyBar={showAcquireFlow} />
+      {showAcquireFlow && <StickyAcquireBar />}
     </AcquireFlowProvider>
   );
 }

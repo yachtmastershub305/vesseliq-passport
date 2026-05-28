@@ -10,6 +10,7 @@ export function LockedSection({
   blurb,
   stats,
   preview,
+  isSample = false,
 }: {
   numeral: string;
   eyebrow: string;
@@ -17,6 +18,7 @@ export function LockedSection({
   blurb: string;
   stats: TeaserStat[];
   preview?: ReactNode;
+  isSample?: boolean;
 }) {
   return (
     <div>
@@ -76,21 +78,43 @@ export function LockedSection({
                 <LockGlyph />
                 <span className="label-ink">Locked</span>
               </div>
-              <h4 className="mt-4 font-serif-italic text-[24px] leading-[1.2] text-ink max-w-md">
-                Unlock the full Passport to view this section.
-              </h4>
-              <p className="mt-3 text-[14px] leading-[1.6] text-ink/75 max-w-md">
-                The full record opens to the buyer on transfer. Pricing and the transfer flow are
-                shown above.
-              </p>
-              <div className="mt-5">
-                <a href="#acquire" className="cta-secondary">
-                  See the acquire offer
-                  <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
-                    <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </a>
-              </div>
+              {isSample ? (
+                <>
+                  <h4 className="mt-4 font-serif-italic text-[24px] leading-[1.2] text-ink max-w-md">
+                    This is what a buyer sees on a real Passport.
+                  </h4>
+                  <p className="mt-3 text-[14px] leading-[1.6] text-ink/75 max-w-md">
+                    On a Passport for a listed vessel, an Unlock and transfer CTA sits here, gated
+                    by broker authorization. This is the sample, so the affordance is illustrative.
+                  </p>
+                  <div className="mt-5">
+                    <a href="/" className="cta-secondary">
+                      Look up a real HIN
+                      <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                        <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h4 className="mt-4 font-serif-italic text-[24px] leading-[1.2] text-ink max-w-md">
+                    Unlock the full Passport to view this section.
+                  </h4>
+                  <p className="mt-3 text-[14px] leading-[1.6] text-ink/75 max-w-md">
+                    The full record opens to the buyer on transfer. Pricing and the transfer flow
+                    are shown above.
+                  </p>
+                  <div className="mt-5">
+                    <a href="#acquire" className="cta-secondary">
+                      See the acquire offer
+                      <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                        <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </a>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

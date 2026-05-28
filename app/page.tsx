@@ -401,8 +401,8 @@ function AcquireCallout() {
             </h2>
             <p className="mt-5 text-[14.5px] leading-[1.6] text-ink/75 max-w-xl">
               When the seller already has a certified Passport, the buyer pays to unlock the full
-              record and receive ownership transfer. The pricing and the flow live inside each
-              Passport preview.
+              record and receive ownership transfer. The pricing and the flow live inside the
+              Passport preview for the listed vessel, look up a HIN above to begin.
             </p>
           </div>
           <div className="col-span-12 lg:col-span-4 lg:text-right">
@@ -412,8 +412,8 @@ function AcquireCallout() {
               {PRICING.transfer.suffix}
             </div>
             <div className="mt-5 flex lg:justify-end">
-              <Link href="/passport/meridian" className="cta-secondary">
-                See a live Passport
+              <Link href="/passport/meridian?view=preview" className="cta-secondary">
+                Open the sample Passport
                 <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                   <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

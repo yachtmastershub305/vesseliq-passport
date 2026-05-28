@@ -3,7 +3,8 @@
     "note": "Fictional but realistic demo data. Field names and types match the VesselIQ production schema exactly (vessel, system, equipment_instance, equipment_model, service_event, service_line_item, vessel_provenance). When connected to the real read only database, a query returning this shape drops in directly. This is a demonstration record, all data is illustrative.",
     "schema_version": "2026-05-25",
     "passport_id": "VIQ-PASS-2026-00142",
-    "issued": "2026-05-28"
+    "issued": "2026-05-28",
+    "is_sample": true
   },
   "vessel": {
     "vessel_id": "a3f7c128-0000-4000-8000-000000000142",
