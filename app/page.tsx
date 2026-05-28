@@ -4,6 +4,7 @@ import { SiteFooter } from "./components/SiteFooter";
 import { AccessForm } from "./components/AccessForm";
 import { SealStamp } from "./components/SealStamp";
 import { CornerMark } from "./components/CornerMark";
+import { PRICING } from "@/lib/pricing";
 
 export default function Home() {
   return (
@@ -15,7 +16,8 @@ export default function Home() {
         <Problem />
         <WhatItIs />
         <HowItWorks />
-        <CTA />
+        <CreateOffer />
+        <AcquireCallout />
       </main>
       <SiteFooter />
     </>
@@ -83,7 +85,7 @@ function Hero() {
                     href="#access"
                     className="inline-flex items-baseline text-[16px] text-ink/70 border-b border-transparent hover:border-ink/70 hover:text-ink transition-colors pb-0.5"
                   >
-                    Request access
+                    Have your Passport created
                   </Link>
                 </div>
               </div>
@@ -283,31 +285,141 @@ function HowItWorks() {
   );
 }
 
-function CTA() {
+function CreateOffer() {
+  const benefits = [
+    {
+      n: "01",
+      title: "Documents organized, day one",
+      body: "We scan and digitize your paper records, registration, insurance, survey, manuals, service receipts, and assemble them into the Passport.",
+    },
+    {
+      n: "02",
+      title: "Identity verified against sources",
+      body: "Vessel identity, builder, hull number, engines, and dimensions are cross checked against USCG documentation, manufacturer codes, and partner registries.",
+    },
+    {
+      n: "03",
+      title: "Equipment certified at install",
+      body: "Engines, batteries, navigation, telemetry. Each instance signed by the OEM or commissioning engineer, serial number on the record.",
+    },
+    {
+      n: "04",
+      title: "Sale ready, faster and more credible",
+      body: "A buyer or insurer can read the verified record without asking. The Passport closes the trust gap before the table.",
+    },
+  ];
+
   return (
-    <section id="access" className="border-t" style={{ borderColor: "var(--brand-line-strong)" }}>
+    <section
+      id="access"
+      className="border-t"
+      style={{ borderColor: "var(--brand-line-strong)" }}
+    >
       <div className="container-doc py-24 sm:py-28">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10">
           <div className="col-span-12 md:col-span-1 hidden md:block">
             <div className="font-serif-italic text-[14px] text-muted">§ V</div>
           </div>
           <div className="col-span-12 md:col-span-11">
-            <div className="grid grid-cols-12 gap-x-10 gap-y-12">
-              <div className="col-span-12 lg:col-span-5">
-                <div className="label">Request access</div>
-                <h2 className="mt-5 display text-[40px] sm:text-[52px] text-ink leading-[1.02]">
-                  Bring the Passport{" "}
-                  <span className="display-italic">to your next deal.</span>
+            <div className="grid grid-cols-12 gap-x-10 gap-y-10 items-baseline">
+              <div className="col-span-12 lg:col-span-8">
+                <div className="label">Offer, for sellers and brokers</div>
+                <h2 className="mt-5 display text-[40px] sm:text-[58px] text-ink leading-[1.02] max-w-3xl">
+                  Have your Passport{" "}
+                  <span className="display-italic">created.</span>
                 </h2>
-                <p className="mt-7 text-[15.5px] leading-[1.6] text-ink/75 max-w-md">
-                  Tell us the role you play in a transaction and we will route the conversation.
-                  Brokers and insurers get prioritized for the design partner cohort.
+                <p className="mt-6 text-[16.5px] leading-[1.6] text-ink/80 max-w-xl">
+                  A service we perform, not a self serve signup. We scan your paper records,
+                  verify identity and equipment against independent sources, and certify a
+                  Passport for your vessel. Day one your documents are organized and secured,
+                  every day after your sale runs on a record a buyer can trust.
+                </p>
+              </div>
+              <div className="col-span-12 lg:col-span-4 lg:text-right">
+                <div className="label">Pricing</div>
+                <div className="mt-2 font-serif text-[30px] text-ink">{PRICING.creation.headline}</div>
+                <div className="mt-1 text-[12.5px] text-muted leading-[1.5] max-w-xs lg:ml-auto">
+                  {PRICING.creation.suffix}
+                </div>
+                <div className="mt-5 text-[12.5px] text-muted leading-[1.5] max-w-xs lg:ml-auto">
+                  Plus {PRICING.maintenance.headline.toLowerCase()}, {PRICING.maintenance.suffix}.
+                </div>
+              </div>
+            </div>
+
+            <ol className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10">
+              {benefits.map((b) => (
+                <li key={b.n}>
+                  <div
+                    className="flex items-baseline gap-3 border-b pb-3"
+                    style={{ borderColor: "var(--brand-line-strong)" }}
+                  >
+                    <span className="font-mono text-[10.5px] tracking-wider text-muted">{b.n}</span>
+                    <span className="label-ink">Included</span>
+                  </div>
+                  <h3 className="mt-5 font-serif-italic text-[22px] leading-[1.2] text-ink">{b.title}</h3>
+                  <p className="mt-3 text-[14px] leading-[1.6] text-ink/75">{b.body}</p>
+                </li>
+              ))}
+            </ol>
+
+            <div className="mt-16 grid grid-cols-12 gap-x-10 gap-y-10">
+              <div className="col-span-12 lg:col-span-5">
+                <div className="label">Request a Passport</div>
+                <h3 className="mt-4 display-italic text-[34px] leading-[1.1] text-ink">
+                  Tell us about the vessel.
+                </h3>
+                <p className="mt-5 text-[14.5px] leading-[1.6] text-ink/75 max-w-md">
+                  We will reply within one business day with a scope and a quote. Brokers and
+                  insurers are prioritized for the first cohort.
                 </p>
               </div>
               <div className="col-span-12 lg:col-span-7">
-                <AccessForm />
+                <AccessForm offer="create" submitLabel={PRICING.creation.label} />
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AcquireCallout() {
+  return (
+    <section className="border-t" style={{ borderColor: "var(--brand-line-strong)" }}>
+      <div className="container-doc py-16 sm:py-20">
+        <div className="grid grid-cols-12 gap-x-6 gap-y-6 items-baseline">
+          <div className="col-span-12 lg:col-span-1 hidden lg:block">
+            <div className="font-serif-italic text-[14px] text-muted">§ VI</div>
+          </div>
+          <div className="col-span-12 lg:col-span-7">
+            <div className="label">Offer, for buyers</div>
+            <h2 className="mt-4 display text-[28px] sm:text-[38px] leading-[1.05] text-ink max-w-2xl">
+              Looking at a vessel with a Passport?{" "}
+              <span className="display-italic">Acquire it</span> when you close the deal.
+            </h2>
+            <p className="mt-5 text-[14.5px] leading-[1.6] text-ink/75 max-w-xl">
+              When the seller already has a certified Passport, the buyer pays to unlock the full
+              record and receive ownership transfer. The pricing and the flow live inside each
+              Passport preview.
+            </p>
+          </div>
+          <div className="col-span-12 lg:col-span-4 lg:text-right">
+            <div className="label">Pricing</div>
+            <div className="mt-2 font-serif text-[24px] text-ink">{PRICING.transfer.headline}</div>
+            <div className="mt-1 text-[12px] text-muted leading-[1.5] max-w-xs lg:ml-auto">
+              {PRICING.transfer.suffix}
+            </div>
+            <Link
+              href="/passport/meridian"
+              className="mt-5 inline-flex items-baseline gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep pb-0.5 transition-colors"
+            >
+              See a live Passport
+              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
           </div>
         </div>
       </div>

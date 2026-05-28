@@ -15,8 +15,8 @@ export function SiteNav() {
           >
             Live record
           </Link>
-          <Link href="#access" className="text-ink/70 hover:text-ink transition-colors">
-            Access
+          <Link href="/#access" className="text-ink/70 hover:text-ink transition-colors">
+            Create a Passport
           </Link>
           <span className="hidden sm:inline label">VIQ / 2026</span>
         </nav>

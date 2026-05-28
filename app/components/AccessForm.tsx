@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import type { OfferKey } from "@/lib/pricing";
 
 type Role = "Broker" | "Buyer" | "Insurer" | "Builder" | "Other";
 
-export function AccessForm() {
+export function AccessForm({
+  offer = "create",
+  submitLabel = "Request a Passport",
+}: {
+  offer?: OfferKey;
+  submitLabel?: string;
+}) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
 
@@ -16,6 +23,7 @@ export function AccessForm() {
       name: String(fd.get("name") ?? "").trim(),
       email: String(fd.get("email") ?? "").trim(),
       role: String(fd.get("role") ?? "Other") as Role,
+      offer: String(fd.get("offer") ?? offer) as OfferKey,
       message: String(fd.get("message") ?? "").trim(),
     };
 
@@ -63,6 +71,8 @@ export function AccessForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-7">
+      <input type="hidden" name="offer" value={offer} />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
         <Field label="Name">
           <input required name="name" type="text" autoComplete="name" className="uinput" placeholder="Jane Mariner" />
@@ -90,12 +100,22 @@ export function AccessForm() {
         </div>
       </Field>
 
-      <Field label="Message, optional">
+      <Field
+        label={
+          offer === "create"
+            ? "Tell us about the vessel, optional"
+            : "Message, optional"
+        }
+      >
         <textarea
           name="message"
           rows={3}
           className="uinput"
-          placeholder="A line on your use case helps us route the conversation."
+          placeholder={
+            offer === "create"
+              ? "Builder, make and model, year, where she lives. Helps us route this."
+              : "Anything you want us to know."
+          }
         />
       </Field>
 
@@ -108,7 +128,7 @@ export function AccessForm() {
           disabled={status === "submitting"}
           className="inline-flex items-center gap-3 text-[15px] text-ink border-b border-ink hover:border-teal hover:text-teal-deep transition-colors disabled:opacity-60"
         >
-          {status === "submitting" ? "Sending." : "Request access"}
+          {status === "submitting" ? "Sending." : submitLabel}
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
             <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.25" fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
