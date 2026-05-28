@@ -1,0 +1,261 @@
+{
+  "_meta": {
+    "note": "Fictional but realistic demo data. Field names and types match the VesselIQ production schema exactly (vessel, system, equipment_instance, equipment_model, service_event, service_line_item, vessel_provenance). When connected to the real read only database, a query returning this shape drops in directly. This is a demonstration record, all data is illustrative.",
+    "schema_version": "2026-05-25",
+    "passport_id": "VIQ-PASS-2026-00142",
+    "issued": "2026-05-28"
+  },
+  "vessel": {
+    "vessel_id": "a3f7c128-0000-4000-8000-000000000142",
+    "catalog_id": "VIQ-00142",
+    "hin": "FCM44021J526",
+    "imo_number": null,
+    "mmsi": "338291744",
+    "official_number_us": "1298447",
+    "name": "Meridian",
+    "flag_state": "United States",
+    "builder": "Focus Motor Yachts",
+    "make": "Focus",
+    "model": "Power 44",
+    "model_year": 2026,
+    "loa_m": 13.41,
+    "beam_m": 4.27,
+    "draft_m": 1.12,
+    "depth_m": 2.30,
+    "hull_material": "GRP, vacuum infused",
+    "vessel_type": "powerboat",
+    "classification_society": "Lloyds Register",
+    "verification_status": "verified",
+    "confidence_pct": 94.00,
+    "service_status": "in_service",
+    "service_status_detail": "Active, Mediterranean cruising",
+    "documented": "yes",
+    "doc_status": "active",
+    "doc_type": "Coastwise, Recreation",
+    "doc_issued_date": "2026-03-01",
+    "doc_expiration_date": "2027-02-28",
+    "manufacturer_mic": "FCM",
+    "manufacturer_id": "FCM",
+    "created_at": "2026-02-22T10:14:00Z",
+    "updated_at": "2026-05-12T16:48:00Z",
+    "attributes": {
+      "hull_color": "Alpine White",
+      "engine_config": "twin outboard",
+      "home_port": "Palma de Mallorca"
+    }
+  },
+  "manufacturer": {
+    "mic": "FCM",
+    "company_name": "Focus Motor Yachts BV",
+    "display_name": "Focus Motor Yachts",
+    "city": "Wanssum",
+    "state": null,
+    "country": "NL",
+    "mic_status": "active"
+  },
+  "systems": [
+    {
+      "system_id": "sys-0001",
+      "system_type": "PROPULSION",
+      "name": "Twin outboard propulsion",
+      "attributes": { "config": "twin", "shaft": "outboard" },
+      "equipment": [
+        {
+          "equipment_instance_id": "eqi-0001",
+          "serial_number": "2B091447",
+          "installed_at": "2026-02-14",
+          "removed_at": null,
+          "subsystem_node_id": "engine.port",
+          "attributes": { "position": "port", "current_hours": 184.0, "condition": "good" },
+          "model": {
+            "manufacturer": "Mercury Marine",
+            "model_number": "Verado 600",
+            "equipment_type": "outboard_engine",
+            "specs": { "hp": 600, "cylinders": 12, "displacement_l": 7.6, "fuel_type": "gasoline", "rpm_max": 6400 }
+          }
+        },
+        {
+          "equipment_instance_id": "eqi-0002",
+          "serial_number": "2B091448",
+          "installed_at": "2026-02-14",
+          "removed_at": null,
+          "subsystem_node_id": "engine.starboard",
+          "attributes": { "position": "starboard", "current_hours": 184.0, "condition": "good" },
+          "model": {
+            "manufacturer": "Mercury Marine",
+            "model_number": "Verado 600",
+            "equipment_type": "outboard_engine",
+            "specs": { "hp": 600, "cylinders": 12, "displacement_l": 7.6, "fuel_type": "gasoline", "rpm_max": 6400 }
+          }
+        }
+      ]
+    },
+    {
+      "system_id": "sys-0002",
+      "system_type": "ELECTRICAL",
+      "name": "Lithium house bank and distribution",
+      "attributes": {},
+      "equipment": [
+        {
+          "equipment_instance_id": "eqi-0003",
+          "serial_number": "MLI-5K-88213",
+          "installed_at": "2026-01-30",
+          "removed_at": null,
+          "subsystem_node_id": "battery.house.1",
+          "attributes": { "capacity_kwh": 5.1, "cycles": 89, "condition": "good" },
+          "model": {
+            "manufacturer": "Mastervolt",
+            "model_number": "MLI Ultra 5000",
+            "equipment_type": "lithium_battery",
+            "specs": { "voltage": 12, "capacity_ah": 400, "chemistry": "LiFePO4" }
+          }
+        },
+        {
+          "equipment_instance_id": "eqi-0004",
+          "serial_number": "QT-48-5000-2231",
+          "installed_at": "2026-02-02",
+          "removed_at": null,
+          "subsystem_node_id": "inverter.1",
+          "attributes": { "condition": "good" },
+          "model": {
+            "manufacturer": "Victron Energy",
+            "model_number": "Quattro 48/5000",
+            "equipment_type": "inverter_charger",
+            "specs": { "voltage": 48, "power_w": 5000 }
+          }
+        }
+      ]
+    },
+    {
+      "system_id": "sys-0003",
+      "system_type": "NAVIGATION",
+      "name": "Telemetry and navigation gateway",
+      "attributes": {},
+      "equipment": [
+        {
+          "equipment_instance_id": "eqi-0005",
+          "serial_number": "CE3-77412",
+          "installed_at": "2026-02-22",
+          "removed_at": null,
+          "subsystem_node_id": "gateway.telemetry",
+          "attributes": { "condition": "new", "role": "telemetry logger" },
+          "model": {
+            "manufacturer": "CSS Electronics",
+            "model_number": "CANedge3",
+            "equipment_type": "telemetry_logger",
+            "specs": { "channels": 2, "storage": "SD", "connectivity": "LTE" }
+          }
+        }
+      ]
+    }
+  ],
+  "service_events": [
+    {
+      "service_event_id": "se-0001",
+      "event_date": "2026-05-12",
+      "event_type": "Scheduled service, 100 hour",
+      "meter_reading_hrs": 184.0,
+      "work_order_ref": "WO-2026-0512-PM",
+      "performed_by": "Verified Mercury service partner, Palma de Mallorca",
+      "task_code": "MERC-100H",
+      "equipment_instance_id": "eqi-0001",
+      "notes": "Mercury Verado 100 hour service, both engines. Oil, filters, gearcase lube, anodes inspected.",
+      "line_items": [
+        { "part_number": "92-8M0086224", "description": "Mercury 25W50 synthetic oil, 12L", "quantity": 12, "unit_cost": 14.50, "currency_code": "EUR", "total_cost": 174.00 },
+        { "part_number": "35-8M0162830", "description": "Oil filter", "quantity": 2, "unit_cost": 28.00, "currency_code": "EUR", "total_cost": 56.00 },
+        { "part_number": "97-8M0107540", "description": "Anode kit", "quantity": 2, "unit_cost": 41.00, "currency_code": "EUR", "total_cost": 82.00 }
+      ]
+    },
+    {
+      "service_event_id": "se-0002",
+      "event_date": "2026-03-18",
+      "event_type": "Software update",
+      "meter_reading_hrs": 92.0,
+      "work_order_ref": "WO-2026-0318-SW",
+      "performed_by": "VesselIQ remote, over the air",
+      "task_code": "SK-FW-UPDATE",
+      "equipment_instance_id": "eqi-0005",
+      "notes": "Signal K gateway firmware updated, telemetry schema v0.4 to v0.5. No interruption to logging.",
+      "line_items": []
+    },
+    {
+      "service_event_id": "se-0003",
+      "event_date": "2026-02-28",
+      "event_type": "Commissioning and sea trial",
+      "meter_reading_hrs": 4.0,
+      "work_order_ref": "WO-2026-0228-COMM",
+      "performed_by": "Focus Motor Yachts and VesselIQ joint commissioning",
+      "task_code": "COMMISSION",
+      "equipment_instance_id": null,
+      "notes": "Full systems commissioning and sea trial. All telemetry channels verified live. Baseline performance recorded.",
+      "line_items": []
+    }
+  ],
+  "provenance": [
+    {
+      "provenance_id": "prov-0001",
+      "entity": "vessel",
+      "source_name": "uscg_psix",
+      "source_type": "government_registry",
+      "source_uri": "psix.uscg.gov/vessel/1298447",
+      "source_url": "https://psix.uscg.gov",
+      "license": "public_domain",
+      "captured_at": "2026-02-22T10:14:00Z",
+      "captured_by": "crawler.psix.v2",
+      "payload_summary": "USCG documentation record, official number 1298447, doc status active"
+    },
+    {
+      "provenance_id": "prov-0002",
+      "entity": "equipment_instance",
+      "source_name": "oem_commissioning",
+      "source_type": "oem_data",
+      "source_uri": "focus.commissioning/hull-021",
+      "source_url": null,
+      "license": "proprietary",
+      "captured_at": "2026-02-14T09:00:00Z",
+      "captured_by": "focus.commissioning.engineer",
+      "payload_summary": "Mercury Verado 600 serials registered at factory install, both engines"
+    },
+    {
+      "provenance_id": "prov-0003",
+      "entity": "service_event",
+      "source_name": "user_submission",
+      "source_type": "user_submission",
+      "source_uri": null,
+      "source_url": null,
+      "license": "proprietary",
+      "captured_at": "2026-05-12T16:48:00Z",
+      "captured_by": "verified service partner, Palma de Mallorca",
+      "payload_summary": "100 hour service record submitted by verified Mercury partner with work order WO-2026-0512-PM"
+    },
+    {
+      "provenance_id": "prov-0004",
+      "entity": "manufacturers",
+      "source_name": "uscg_mic",
+      "source_type": "government_registry",
+      "source_uri": "uscg.mic/FCM",
+      "source_url": "https://www.dco.uscg.mil",
+      "license": "public_domain",
+      "captured_at": "2026-02-22T03:00:00Z",
+      "captured_by": "crawler.mic_sync.nightly",
+      "payload_summary": "Manufacturer Identification Code FCM resolved to Focus Motor Yachts BV"
+    }
+  ],
+  "scoring": {
+    "confidence_pct": 94.00,
+    "weights": {
+      "accuracy": 30,
+      "provenance": 25,
+      "completeness": 20,
+      "consistency": 15,
+      "timeliness": 10
+    },
+    "breakdown": {
+      "identity": 100,
+      "equipment": 96,
+      "maintenance": 91,
+      "provenance": 98,
+      "documents": 85
+    }
+  }
+}
