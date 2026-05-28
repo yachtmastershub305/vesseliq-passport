@@ -80,7 +80,7 @@ export function PassportHeader({
           </>
         )}
 
-        <div className="relative z-10 grid grid-cols-12 gap-x-6 gap-y-10 items-end">
+        <div className="relative z-10 grid grid-cols-12 gap-x-6 gap-y-10 items-start">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
               <span className="label">{typeDisplay}</span>
