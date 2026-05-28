@@ -8,9 +8,13 @@ type Role = "Broker" | "Buyer" | "Insurer" | "Builder" | "Other";
 export function AccessForm({
   offer = "create",
   submitLabel = "Request a Passport",
+  hin,
+  passportSlug,
 }: {
   offer?: OfferKey;
   submitLabel?: string;
+  hin?: string;
+  passportSlug?: string;
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -25,6 +29,8 @@ export function AccessForm({
       role: String(fd.get("role") ?? "Other") as Role,
       offer: String(fd.get("offer") ?? offer) as OfferKey,
       message: String(fd.get("message") ?? "").trim(),
+      hin: hin?.trim() || undefined,
+      passportSlug: passportSlug || undefined,
     };
 
     setStatus("submitting");
@@ -72,6 +78,16 @@ export function AccessForm({
   return (
     <form onSubmit={onSubmit} className="space-y-7">
       <input type="hidden" name="offer" value={offer} />
+
+      {hin && (
+        <div
+          className="border-t border-b py-3 -mb-1 flex items-baseline justify-between gap-3"
+          style={{ borderColor: "var(--brand-line)" }}
+        >
+          <span className="label">HIN attached</span>
+          <span className="font-mono text-[13px] text-ink">{hin}</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
         <Field label="Name">
