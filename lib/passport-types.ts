@@ -133,6 +133,16 @@ export type Scoring = {
   breakdown: ScoringBreakdown;
 };
 
+export type PassportSignature = {
+  canonical_hash_sha256: string;
+  signature_b64: string;
+  signing_key_id: string;
+  signing_key_version: number;
+  algorithm: string;
+  mint_timestamp: string;
+  public_key_url?: string;
+};
+
 export type Passport = {
   _meta: PassportMeta;
   vessel: Vessel;
@@ -141,4 +151,5 @@ export type Passport = {
   service_events: ServiceEvent[];
   provenance: ProvenanceRecord[];
   scoring: Scoring;
+  signature?: PassportSignature;
 };
