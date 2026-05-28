@@ -18,7 +18,7 @@ export function HinLookup() {
               required
               autoComplete="off"
               spellCheck={false}
-              placeholder="Hull identification number, e.g. FCM44021J526"
+              placeholder="Hull identification number, e.g. FCM5X021J526"
               className="uinput font-mono text-[17px] tracking-wide"
               style={{ paddingTop: 12, paddingBottom: 12 }}
             />
@@ -42,7 +42,7 @@ export function HinLookup() {
         Demonstration lookup, will connect to the live registry of{" "}
         <span className="font-mono text-ink/80">{REGISTRY_DEMO_COUNT}</span> demo vessel
         {REGISTRY_DEMO_COUNT === 1 ? "" : "s"} when wired. Try{" "}
-        <span className="font-mono text-ink/80">FCM44021J526</span> for the demo Passport, or any
+        <span className="font-mono text-ink/80">FCM5X021J526</span> for the demo Passport, or any
         other HIN to see the claim path.
       </p>
     </div>

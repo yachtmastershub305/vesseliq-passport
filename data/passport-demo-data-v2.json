@@ -4,26 +4,27 @@
     "schema_version": "2026-05-25",
     "passport_id": "VIQ-PASS-2026-00142",
     "issued": "2026-05-28",
-    "is_sample": true
+    "is_sample": true,
+    "slug": "bruce-wayne"
   },
   "vessel": {
     "vessel_id": "a3f7c128-0000-4000-8000-000000000142",
     "catalog_id": "VIQ-00142",
-    "hin": "FCM44021J526",
+    "hin": "FCM5X021J526",
     "imo_number": null,
     "mmsi": "338291744",
     "official_number_us": "1298447",
-    "name": "Meridian",
+    "name": "Bruce Wayne",
     "flag_state": "United States",
     "builder": "Focus Motor Yachts",
     "make": "Focus",
-    "model": "Power 44",
+    "model": "5x",
     "model_year": 2026,
-    "loa_m": 13.41,
-    "beam_m": 4.27,
-    "draft_m": 1.12,
-    "depth_m": 2.30,
-    "hull_material": "GRP, vacuum infused",
+    "loa_m": 15.85,
+    "beam_m": 4.50,
+    "draft_m": 1.28,
+    "depth_m": 2.60,
+    "hull_material": "GRP, vacuum infused, carbon reinforced",
     "vessel_type": "powerboat",
     "classification_society": "Lloyds Register",
     "verification_status": "verified",
@@ -40,9 +41,11 @@
     "created_at": "2026-02-22T10:14:00Z",
     "updated_at": "2026-05-12T16:48:00Z",
     "attributes": {
-      "hull_color": "Alpine White",
-      "engine_config": "twin outboard",
-      "home_port": "Palma de Mallorca"
+      "hull_color": "Onyx Black",
+      "engine_config": "twin inboard, IPS pod drive",
+      "home_port": "Palma de Mallorca",
+      "hero_image": "/bruce-wayne-focus-5x.jpg",
+      "hero_image_credit": "Builder photo, Focus Motor Yachts"
     }
   },
   "manufacturer": {
@@ -58,35 +61,35 @@
     {
       "system_id": "sys-0001",
       "system_type": "PROPULSION",
-      "name": "Twin outboard propulsion",
-      "attributes": { "config": "twin", "shaft": "outboard" },
+      "name": "Twin inboard pod propulsion",
+      "attributes": { "config": "twin", "drive": "IPS pod" },
       "equipment": [
         {
           "equipment_instance_id": "eqi-0001",
-          "serial_number": "2B091447",
+          "serial_number": "VP-IPS950-78821",
           "installed_at": "2026-02-14",
           "removed_at": null,
           "subsystem_node_id": "engine.port",
           "attributes": { "position": "port", "current_hours": 184.0, "condition": "good" },
           "model": {
-            "manufacturer": "Mercury Marine",
-            "model_number": "Verado 600",
-            "equipment_type": "outboard_engine",
-            "specs": { "hp": 600, "cylinders": 12, "displacement_l": 7.6, "fuel_type": "gasoline", "rpm_max": 6400 }
+            "manufacturer": "Volvo Penta",
+            "model_number": "D11 IPS950",
+            "equipment_type": "pod_drive",
+            "specs": { "hp": 725, "cylinders": 6, "displacement_l": 10.8, "fuel_type": "diesel", "rpm_max": 2500, "drive_type": "IPS" }
           }
         },
         {
           "equipment_instance_id": "eqi-0002",
-          "serial_number": "2B091448",
+          "serial_number": "VP-IPS950-78822",
           "installed_at": "2026-02-14",
           "removed_at": null,
           "subsystem_node_id": "engine.starboard",
           "attributes": { "position": "starboard", "current_hours": 184.0, "condition": "good" },
           "model": {
-            "manufacturer": "Mercury Marine",
-            "model_number": "Verado 600",
-            "equipment_type": "outboard_engine",
-            "specs": { "hp": 600, "cylinders": 12, "displacement_l": 7.6, "fuel_type": "gasoline", "rpm_max": 6400 }
+            "manufacturer": "Volvo Penta",
+            "model_number": "D11 IPS950",
+            "equipment_type": "pod_drive",
+            "specs": { "hp": 725, "cylinders": 6, "displacement_l": 10.8, "fuel_type": "diesel", "rpm_max": 2500, "drive_type": "IPS" }
           }
         }
       ]
@@ -154,17 +157,18 @@
     {
       "service_event_id": "se-0001",
       "event_date": "2026-05-12",
-      "event_type": "Scheduled service, 100 hour",
+      "event_type": "Scheduled service, 200 hour",
       "meter_reading_hrs": 184.0,
       "work_order_ref": "WO-2026-0512-PM",
-      "performed_by": "Verified Mercury service partner, Palma de Mallorca",
-      "task_code": "MERC-100H",
+      "performed_by": "Verified Volvo Penta service partner, Palma de Mallorca",
+      "task_code": "VP-IPS-200H",
       "equipment_instance_id": "eqi-0001",
-      "notes": "Mercury Verado 100 hour service, both engines. Oil, filters, gearcase lube, anodes inspected.",
+      "notes": "Volvo Penta D11 IPS 200 hour service, both engines. Oil, filters, pod drive lube, anodes inspected, coolant level checked.",
       "line_items": [
-        { "part_number": "92-8M0086224", "description": "Mercury 25W50 synthetic oil, 12L", "quantity": 12, "unit_cost": 14.50, "currency_code": "EUR", "total_cost": 174.00 },
-        { "part_number": "35-8M0162830", "description": "Oil filter", "quantity": 2, "unit_cost": 28.00, "currency_code": "EUR", "total_cost": 56.00 },
-        { "part_number": "97-8M0107540", "description": "Anode kit", "quantity": 2, "unit_cost": 41.00, "currency_code": "EUR", "total_cost": 82.00 }
+        { "part_number": "22454734", "description": "Volvo Penta engine oil, VDS-4.5, 30L", "quantity": 30, "unit_cost": 18.50, "currency_code": "EUR", "total_cost": 555.00 },
+        { "part_number": "21707132", "description": "Oil filter, D11 IPS", "quantity": 2, "unit_cost": 62.00, "currency_code": "EUR", "total_cost": 124.00 },
+        { "part_number": "22479639", "description": "Fuel filter, primary", "quantity": 2, "unit_cost": 84.00, "currency_code": "EUR", "total_cost": 168.00 },
+        { "part_number": "22479640", "description": "Anode kit, IPS pod", "quantity": 2, "unit_cost": 162.00, "currency_code": "EUR", "total_cost": 324.00 }
       ]
     },
     {
@@ -215,7 +219,7 @@
       "license": "proprietary",
       "captured_at": "2026-02-14T09:00:00Z",
       "captured_by": "focus.commissioning.engineer",
-      "payload_summary": "Mercury Verado 600 serials registered at factory install, both engines"
+      "payload_summary": "Volvo Penta D11 IPS950 serials registered at factory install, both engines"
     },
     {
       "provenance_id": "prov-0003",
@@ -227,7 +231,7 @@
       "license": "proprietary",
       "captured_at": "2026-05-12T16:48:00Z",
       "captured_by": "verified service partner, Palma de Mallorca",
-      "payload_summary": "100 hour service record submitted by verified Mercury partner with work order WO-2026-0512-PM"
+      "payload_summary": "200 hour service record submitted by verified Volvo Penta partner with work order WO-2026-0512-PM"
     },
     {
       "provenance_id": "prov-0004",

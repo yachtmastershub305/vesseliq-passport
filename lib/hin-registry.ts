@@ -27,9 +27,11 @@ export type HinLookupResult = HinLookupHit | HinLookupMiss;
 // The aliases let a broker key in something close (e.g. truncated or with
 // spaces removed) and still land on the demo Passport.
 const DEMO_REGISTRY: Record<string, { slug: string; canonicalHin: string; vesselName: string }> = {
-  FCM44021J526: { slug: "meridian", canonicalHin: "FCM44021J526", vesselName: "Meridian" },
-  // Aliases for the demo, in case the broker types a near match. Optional.
-  FCM44021J525: { slug: "meridian", canonicalHin: "FCM44021J526", vesselName: "Meridian" },
+  FCM5X021J526: { slug: "bruce-wayne", canonicalHin: "FCM5X021J526", vesselName: "Bruce Wayne" },
+  // Near-match aliases for the demo so a broker typing close still lands here.
+  FCM5X021J525: { slug: "bruce-wayne", canonicalHin: "FCM5X021J526", vesselName: "Bruce Wayne" },
+  // Prior demo HIN, kept resolving for backwards links during the rollout.
+  FCM44021J526: { slug: "bruce-wayne", canonicalHin: "FCM5X021J526", vesselName: "Bruce Wayne" },
 };
 
 export function normalizeHin(input: string): string {

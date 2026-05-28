@@ -10,7 +10,7 @@ export function SiteNav() {
         </Link>
         <nav className="flex items-baseline gap-7 text-[13.5px]">
           <Link
-            href="/passport/meridian"
+            href="/passport/bruce-wayne"
             className="text-ink/70 hover:text-ink transition-colors"
           >
             Live record
