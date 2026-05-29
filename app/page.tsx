@@ -42,7 +42,7 @@ function FolioRail() {
 function Hero() {
   return (
     <section className="relative">
-      <div className="container-doc pt-20 sm:pt-28 pb-24 sm:pb-32 relative">
+      <div className="container-doc pt-12 sm:pt-20 md:pt-28 pb-16 sm:pb-24 md:pb-32 relative">
         <span className="absolute left-6 top-12 hidden md:block">
           <CornerMark position="tl" />
         </span>
@@ -57,7 +57,7 @@ function Hero() {
 
           <div className="col-span-12 md:col-span-11">
             <div className="label">Vessel record, since 2026</div>
-            <h1 className="mt-6 display text-[64px] sm:text-[92px] lg:text-[112px] text-ink">
+            <h1 className="mt-5 sm:mt-6 display text-[40px] sm:text-[64px] md:text-[88px] lg:text-[112px] text-ink">
               The verified history
               <br />
               <span className="display-italic">that travels with</span>
@@ -119,14 +119,14 @@ function Hero() {
 
 function Problem() {
   return (
-    <section className="container-doc py-24 sm:py-28">
+    <section className="container-doc py-14 sm:py-20 md:py-28">
       <div className="grid grid-cols-12 gap-x-6 gap-y-10">
         <div className="col-span-12 md:col-span-1 hidden md:block">
           <div className="font-serif-italic text-[14px] text-muted">§ II</div>
         </div>
         <div className="col-span-12 md:col-span-11">
           <div className="label">The problem</div>
-          <h2 className="mt-5 display text-[40px] sm:text-[58px] text-ink max-w-3xl">
+          <h2 className="mt-5 display text-[30px] sm:text-[44px] md:text-[58px] text-ink max-w-3xl">
             A yacht sale runs on{" "}
             <span className="display-italic">a folder of PDFs.</span>
           </h2>
@@ -163,14 +163,14 @@ function Problem() {
 function WhatItIs() {
   return (
     <section className="border-t" style={{ borderColor: "var(--brand-line-strong)" }}>
-      <div className="container-doc py-24 sm:py-28">
+      <div className="container-doc py-14 sm:py-20 md:py-28">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10">
           <div className="col-span-12 md:col-span-1 hidden md:block">
             <div className="font-serif-italic text-[14px] text-muted">§ III</div>
           </div>
           <div className="col-span-12 md:col-span-11">
             <div className="label">What the Passport is</div>
-            <h2 className="mt-5 display text-[40px] sm:text-[58px] text-ink max-w-3xl">
+            <h2 className="mt-5 display text-[30px] sm:text-[44px] md:text-[58px] text-ink max-w-3xl">
               A signed record{" "}
               <span className="display-italic">for the people</span> who underwrite the deal.
             </h2>
@@ -254,14 +254,14 @@ function HowItWorks() {
   ];
   return (
     <section className="border-t" style={{ borderColor: "var(--brand-line-strong)" }}>
-      <div className="container-doc py-24 sm:py-28">
+      <div className="container-doc py-14 sm:py-20 md:py-28">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10">
           <div className="col-span-12 md:col-span-1 hidden md:block">
             <div className="font-serif-italic text-[14px] text-muted">§ IV</div>
           </div>
           <div className="col-span-12 md:col-span-11">
             <div className="label">How it works</div>
-            <h2 className="mt-5 display text-[40px] sm:text-[58px] text-ink max-w-3xl">
+            <h2 className="mt-5 display text-[30px] sm:text-[44px] md:text-[58px] text-ink max-w-3xl">
               Four sources of truth,{" "}
               <span className="display-italic">one record.</span>
             </h2>
@@ -315,7 +315,7 @@ function CreateOffer() {
       className="border-t"
       style={{ borderColor: "var(--brand-line-strong)" }}
     >
-      <div className="container-doc py-24 sm:py-28">
+      <div className="container-doc py-14 sm:py-20 md:py-28">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10">
           <div className="col-span-12 md:col-span-1 hidden md:block">
             <div className="font-serif-italic text-[14px] text-muted">§ V</div>
@@ -324,7 +324,7 @@ function CreateOffer() {
             <div className="grid grid-cols-12 gap-x-10 gap-y-10 items-baseline">
               <div className="col-span-12 lg:col-span-8">
                 <div className="label">Offer, for sellers and brokers</div>
-                <h2 className="mt-5 display text-[40px] sm:text-[58px] text-ink leading-[1.02] max-w-3xl">
+                <h2 className="mt-5 display text-[30px] sm:text-[44px] md:text-[58px] text-ink leading-[1.02] max-w-3xl">
                   Have your Passport{" "}
                   <span className="display-italic">created.</span>
                 </h2>
@@ -395,7 +395,7 @@ function AcquireCallout() {
           </div>
           <div className="col-span-12 lg:col-span-7">
             <div className="label">Offer, for buyers</div>
-            <h2 className="mt-4 display text-[28px] sm:text-[38px] leading-[1.05] text-ink max-w-2xl">
+            <h2 className="mt-4 display text-[24px] sm:text-[32px] md:text-[38px] leading-[1.05] text-ink max-w-2xl">
               Looking at a vessel with a Passport?{" "}
               <span className="display-italic">Acquire it</span> when you close the deal.
             </h2>

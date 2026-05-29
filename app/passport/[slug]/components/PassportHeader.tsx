@@ -64,14 +64,14 @@ export function PassportHeader({
                 </span>
               )}
             </div>
-            <h1 className="mt-4 display text-[68px] sm:text-[96px] text-ink leading-[0.92]">
+            <h1 className="mt-4 display text-[44px] sm:text-[68px] md:text-[80px] lg:text-[96px] text-ink leading-[0.92] break-words">
               {v.name}
             </h1>
-            <div className="mt-4 font-serif-italic text-[24px] sm:text-[28px] text-ink/85">
+            <div className="mt-3 sm:mt-4 font-serif-italic text-[19px] sm:text-[24px] md:text-[28px] text-ink/85">
               {v.make} {v.model} <span className="text-muted">,</span> {v.model_year}
             </div>
 
-            <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-5">
+            <div className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-5">
               <Field label="HIN" value={v.hin} mono />
               <Field label="Catalog" value={v.catalog_id} mono />
               <Field label="MMSI" value={v.mmsi ?? "—"} mono />
