@@ -129,7 +129,12 @@ export function PassportHeader({
 
           <div className="col-span-12 lg:col-span-4">
             <div className="flex flex-col items-start lg:items-end">
-              <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
+              <div className="lg:hidden">
+                <SealStamp pct={Math.round(v.confidence_pct)} size={140} />
+              </div>
+              <div className="hidden lg:block">
+                <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
+              </div>
               <SnapshotAnchor data={data} />
               <ScoreWeighting weights={data.scoring.weights} />
               {data.signature && (

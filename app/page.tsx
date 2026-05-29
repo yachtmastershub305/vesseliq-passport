@@ -104,7 +104,12 @@ function Hero() {
                   </div>
                 </div>
                 <div className="mt-6 flex justify-end">
-                  <SealStamp pct={94} size={160} />
+                  <div className="lg:hidden">
+                    <SealStamp pct={94} size={132} />
+                  </div>
+                  <div className="hidden lg:block">
+                    <SealStamp pct={94} size={160} />
+                  </div>
                 </div>
               </aside>
             </div>
