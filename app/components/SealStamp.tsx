@@ -1,3 +1,7 @@
+"use client";
+
+import { useId } from "react";
+
 export function SealStamp({
   size = 156,
   pct,
@@ -16,6 +20,14 @@ export function SealStamp({
   const scoreC = 2 * Math.PI * scoreR;
   const scoreDash = (pct / 100) * scoreC;
 
+  // Each SealStamp instance gets its own unique path id so multiple seals
+  // on the same page (mobile + desktop responsive duplication, or several
+  // seals in a guided tour panel) do not collide on a single id. Before
+  // this, two seals shared id="seal-ring-path" and the desktop seal would
+  // render its rotating text along the mobile seal's smaller circle path.
+  const reactId = useId();
+  const pathId = `seal-ring-path-${reactId.replace(/:/g, "")}`;
+
   return (
     <div className="relative inline-block" style={{ width: size, height: size }}>
       <svg
@@ -27,7 +39,7 @@ export function SealStamp({
       >
         <defs>
           <path
-            id="seal-ring-path"
+            id={pathId}
             d={`M ${cx},${cy} m -${textPathR},0 a ${textPathR},${textPathR} 0 1,1 ${
               textPathR * 2
             },0 a ${textPathR},${textPathR} 0 1,1 -${textPathR * 2},0`}
@@ -50,7 +62,7 @@ export function SealStamp({
             letterSpacing="2.4"
             fill="var(--brand-ink)"
           >
-            <textPath href="#seal-ring-path" startOffset="0">
+            <textPath href={`#${pathId}`} startOffset="0">
               {ringText}
             </textPath>
           </text>
