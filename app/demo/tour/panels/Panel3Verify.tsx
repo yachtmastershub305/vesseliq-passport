@@ -43,7 +43,7 @@ export function Panel3Verify({ data }: { data: Passport }) {
           </div>
 
           <div className="col-span-12 sm:col-span-5">
-            <div className="flex flex-col items-start sm:items-end">
+            <div className="flex flex-col items-start">
               <SealStamp pct={Math.round(v.confidence_pct)} size={140} />
             </div>
           </div>
