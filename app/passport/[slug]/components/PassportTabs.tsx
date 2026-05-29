@@ -26,14 +26,14 @@ export function PassportTabs({
   return (
     <div>
       <div
-        className="sticky top-0 z-20 backdrop-blur-md border-b no-print"
+        className="sticky top-0 z-20 backdrop-blur-md border-b no-print relative"
         style={{
           backgroundColor: "rgba(239,233,218,0.88)",
           borderColor: "var(--brand-line-strong)",
         }}
       >
         <div className="py-3 overflow-x-auto">
-          <div role="tablist" aria-label="Passport sections" className="flex items-baseline gap-x-7 sm:gap-x-10 whitespace-nowrap">
+          <div role="tablist" aria-label="Passport sections" className="flex items-baseline gap-x-5 sm:gap-x-10 whitespace-nowrap pl-1 pr-6 sm:pr-0">
             <span className="label hidden sm:inline">Table of contents</span>
             {ENTRIES.map((entry) => {
               const isActive = active === entry.key;
@@ -64,6 +64,15 @@ export function PassportTabs({
             })}
           </div>
         </div>
+        {/* Right-edge fade hint, mobile only, signals horizontal scrollability */}
+        <div
+          aria-hidden="true"
+          className="sm:hidden pointer-events-none absolute top-0 bottom-0 right-0 w-8"
+          style={{
+            background:
+              "linear-gradient(to left, rgba(239,233,218,0.95), rgba(239,233,218,0))",
+          }}
+        />
       </div>
       <div className="pt-12 pb-6" role="tabpanel">
         {panels[active]}

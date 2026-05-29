@@ -48,7 +48,7 @@ export function PassportHeader({
         </div>
       </div>
 
-      <div className="pt-10 pb-10">
+      <div className="pt-6 pb-8 sm:pt-10 sm:pb-10">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-start">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
