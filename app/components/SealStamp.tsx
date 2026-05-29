@@ -88,16 +88,16 @@ export function SealStamp({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="label" style={{ fontSize: 8.5 }}>
+        <span className="label" style={{ fontSize: Math.max(7.5, size * 0.055) }}>
           Confidence
         </span>
         <span
           className="font-serif text-ink leading-none"
-          style={{ fontSize: 36, marginTop: 4 }}
+          style={{ fontSize: Math.round(size * 0.22), marginTop: 4 }}
         >
           {pct}
         </span>
-        <span className="label mt-1" style={{ fontSize: 8.5 }}>
+        <span className="label mt-1" style={{ fontSize: Math.max(7.5, size * 0.055) }}>
           of 100
         </span>
       </div>
