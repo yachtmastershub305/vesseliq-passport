@@ -73,7 +73,7 @@ export function TourChrome({
       </div>
 
       {/* Two-column body: content + margin annotation */}
-      <div className="container-doc pt-6 sm:pt-10 pb-24 sm:pb-28">
+      <div className="container-doc pt-6 sm:pt-10 pb-32 sm:pb-36">
         <div className="grid grid-cols-12 gap-x-6 gap-y-8">
           <div className="col-span-12 lg:col-span-8">{children}</div>
           <aside className="col-span-12 lg:col-span-4">
@@ -115,7 +115,7 @@ export function TourChrome({
             <span className="font-mono">{totalSteps}</span> · {stepLabel}
           </span>
 
-          {!isLast && (
+          {!isLast ? (
             <Link href={nextHref} className="cta-primary">
               Next
               <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
@@ -129,21 +129,15 @@ export function TourChrome({
                 />
               </svg>
             </Link>
-          )}
-          {isLast && (
-            <Link href="/#access" className="cta-primary">
-              Have your Passport created
-              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
-                <path
-                  d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </Link>
+          ) : (
+            // Step 5 has the closer form with its own filled cta-primary
+            // submit ("Have your Passport created"). Surfacing another
+            // identical CTA in the nav duplicates the action and confuses
+            // mobile especially. Show a quiet "Use the form below" hint
+            // instead, the conversion lives in the form.
+            <span className="label hidden sm:inline">
+              The form is the close
+            </span>
           )}
         </div>
       </div>

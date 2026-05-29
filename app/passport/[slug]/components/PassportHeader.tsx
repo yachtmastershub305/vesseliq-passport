@@ -93,22 +93,17 @@ export function PassportHeader({
 
             {heroImage && (
               <figure
-                className="hero-photo-contained mt-10 relative w-full overflow-hidden border"
-                style={{
-                  aspectRatio: "16 / 9",
-                  borderColor: "var(--brand-line-strong)",
-                }}
+                className="hero-photo-contained mt-10 relative overflow-hidden border"
+                style={{ borderColor: "var(--brand-line-strong)" }}
               >
                 <Image
                   src={heroImage}
                   alt={`${v.name}, ${v.make} ${v.model}, ${v.model_year}`}
-                  fill
+                  width={1672}
+                  height={941}
                   priority
                   sizes="(min-width: 1120px) 720px, 100vw"
-                  style={{
-                    objectFit: "cover",
-                    objectPosition: "center 42%",
-                  }}
+                  className="block w-full h-auto"
                 />
                 {heroCredit && (
                   <figcaption
