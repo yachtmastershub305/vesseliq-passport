@@ -140,9 +140,21 @@ export function TransferProgressBanner() {
       role="region"
       aria-label="Transfer progress"
     >
-      <div className="container-doc py-2.5 flex items-center justify-between gap-4 flex-wrap">
+      <div className="container-doc py-2.5 flex items-center justify-between gap-3 sm:gap-4">
         <span className="label-ink shrink-0">Transfer in progress</span>
-        <ol className="flex items-center gap-x-1 sm:gap-x-2 gap-y-2 flex-wrap">
+
+        {/* Mobile, compressed indicator: "Step N of 4 · current label" */}
+        <div className="sm:hidden flex items-center gap-2 min-w-0">
+          <StepDot done={false} current={true} />
+          <span className="text-[12px] text-ink truncate">
+            <span className="font-mono text-muted-2">{currentStep + 1}/4</span>
+            {" "}
+            {STEPS[currentStep].label}
+          </span>
+        </div>
+
+        {/* sm and up, full 4 step trail */}
+        <ol className="hidden sm:flex items-center gap-x-2 gap-y-2 flex-wrap">
           {STEPS.map((step, i) => {
             const isDone = i < currentStep;
             const isCurrent = i === currentStep;
@@ -154,13 +166,11 @@ export function TransferProgressBanner() {
             return (
               <li key={step.key} className="flex items-center gap-1.5">
                 <StepDot done={isDone} current={isCurrent} />
-                <span className={`text-[12px] sm:text-[12.5px] ${labelClass}`}>
-                  {step.label}
-                </span>
+                <span className={`text-[12.5px] ${labelClass}`}>{step.label}</span>
                 {i < STEPS.length - 1 && (
                   <span
                     aria-hidden="true"
-                    className="text-muted-2 px-1 sm:px-1.5 text-[10px]"
+                    className="text-muted-2 px-1.5 text-[10px]"
                   >
                     →
                   </span>
