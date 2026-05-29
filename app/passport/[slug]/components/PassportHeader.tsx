@@ -48,7 +48,7 @@ export function PassportHeader({
         </div>
       </div>
 
-      <div className="pt-10 pb-10">
+      <div className="pt-6 pb-8 sm:pt-10 sm:pb-10">
         <div className="grid grid-cols-12 gap-x-6 gap-y-10 items-start">
           <div className="col-span-12 lg:col-span-8">
             <div className="flex items-center gap-3 flex-wrap">
@@ -64,14 +64,14 @@ export function PassportHeader({
                 </span>
               )}
             </div>
-            <h1 className="mt-4 display text-[68px] sm:text-[96px] text-ink leading-[0.92]">
+            <h1 className="mt-4 display text-[44px] sm:text-[68px] md:text-[80px] lg:text-[96px] text-ink leading-[0.92] break-words">
               {v.name}
             </h1>
-            <div className="mt-4 font-serif-italic text-[24px] sm:text-[28px] text-ink/85">
+            <div className="mt-3 sm:mt-4 font-serif-italic text-[19px] sm:text-[24px] md:text-[28px] text-ink/85">
               {v.make} {v.model} <span className="text-muted">,</span> {v.model_year}
             </div>
 
-            <div className="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-5">
+            <div className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-5">
               <Field label="HIN" value={v.hin} mono />
               <Field label="Catalog" value={v.catalog_id} mono />
               <Field label="MMSI" value={v.mmsi ?? "—"} mono />
@@ -129,7 +129,12 @@ export function PassportHeader({
 
           <div className="col-span-12 lg:col-span-4">
             <div className="flex flex-col items-start lg:items-end">
-              <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
+              <div className="lg:hidden">
+                <SealStamp pct={Math.round(v.confidence_pct)} size={140} />
+              </div>
+              <div className="hidden lg:block">
+                <SealStamp pct={Math.round(v.confidence_pct)} size={184} />
+              </div>
               <SnapshotAnchor data={data} />
               <ScoreWeighting weights={data.scoring.weights} />
               {data.signature && (
