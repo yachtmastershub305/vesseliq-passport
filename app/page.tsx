@@ -78,11 +78,14 @@ function Hero() {
                 </div>
 
                 <div className="mt-7 flex flex-wrap items-baseline gap-x-8 gap-y-3">
-                  <Link href="/passport/bruce-wayne" className="cta-secondary">
-                    Or open a sample Passport
+                  <Link href="/demo" className="cta-secondary">
+                    See the guided demo
                     <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
                       <path d="M3 7h8m0 0L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
+                  </Link>
+                  <Link href="/passport/bruce-wayne" className="cta-quiet">
+                    Open a sample Passport
                   </Link>
                   <Link href="#access" className="cta-quiet">
                     Have your Passport created
