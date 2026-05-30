@@ -1,3 +1,7 @@
+"use client";
+
+import { useId } from "react";
+
 export function SealStamp({
   size = 156,
   pct,
@@ -16,6 +20,14 @@ export function SealStamp({
   const scoreC = 2 * Math.PI * scoreR;
   const scoreDash = (pct / 100) * scoreC;
 
+  // Each SealStamp instance gets its own unique path id so multiple seals
+  // on the same page (mobile + desktop responsive duplication, or several
+  // seals in a guided tour panel) do not collide on a single id. Before
+  // this, two seals shared id="seal-ring-path" and the desktop seal would
+  // render its rotating text along the mobile seal's smaller circle path.
+  const reactId = useId();
+  const pathId = `seal-ring-path-${reactId.replace(/:/g, "")}`;
+
   return (
     <div className="relative inline-block" style={{ width: size, height: size }}>
       <svg
@@ -27,7 +39,7 @@ export function SealStamp({
       >
         <defs>
           <path
-            id="seal-ring-path"
+            id={pathId}
             d={`M ${cx},${cy} m -${textPathR},0 a ${textPathR},${textPathR} 0 1,1 ${
               textPathR * 2
             },0 a ${textPathR},${textPathR} 0 1,1 -${textPathR * 2},0`}
@@ -50,7 +62,7 @@ export function SealStamp({
             letterSpacing="2.4"
             fill="var(--brand-ink)"
           >
-            <textPath href="#seal-ring-path" startOffset="0">
+            <textPath href={`#${pathId}`} startOffset="0">
               {ringText}
             </textPath>
           </text>
@@ -76,16 +88,16 @@ export function SealStamp({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="label" style={{ fontSize: 8.5 }}>
+        <span className="label" style={{ fontSize: Math.max(7.5, size * 0.055) }}>
           Confidence
         </span>
         <span
           className="font-serif text-ink leading-none"
-          style={{ fontSize: 36, marginTop: 4 }}
+          style={{ fontSize: Math.round(size * 0.22), marginTop: 4 }}
         >
           {pct}
         </span>
-        <span className="label mt-1" style={{ fontSize: 8.5 }}>
+        <span className="label mt-1" style={{ fontSize: Math.max(7.5, size * 0.055) }}>
           of 100
         </span>
       </div>
