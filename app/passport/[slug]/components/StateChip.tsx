@@ -11,10 +11,7 @@ export function StateChip({ state }: { state: ViewState }) {
   }
   if (state === "transfer") {
     return (
-      <span
-        className="stamp-chip"
-        style={{ borderStyle: "dashed", borderColor: "var(--brand-ink)" }}
-      >
+      <span className="stamp-chip stamp-chip-amber" style={{ borderStyle: "dashed" }}>
         <PulseDot />
         Transfer pending
       </span>
@@ -22,13 +19,7 @@ export function StateChip({ state }: { state: ViewState }) {
   }
   if (state === "archived") {
     return (
-      <span
-        className="stamp-chip"
-        style={{
-          color: "rgba(12, 17, 23, 0.65)",
-          borderColor: "rgba(12, 17, 23, 0.35)",
-        }}
-      >
+      <span className="stamp-chip stamp-chip-muted">
         <ArchiveGlyph />
         Archived
       </span>
@@ -36,14 +27,7 @@ export function StateChip({ state }: { state: ViewState }) {
   }
   if (state === "revoked") {
     return (
-      <span
-        className="stamp-chip"
-        style={{
-          backgroundColor: "rgb(150, 25, 25)",
-          color: "var(--brand-paper)",
-          borderColor: "rgb(120, 20, 20)",
-        }}
-      >
+      <span className="stamp-chip stamp-chip-rust">
         <CrossGlyph />
         Revoked
       </span>

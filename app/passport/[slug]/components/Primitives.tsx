@@ -65,7 +65,7 @@ export function SectionTitle({
   return (
     <header className="mb-10">
       <div className="flex items-baseline gap-3">
-        <span className="font-serif-italic text-[15px] text-muted">§ {numeral}</span>
+        <span className="font-serif-italic text-[15px] numeral-accent">§ {numeral}</span>
         <span className="label-ink">{eyebrow}</span>
       </div>
       <h2 className="mt-4 display text-[40px] sm:text-[52px] text-ink leading-[1.02]">{title}</h2>
@@ -76,7 +76,7 @@ export function SectionTitle({
 export function Subhead({ numeral, label }: { numeral: string; label: string }) {
   return (
     <div className="flex items-baseline gap-3 border-b pb-3 mb-6" style={{ borderColor: "var(--brand-line-strong)" }}>
-      <span className="font-serif-italic text-[14px] text-muted">{numeral}</span>
+      <span className="font-serif-italic text-[14px] numeral-accent">{numeral}</span>
       <span className="label-ink">{label}</span>
     </div>
   );

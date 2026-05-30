@@ -13,6 +13,17 @@
   --brand-line-soft: rgba(12, 17, 23, 0.06);
   --brand-muted: rgba(12, 17, 23, 0.58);
   --brand-muted-2: rgba(12, 17, 23, 0.42);
+
+  --brand-mark: #f5c451;
+  --brand-mark-soft: rgba(245, 196, 81, 0.45);
+  --brand-accent: #b8442a;
+  --brand-accent-soft: rgba(184, 68, 42, 0.10);
+  --brand-ocean: #1f4a6b;
+  --brand-ocean-soft: rgba(31, 74, 107, 0.08);
+  --brand-ochre: #a36a14;
+  --brand-ochre-soft: rgba(163, 106, 20, 0.10);
+  --brand-rust: #9a2e1a;
+  --brand-rust-soft: rgba(154, 46, 26, 0.08);
 }
 
 @theme inline {
@@ -83,6 +94,19 @@ body {
   font-weight: 400;
   letter-spacing: -0.022em;
   line-height: 0.95;
+  background-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 58%,
+    var(--brand-mark-soft) 58%,
+    var(--brand-mark-soft) 92%,
+    transparent 92%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 0.06em;
 }
 
 /* Mono label, used everywhere for marginalia, numbers, tags */
@@ -99,7 +123,7 @@ body {
   font-size: 10.5px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--brand-ink);
+  color: var(--brand-accent);
 }
 
 /* Page rule, a single hairline horizontal divider */
@@ -132,7 +156,11 @@ body {
   font-style: italic;
   font-size: 13.5px;
   letter-spacing: 0.02em;
-  color: var(--brand-muted);
+  color: var(--brand-accent);
+}
+
+.numeral-accent {
+  color: var(--brand-accent);
 }
 
 /* Underline only input */
@@ -195,6 +223,24 @@ textarea.uinput:focus {
 .stamp-chip-teal {
   border-color: var(--brand-teal);
   color: var(--brand-teal-deep);
+}
+
+.stamp-chip-amber {
+  background: var(--brand-ochre-soft);
+  border-color: var(--brand-ochre);
+  color: var(--brand-ochre);
+}
+
+.stamp-chip-rust {
+  background: var(--brand-rust-soft);
+  border-color: var(--brand-rust);
+  color: var(--brand-rust);
+}
+
+.stamp-chip-muted {
+  background: rgba(12, 17, 23, 0.04);
+  border-color: var(--brand-line-strong);
+  color: var(--brand-muted);
 }
 
 /* Vertical column rule used in ledger layouts */
@@ -328,18 +374,21 @@ a {
 }
 
 .tier-pill.tier-2 {
-  background: transparent;
-  color: var(--brand-ink);
-  border-color: var(--brand-ink);
+  background: var(--brand-ocean-soft);
+  color: var(--brand-ocean);
+  border-color: var(--brand-ocean);
+}
+.tier-pill.tier-2 .tier-dot {
+  background: var(--brand-ocean);
 }
 
 .tier-pill.tier-3 {
-  background: transparent;
-  color: rgba(12, 17, 23, 0.72);
-  border-color: rgba(12, 17, 23, 0.4);
+  background: var(--brand-ochre-soft);
+  color: var(--brand-ochre);
+  border-color: var(--brand-ochre);
 }
 .tier-pill.tier-3 .tier-dot {
-  background: rgba(12, 17, 23, 0.6);
+  background: var(--brand-ochre);
 }
 
 .tier-pill.tier-4 {
@@ -448,5 +497,8 @@ textarea.uinput:focus-visible {
   .hero-photo-band { display: none !important; }
   .hero-watermark { display: none !important; }
   .seal-rotating { animation: none !important; }
+  .display-italic {
+    background-image: none !important;
+  }
   a { color: inherit; text-decoration: none; }
 }
