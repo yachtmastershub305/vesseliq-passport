@@ -5,6 +5,7 @@ export type PassportMeta = {
   issued: string;
   is_sample?: boolean;
   slug?: string;
+  status?: string;
 };
 
 export type Vessel = {

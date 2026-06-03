@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SiteNav } from "@/app/components/SiteNav";
 import { SiteFooter } from "@/app/components/SiteFooter";
-import { getAllPassportSlugs, getPassportBySlug } from "@/lib/passport-data";
+import { getAllPassportSlugs, getPassportForRoute } from "@/lib/passport-data";
 import { parseViewState } from "@/lib/passport-view";
 import { PassportHeader } from "./components/PassportHeader";
 import { PassportTabs, type TabKey } from "./components/PassportTabs";
@@ -32,15 +32,21 @@ export function generateStaticParams() {
   return getAllPassportSlugs().map((slug) => ({ slug }));
 }
 
-export default async function PassportPage(props: PageProps<"/passport/[slug]">) {
-  const { slug } = await props.params;
-  const sp = await props.searchParams;
+type PassportPageProps = {
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
 
-  const data = getPassportBySlug(slug);
+export default async function PassportPage(props: PassportPageProps) {
+  const { slug } = await props.params;
+  const sp = (await props.searchParams) ?? {};
+
+  const data = await getPassportForRoute(slug);
   if (!data) notFound();
 
   const isSample = data._meta.is_sample === true;
   const demoEnabled = sp.demo === "1";
+  const backendStatus = data._meta.status;
   // Sample Passport normally hides the acquire flow because nothing real
   // can be transacted on a sample. But for a broker walk through we want
   // the full flow (AcquirePanel + gate modal + StatusSequence + simulate
@@ -51,9 +57,15 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
   // when there is nothing to unlock. The DemoSwitcher still lets the
   // founder flip to preview, transfer, archived, or revoked to show what
   // those look like.
-  const view = parseViewState(sp.view, isSample ? "full" : "preview");
+  const requestedView = parseViewState(sp.view, isSample ? "full" : "preview");
+  const view = !isSample && backendStatus === "revoked"
+    ? "revoked"
+    : !isSample && backendStatus === "archived"
+      ? "archived"
+      : requestedView;
   const showAcquireFlow = view === "preview" && acquireUnlocked;
   const isRevoked = view === "revoked";
+  const isLivePassport = !isSample;
 
   const lockedTabs: TabKey[] =
     view === "preview" ? ["equipment", "maintenance", "telemetry", "provenance"] : [];
@@ -140,8 +152,9 @@ export default async function PassportPage(props: PageProps<"/passport/[slug]">)
               <span className="label-ink">Notice</span>
             </div>
             <p className="col-span-12 md:col-span-10 text-[14px] text-ink/85 leading-[1.6] max-w-3xl">
-              Demonstration record. All data is illustrative. Field names and types match the
-              VesselIQ production schema, so a real query drops into this view without remapping.
+              {isLivePassport
+                ? "Live VesselIQ Passport record. Field names and types match the VesselIQ production schema."
+                : "Demonstration record. All data is illustrative. Field names and types match the VesselIQ production schema, so a real query drops into this view without remapping."}
               {isSample && (
                 <>
                   {" "}

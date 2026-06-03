@@ -5,8 +5,12 @@ import { AccessForm } from "@/app/components/AccessForm";
 import { normalizeHin } from "@/lib/hin-registry";
 import { PRICING } from "@/lib/pricing";
 
-export default async function ClaimPage(props: PageProps<"/claim">) {
-  const sp = await props.searchParams;
+type ClaimPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function ClaimPage(props: ClaimPageProps) {
+  const sp = (await props.searchParams) ?? {};
   const raw = typeof sp.hin === "string" ? sp.hin : "";
   const hin = raw ? normalizeHin(raw) : "";
 

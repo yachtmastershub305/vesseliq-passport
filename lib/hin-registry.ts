@@ -1,9 +1,10 @@
-// Demonstration HIN registry. Swap findVesselByHin for the live API later.
-//
-// This module is the seam between the demo and the real lookup. The single
-// async function below is the only thing other code calls. When Bill's API
-// is ready, replace the body with a fetch, the rest of the app does not
-// change.
+import { fetchHinLookup } from "@/lib/backend";
+
+// Demonstration HIN registry. Prefer the live backend when configured, then
+// fall back to the local demo registry so the sample experience keeps working.
+
+// This module remains the seam between the demo and the real lookup. The single
+// async function below is the only thing other code calls.
 
 export type HinLookupHit = {
   status: "found";
@@ -43,6 +44,23 @@ export function normalizeHin(input: string): string {
 // signature change.
 export async function findVesselByHin(rawHin: string): Promise<HinLookupResult> {
   const hin = normalizeHin(rawHin);
+
+  try {
+    const backend = await fetchHinLookup(hin);
+    const vessel = backend?.vessel;
+    if (vessel?.passport_id) {
+      return {
+        status: "found",
+        slug: vessel.passport_id,
+        hin: vessel.hin ?? hin,
+        vesselName: vessel.name ?? "Vessel of record",
+      };
+    }
+  } catch {
+    // Fall back to the demo registry when the backend is unavailable or the
+    // HIN has no routable backend passport yet.
+  }
+
   const hit = DEMO_REGISTRY[hin];
   if (hit) {
     return {

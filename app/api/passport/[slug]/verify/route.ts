@@ -1,17 +1,50 @@
 import type { NextRequest } from "next/server";
 import { getPassportBySlug } from "@/lib/passport-data";
+import { isUuidLike, verifyPublicPassport } from "@/lib/backend";
 
-// Demo verifier. Always returns verified for the sample so the broker
-// can see the green check. When Bill's real GET /api/v1/passports/public/
-// {passport_id}/verify endpoint ships, swap the body here for a fetch.
+type BackendError = Error & {
+  status?: number;
+  body?: unknown;
+};
+
+// UUID slugs proxy the live backend verify endpoint.
+// Demo slugs keep the local illustrative verifier so broker walkthroughs
+// can still force positive and negative outcomes.
 //
 // To demo the negative case, pass ?fail=1 and the response flips to
 // verified: false.
+type VerifyRouteContext = {
+  params: Promise<{ slug: string }>;
+};
+
 export async function GET(
   request: NextRequest,
-  ctx: RouteContext<"/api/passport/[slug]/verify">
+  ctx: VerifyRouteContext
 ) {
   const { slug } = await ctx.params;
+
+  if (isUuidLike(slug)) {
+    try {
+      const body = await verifyPublicPassport(slug);
+      return Response.json(
+        {
+          ...body,
+          verified_at: new Date().toISOString(),
+        },
+        { status: 200 }
+      );
+    } catch (error) {
+      const backendError = error as BackendError;
+      const status = backendError.status ?? 502;
+      const body =
+        backendError.body && typeof backendError.body === "object"
+          ? backendError.body
+          : { error: backendError.message || "backend_request_failed" };
+
+      return Response.json(body, { status });
+    }
+  }
+
   const data = getPassportBySlug(slug);
 
   if (!data) {

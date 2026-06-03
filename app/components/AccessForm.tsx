@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { OfferKey } from "@/lib/pricing";
 
@@ -63,12 +64,12 @@ export function AccessForm({
         </div>
         <p className="mt-4 text-[15px] text-ink/70 max-w-md">
           In the meantime,{" "}
-          <a
+          <Link
             href="/passport/bruce-wayne"
             className="border-b border-ink/60 hover:border-ink"
           >
             view a live Passport
-          </a>{" "}
+          </Link>{" "}
           to see what a verified vessel record looks like.
         </p>
       </div>
