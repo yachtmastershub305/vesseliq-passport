@@ -27,14 +27,14 @@ export default async function ClaimPage(props: ClaimPageProps) {
             <div className="col-span-12 md:col-span-11">
               <div className="label">Lookup, no Passport on file</div>
               <h1 className="mt-5 display text-[44px] sm:text-[68px] leading-[1.02] text-ink max-w-3xl">
-                We do not have a Passport for{" "}
-                <span className="display-italic">this hull yet.</span>
+                Start onboarding for{" "}
+                <span className="display-italic">this hull.</span>
               </h1>
 
               <p className="mt-7 text-[16.5px] leading-[1.6] text-ink/80 max-w-xl">
                 The HIN you entered is not on our records. If you are the seller or the broker
-                managing this vessel, you can claim the profile and have a certified Passport
-                created. We perform the work, you control access to the record.
+                managing this vessel, you can start an onboarding request and have VesselIQ open a
+                real intake session for this hull.
               </p>
 
               <dl className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-5 max-w-3xl">
@@ -44,7 +44,7 @@ export default async function ClaimPage(props: ClaimPageProps) {
                   mono
                 />
                 <Stat label="Status" value="Not on file" />
-                <Stat label="Next step" value="Claim and create" />
+                <Stat label="Next step" value="Start onboarding" />
               </dl>
             </div>
           </div>
@@ -59,15 +59,14 @@ export default async function ClaimPage(props: ClaimPageProps) {
               <div className="col-span-12 md:col-span-11">
                 <div className="grid grid-cols-12 gap-x-10 gap-y-10 items-baseline">
                   <div className="col-span-12 lg:col-span-8">
-                    <div className="label">Offer, claim and create</div>
+                    <div className="label">Offer, onboarding intake</div>
                     <h2 className="mt-4 display text-[34px] sm:text-[46px] leading-[1.05] text-ink max-w-2xl">
-                      Claim this profile and have a Passport{" "}
-                      <span className="display-italic">created for the vessel.</span>
+                      Start a real intake for this hull and request a Passport{" "}
+                      <span className="display-italic">to be created.</span>
                     </h2>
                     <p className="mt-5 text-[15.5px] leading-[1.6] text-ink/80 max-w-xl">
-                      We scan your records, verify identity and equipment against independent
-                      sources, and certify a Passport for this hull. Day one your documents are
-                      organized, every day after the sale runs on a record a buyer can trust.
+                      We open an onboarding session, review the vessel identity and records, and use
+                      that intake to scope Passport creation for this hull.
                     </p>
                   </div>
                   <div className="col-span-12 lg:col-span-4 lg:text-right">
@@ -85,7 +84,7 @@ export default async function ClaimPage(props: ClaimPageProps) {
                   <div className="col-span-12 lg:col-span-5">
                     <div className="label">Tell us about the vessel</div>
                     <h3 className="mt-4 display-italic text-[30px] leading-[1.15] text-ink">
-                      We will reply with a scope and a quote.
+                      We will open the intake and follow up from that record.
                     </h3>
                     <p className="mt-5 text-[14.5px] leading-[1.6] text-ink/75 max-w-md">
                       Brokers and insurers are prioritized for the first cohort. The HIN you
@@ -103,7 +102,7 @@ export default async function ClaimPage(props: ClaimPageProps) {
                   <div className="col-span-12 lg:col-span-7">
                     <AccessForm
                       offer="create"
-                      submitLabel="Claim and have one created"
+                      submitLabel="Start onboarding"
                       hin={hin || undefined}
                     />
                   </div>

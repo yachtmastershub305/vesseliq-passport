@@ -1,7 +1,7 @@
 import { fetchHinLookup } from "@/lib/backend";
 
-// Demonstration HIN registry. Prefer the live backend when configured, then
-// fall back to the local demo registry so the sample experience keeps working.
+// Demonstration HIN registry. It is available only through explicit sample
+// entry points and is not part of the default live lookup path.
 
 // This module remains the seam between the demo and the real lookup. The single
 // async function below is the only thing other code calls.
@@ -57,20 +57,24 @@ export async function findVesselByHin(rawHin: string): Promise<HinLookupResult> 
       };
     }
   } catch {
-    // Fall back to the demo registry when the backend is unavailable or the
-    // HIN has no routable backend passport yet.
+    return { status: "not_found", hin };
   }
 
-  const hit = DEMO_REGISTRY[hin];
-  if (hit) {
-    return {
-      status: "found",
-      slug: hit.slug,
-      hin: hit.canonicalHin,
-      vesselName: hit.vesselName,
-    };
-  }
   return { status: "not_found", hin };
+}
+
+export function findSampleVesselByHin(rawHin: string): HinLookupResult {
+  const hin = normalizeHin(rawHin);
+  const hit = DEMO_REGISTRY[hin];
+  if (!hit) {
+    return { status: "not_found", hin };
+  }
+  return {
+    status: "found",
+    slug: hit.slug,
+    hin: hit.canonicalHin,
+    vesselName: hit.vesselName,
+  };
 }
 
 // Surface counts for the honest demo banner copy. Update if the registry grows.

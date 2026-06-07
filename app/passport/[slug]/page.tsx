@@ -62,7 +62,9 @@ export default async function PassportPage(props: PassportPageProps) {
     ? "revoked"
     : !isSample && backendStatus === "archived"
       ? "archived"
-      : requestedView;
+      : !isSample && backendStatus === "transfer_pending"
+        ? "transfer"
+        : requestedView;
   const showAcquireFlow = view === "preview" && acquireUnlocked;
   const isRevoked = view === "revoked";
   const isLivePassport = !isSample;
@@ -122,6 +124,7 @@ export default async function PassportPage(props: PassportPageProps) {
         {view === "transfer" && (
           <TransferBand
             slug={slug}
+            passport={data}
             fromParty={isSample ? "Illustrative seller" : "Recorded holder"}
             toParty={isSample ? "Illustrative buyer" : "Acquiring party"}
             demoEnabled={demoEnabled}
@@ -129,11 +132,11 @@ export default async function PassportPage(props: PassportPageProps) {
         )}
 
         {view === "archived" && (
-          <ArchivedBand slug={slug} isSample={isSample} demoEnabled={demoEnabled} />
+          <ArchivedBand slug={slug} passport={data} isSample={isSample} demoEnabled={demoEnabled} />
         )}
 
         {isRevoked && (
-          <RevokedBand slug={slug} isSample={isSample} demoEnabled={demoEnabled} />
+          <RevokedBand slug={slug} passport={data} isSample={isSample} demoEnabled={demoEnabled} />
         )}
 
         {showAcquireFlow && <AcquirePanel />}

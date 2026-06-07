@@ -20,6 +20,110 @@ export type HinLookupResult = {
   };
 };
 
+export type StartOnboardingSessionInput = {
+  hin?: string;
+  imo_number?: string;
+  make?: string;
+  model?: string;
+  builder?: string;
+  user_id: string;
+};
+
+export type StartOnboardingSessionResult = {
+  session_id: string;
+  vessel_id?: string | null;
+  state: string;
+  status?: string | null;
+  created_at: string;
+  updated_at?: string | null;
+};
+
+export type TransferRequestStatus =
+  | "requested"
+  | "authorized"
+  | "payment_pending"
+  | "completed"
+  | "rejected";
+
+export type CreateTransferRequestInput = {
+  requester_name: string;
+  requester_email: string;
+  message?: string;
+};
+
+export type TransferRequestResult = {
+  request_id: string;
+  passport_id: string;
+  status: TransferRequestStatus;
+  requester_name: string;
+  requester_email: string;
+  message?: string | null;
+  successor_passport_id?: string | null;
+  archive_reason?: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type BackendPostError = BackendError;
+
+export async function postBackendJson<TResponse, TBody extends Record<string, unknown>>(
+  path: string,
+  body: TBody
+): Promise<TResponse> {
+  const baseUrl = getBackendBaseUrl();
+  if (!baseUrl) {
+    throw new Error("backend_base_url_missing");
+  }
+
+  const res = await fetch(`${baseUrl}${path}`, {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const responseBody = await res.json().catch(() => ({}));
+    const err = new Error(`backend_http_${res.status}`) as BackendError;
+    err.status = res.status;
+    err.body = responseBody;
+    throw err;
+  }
+
+  return (await res.json()) as TResponse;
+}
+
+export async function startOnboardingSession(
+  body: StartOnboardingSessionInput
+): Promise<StartOnboardingSessionResult> {
+  return postBackendJson<StartOnboardingSessionResult, StartOnboardingSessionInput>(
+    "/api/v1/onboarding/session",
+    body
+  );
+}
+
+export async function createTransferRequest(
+  passportId: string,
+  body: CreateTransferRequestInput
+): Promise<TransferRequestResult> {
+  return postBackendJson<TransferRequestResult, CreateTransferRequestInput>(
+    `/api/v1/passports/public/${passportId}/transfer-requests`,
+    body
+  );
+}
+
+export async function fetchTransferRequest(
+  passportId: string,
+  requestId: string
+): Promise<TransferRequestResult> {
+  return fetchBackendJson<TransferRequestResult>(
+    `/api/v1/passports/public/${passportId}/transfer-requests/${requestId}`
+  );
+}
+
 type BackendError = Error & {
   status?: number;
   body?: unknown;
@@ -29,6 +133,16 @@ type BackendPassportResponse = {
   passport_id: string;
   status: string;
   mint_timestamp: string;
+  archived_at?: string | null;
+  revoked_at?: string | null;
+  transfer_request?: {
+    request_id: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    successor_passport_id?: string | null;
+    archive_reason?: string | null;
+  } | null;
   snapshot_payload: Record<string, unknown>;
   signature: {
     canonical_hash_sha256: string;
@@ -323,6 +437,20 @@ function buildPassportFromBackendResponse(data: BackendPassportResponse): Passpo
       is_sample: false,
       slug: data.passport_id,
       status: data.status,
+      lifecycle: {
+        archived_at: data.archived_at ?? null,
+        revoked_at: data.revoked_at ?? null,
+        transfer_request: data.transfer_request
+          ? {
+              request_id: data.transfer_request.request_id,
+              status: data.transfer_request.status,
+              created_at: data.transfer_request.created_at,
+              updated_at: data.transfer_request.updated_at,
+              successor_passport_id: data.transfer_request.successor_passport_id ?? null,
+              archive_reason: data.transfer_request.archive_reason ?? null,
+            }
+          : null,
+      },
     },
     vessel,
     manufacturer: deriveManufacturer(vesselRaw),

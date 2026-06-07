@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { getPassportBySlug } from "@/lib/passport-data";
+import { getPassportBySlug, isSamplePassportSlug } from "@/lib/passport-data";
 import { isUuidLike, verifyPublicPassport } from "@/lib/backend";
 
 type BackendError = Error & {
@@ -8,11 +8,7 @@ type BackendError = Error & {
 };
 
 // UUID slugs proxy the live backend verify endpoint.
-// Demo slugs keep the local illustrative verifier so broker walkthroughs
-// can still force positive and negative outcomes.
-//
-// To demo the negative case, pass ?fail=1 and the response flips to
-// verified: false.
+// Explicit sample slugs keep the local illustrative verifier.
 type VerifyRouteContext = {
   params: Promise<{ slug: string }>;
 };
@@ -45,8 +41,11 @@ export async function GET(
     }
   }
 
-  const data = getPassportBySlug(slug);
+  if (!isSamplePassportSlug(slug)) {
+    return Response.json({ verified: false, error: "not_found" }, { status: 404 });
+  }
 
+  const data = getPassportBySlug(slug);
   if (!data) {
     return Response.json({ verified: false, error: "not_found" }, { status: 404 });
   }
@@ -54,25 +53,7 @@ export async function GET(
     return Response.json({ verified: false, error: "no_signature" }, { status: 200 });
   }
 
-  // Slight delay so the UI can show its loading state, the real KMS verify
-  // takes a few hundred ms anyway.
   await new Promise((resolve) => setTimeout(resolve, 450));
-
-  const fail = request.nextUrl.searchParams.get("fail") === "1";
-  if (fail) {
-    return Response.json(
-      {
-        passport_id: data._meta.passport_id,
-        verified: false,
-        status: "tampered",
-        algorithm: data.signature.algorithm,
-        signing_key_id: data.signature.signing_key_id,
-        verified_at: new Date().toISOString(),
-        demo_note: "Forced failure via ?fail=1, illustrative only.",
-      },
-      { status: 200 }
-    );
-  }
 
   return Response.json(
     {

@@ -1,15 +1,22 @@
 import Link from "next/link";
+import { fmtDate } from "@/lib/format";
+import type { Passport } from "@/lib/passport-types";
 
 export function ArchivedBand({
   slug,
+  passport,
   isSample = false,
   demoEnabled = false,
 }: {
   slug: string;
+  passport: Passport;
   isSample?: boolean;
   demoEnabled?: boolean;
 }) {
   const demoSuffix = demoEnabled ? "&demo=1" : "";
+  const transfer = passport._meta.lifecycle?.transfer_request ?? null;
+  const successor = transfer?.successor_passport_id;
+  const archiveReason = transfer?.archive_reason;
   return (
     <section
       className="border-t border-b py-9"
@@ -25,13 +32,10 @@ export function ArchivedBand({
             <span className="label-ink">Status</span>
           </div>
           <h2 className="mt-3 display text-[34px] sm:text-[44px] leading-[1.04] text-ink max-w-2xl">
-            Archived record{" "}
-            <span className="display-italic">from a prior owner.</span>
+            Archived record <span className="display-italic">from a prior ownership state.</span>
           </h2>
           <p className="mt-4 text-[14.5px] leading-[1.6] text-ink/75 max-w-xl">
-            This Passport was closed when ownership transferred. It remains readable as the
-            historical record of the prior holder. The vessel may have a current Passport under a
-            new holder, look it up by HIN to find the active record.
+            This Passport remains readable as a historical record. Any active successor Passport is tracked separately and may be discovered through a fresh lookup for the vessel.
           </p>
         </div>
 
@@ -41,9 +45,9 @@ export function ArchivedBand({
             style={{ borderColor: "var(--brand-line-strong)", backgroundColor: "var(--brand-paper-2)" }}
           >
             <Row k="Status" v="Archived, read only" />
-            <Row k="Closed at" v="2026-05-12" />
-            <Row k="Reason" v="Ownership transfer completed" />
-            <Row k="Successor" v="See current Passport for this HIN" mono />
+            <Row k="Closed at" v={fmtDate(passport._meta.lifecycle?.archived_at)} />
+            <Row k="Reason" v={archiveReason ?? "Superseded by a later lifecycle event"} />
+            <Row k="Successor" v={successor ?? "Not exposed on this public record"} mono />
           </dl>
           <div className="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-2 no-print">
             <Link href="/" className="cta-secondary">

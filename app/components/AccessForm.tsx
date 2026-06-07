@@ -6,6 +6,33 @@ import type { OfferKey } from "@/lib/pricing";
 
 type Role = "Broker" | "Buyer" | "Insurer" | "Builder" | "Other";
 
+type AccessSuccess = {
+  ok: true;
+  offer: OfferKey;
+  session_id: string;
+  vessel_id: string | null;
+  state: string;
+  status: string | null;
+};
+
+const SUCCESS_COPY: Record<OfferKey, { eyebrow: string; headline: string; body: string }> = {
+  create: {
+    eyebrow: "Onboarding started",
+    headline: "Your request is on file.",
+    body: "We created an onboarding session for this hull and will continue from that record.",
+  },
+  acquire: {
+    eyebrow: "Onboarding started",
+    headline: "Your request is on file.",
+    body: "We created an onboarding session and will use it to continue the acquisition workflow.",
+  },
+  transfer_access_request: {
+    eyebrow: "Request recorded",
+    headline: "Your access request is on file.",
+    body: "We created an onboarding session to track this request while the backend transfer workflow is still being wired up.",
+  },
+};
+
 export function AccessForm({
   offer = "create",
   submitLabel = "Request a Passport",
@@ -19,6 +46,31 @@ export function AccessForm({
 }) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [success, setSuccess] = useState<AccessSuccess | null>(null);
+  const successCopy = SUCCESS_COPY[offer];
+
+  function buildErrorMessage(body: unknown): string {
+    if (!body || typeof body !== "object") return "Submission failed. Try again.";
+    const candidate = (body as { error?: unknown }).error;
+    return typeof candidate === "string" && candidate.trim()
+      ? candidate
+      : "Submission failed. Try again.";
+  }
+
+  function isAccessSuccess(body: unknown): body is AccessSuccess {
+    if (!body || typeof body !== "object") return false;
+    const candidate = body as Partial<AccessSuccess>;
+    return candidate.ok === true && typeof candidate.session_id === "string" && typeof candidate.state === "string";
+  }
+
+  function attachedPassportHref() {
+    if (!passportSlug) return "/demo";
+    return `/passport/${passportSlug}`;
+  }
+
+  function attachedPassportLabel() {
+    return passportSlug ? "View attached Passport" : "Open a sample Passport";
+  }
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -35,18 +87,20 @@ export function AccessForm({
     };
 
     setStatus("submitting");
+    setErrorMsg("");
     try {
       const res = await fetch("/api/access", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        setErrorMsg(body?.error ?? "Submission failed. Try again.");
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok || !isAccessSuccess(body)) {
+        setErrorMsg(buildErrorMessage(body));
         setStatus("error");
         return;
       }
+      setSuccess(body);
       setStatus("success");
       form.reset();
     } catch {
@@ -55,23 +109,36 @@ export function AccessForm({
     }
   }
 
-  if (status === "success") {
+  if (status === "success" && success) {
     return (
       <div className="border-t border-b py-10" style={{ borderColor: "var(--brand-line-strong)" }}>
-        <div className="label">Request received</div>
+        <div className="label">{successCopy.eyebrow}</div>
         <div className="mt-3 font-serif-italic text-[28px] leading-tight text-ink">
-          Thank you. We will be in touch within one business day.
+          {successCopy.headline}
         </div>
-        <p className="mt-4 text-[15px] text-ink/70 max-w-md">
-          In the meantime,{" "}
-          <Link
-            href="/passport/bruce-wayne"
-            className="border-b border-ink/60 hover:border-ink"
-          >
-            view a live Passport
-          </Link>{" "}
-          to see what a verified vessel record looks like.
-        </p>
+        <p className="mt-4 text-[15px] text-ink/70 max-w-md">{successCopy.body}</p>
+        <dl className="mt-6 border-t border-b py-3 space-y-2" style={{ borderColor: "var(--brand-line)" }}>
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="label">Session</dt>
+            <dd className="font-mono text-[12px] text-ink">{success.session_id}</dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="label">State</dt>
+            <dd className="text-[13px] text-ink">{success.state}</dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="label">Vessel</dt>
+            <dd className="font-mono text-[12px] text-ink">{success.vessel_id ?? "Pending match"}</dd>
+          </div>
+        </dl>
+        <div className="mt-5 flex flex-wrap items-baseline gap-x-5 gap-y-2">
+          <Link href={attachedPassportHref()} className="border-b border-ink/60 hover:border-ink">
+            {attachedPassportLabel()}
+          </Link>
+          <button type="button" onClick={() => setStatus("idle")} className="label hover:text-ink transition-colors">
+            Submit another request
+          </button>
+        </div>
       </div>
     );
   }

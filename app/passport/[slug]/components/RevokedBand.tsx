@@ -1,11 +1,15 @@
 import Link from "next/link";
+import { fmtDate } from "@/lib/format";
+import type { Passport } from "@/lib/passport-types";
 
 export function RevokedBand({
   slug,
+  passport,
   isSample = false,
   demoEnabled = false,
 }: {
   slug: string;
+  passport: Passport;
   isSample?: boolean;
   demoEnabled?: boolean;
 }) {
@@ -35,13 +39,10 @@ export function RevokedBand({
             </span>
           </div>
           <h2 className="mt-3 display text-[34px] sm:text-[44px] leading-[1.04] text-ink max-w-2xl">
-            This Passport was{" "}
-            <span className="display-italic">invalidated and withdrawn.</span>
+            This Passport was <span className="display-italic">invalidated and withdrawn.</span>
           </h2>
           <p className="mt-4 text-[14.5px] leading-[1.6] text-ink/80 max-w-xl">
-            The record was found to contain incorrect data and has been revoked by VesselIQ. The
-            cryptographic signature is preserved for audit but the data should not be relied on.
-            Public verification of this Passport returns 410 Gone.
+            VesselIQ revoked this record. The cryptographic signature is preserved for audit, but the public data should no longer be relied on. Public verification of this Passport returns 410 Gone.
           </p>
         </div>
 
@@ -54,8 +55,8 @@ export function RevokedBand({
             }}
           >
             <Row k="Status" v="Revoked" />
-            <Row k="Revoked at" v="2026-05-20" />
-            <Row k="Reason" v="HIN reassignment error, corrected upstream" />
+            <Row k="Revoked at" v={fmtDate(passport._meta.lifecycle?.revoked_at ?? passport._meta.lifecycle?.archived_at)} />
+            <Row k="Reason" v="Withdrawn from active use" />
             <Row k="Public endpoint" v="Returns 410 Gone" mono />
           </dl>
           <div className="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-2 no-print">

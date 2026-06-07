@@ -1,3 +1,18 @@
+export type PassportTransferLifecycle = {
+  request_id: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  successor_passport_id?: string | null;
+  archive_reason?: string | null;
+};
+
+export type PassportLifecycle = {
+  archived_at?: string | null;
+  revoked_at?: string | null;
+  transfer_request?: PassportTransferLifecycle | null;
+};
+
 export type PassportMeta = {
   note: string;
   schema_version: string;
@@ -6,6 +21,7 @@ export type PassportMeta = {
   is_sample?: boolean;
   slug?: string;
   status?: string;
+  lifecycle?: PassportLifecycle;
 };
 
 export type Vessel = {
