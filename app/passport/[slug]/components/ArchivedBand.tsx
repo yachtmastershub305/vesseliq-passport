@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { PassportLifecycleResult } from "@/lib/backend";
 import { fmtDate } from "@/lib/format";
 import type { Passport } from "@/lib/passport-types";
 
@@ -7,16 +8,17 @@ export function ArchivedBand({
   passport,
   isSample = false,
   demoEnabled = false,
+  lifecycle = null,
 }: {
   slug: string;
   passport: Passport;
+  lifecycle?: PassportLifecycleResult | null;
   isSample?: boolean;
   demoEnabled?: boolean;
 }) {
   const demoSuffix = demoEnabled ? "&demo=1" : "";
-  const transfer = passport._meta.lifecycle?.transfer_request ?? null;
-  const successor = transfer?.successor_passport_id;
-  const archiveReason = transfer?.archive_reason;
+  const successor = lifecycle?.successor_passport_id;
+  const archiveReason = lifecycle?.archived_reason;
   return (
     <section
       className="border-t border-b py-9"
@@ -45,7 +47,7 @@ export function ArchivedBand({
             style={{ borderColor: "var(--brand-line-strong)", backgroundColor: "var(--brand-paper-2)" }}
           >
             <Row k="Status" v="Archived, read only" />
-            <Row k="Closed at" v={fmtDate(passport._meta.lifecycle?.archived_at)} />
+            <Row k="Closed at" v={fmtDate(lifecycle?.archived_at)} />
             <Row k="Reason" v={archiveReason ?? "Superseded by a later lifecycle event"} />
             <Row k="Successor" v={successor ?? "Not exposed on this public record"} mono />
           </dl>

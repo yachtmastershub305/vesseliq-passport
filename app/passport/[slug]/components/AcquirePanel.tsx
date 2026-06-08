@@ -8,7 +8,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { isUuidLike, type TransferRequestResult, type TransferRequestStatus } from "@/lib/backend";
+import {
+  completeTransfer,
+  createAccessRequest,
+  fetchAccessRequestProgress,
+  fetchPassportLifecycle,
+  fetchTransferState,
+  isUuidLike,
+  type AccessRequestProgressResult,
+  type AccessRequestResult,
+  type PassportLifecycleResult,
+  type TransferCompleteResult,
+  type TransferRequestStatus,
+  type TransferStateResult,
+} from "@/lib/backend";
 import { PRICING } from "@/lib/pricing";
 import type { ViewState } from "@/lib/passport-view";
 
@@ -21,6 +34,13 @@ type StoredRequest = {
   createdAt: string;
 };
 
+type LifecycleSnapshot = {
+  requestId?: string | null;
+  requestStatus: TransferRequestStatus | null;
+  requestCreatedAt: string | null;
+  successorPassportId: string | null;
+};
+
 type GateCtx = {
   phase: GatePhase;
   setPhase: (phase: GatePhase) => void;
@@ -30,11 +50,12 @@ type GateCtx = {
   view: ViewState;
   mode: GateMode;
   requestId: string | null;
+  setRequestId: (requestId: string | null) => void;
   requestStatus: TransferRequestStatus | null;
   requestCreatedAt: string | null;
   requestLoading: boolean;
   refreshRequest: () => Promise<void>;
-  applyRequestResult: (result: TransferRequestResult) => void;
+  applyRequestResult: (result: LifecycleSnapshot) => void;
   clearRequest: () => void;
 };
 
@@ -78,14 +99,14 @@ function readStoredRequest(passportId: string): StoredRequest | null {
   }
 }
 
-function writeStoredRequest(passportId: string, result: TransferRequestResult) {
+function writeStoredRequest(passportId: string, result: LifecycleSnapshot) {
   if (typeof window === "undefined") return;
   window.sessionStorage.setItem(
     storageKey(passportId),
     JSON.stringify({
-      requestId: result.request_id,
-      status: result.status,
-      createdAt: result.created_at,
+      requestId: "requestId" in result ? result.requestId : "",
+      status: result.requestStatus ?? "requested",
+      createdAt: result.requestCreatedAt ?? new Date().toISOString(),
     })
   );
 }
@@ -165,42 +186,38 @@ function formatRequestDate(value: string) {
   });
 }
 
-async function createLiveTransferRequest(passportId: string, payload: {
-  requester_name: string;
-  requester_email: string;
-  message?: string;
-}) {
-  const res = await fetch(`/api/passport/${passportId}/transfer-requests`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const error =
-      body && typeof body === "object" && typeof (body as { error?: unknown }).error === "string"
-        ? (body as { error: string }).error
-        : "Submission failed. Try again.";
-    throw new Error(error);
+function responseStatusToTransferStatus(
+  progress: AccessRequestProgressResult,
+  transferState: TransferStateResult | null
+): TransferRequestStatus {
+  if (progress.status === "completed") return "completed";
+  if (progress.status === "rejected") return "rejected";
+  if (progress.payment_status === "payment_pending" || transferState?.payment_status === "payment_pending") {
+    return "payment_pending";
   }
-  return body as TransferRequestResult;
+  if (progress.status === "authorized") return "authorized";
+  return "requested";
 }
 
-async function fetchLiveTransferRequest(passportId: string, requestId: string) {
-  const res = await fetch(`/api/passport/${passportId}/transfer-requests/${requestId}`, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-  });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const error =
-      body && typeof body === "object" && typeof (body as { error?: unknown }).error === "string"
-        ? (body as { error: string }).error
-        : "Request lookup failed.";
-    throw new Error(error);
-  }
-  return body as TransferRequestResult;
+async function createLiveAccessRequest(passportId: string, payload: {
+  buyer_name?: string;
+  buyer_email?: string;
+  message?: string;
+}) {
+  return createAccessRequest(passportId, payload);
+}
+
+async function fetchLiveLifecycle(passportId: string, requestId: string): Promise<LifecycleSnapshot> {
+  const [progress, transferState, lifecycle] = await Promise.all([
+    fetchAccessRequestProgress(passportId, requestId),
+    fetchTransferState(passportId),
+    fetchPassportLifecycle(passportId),
+  ]);
+  return {
+    requestStatus: responseStatusToTransferStatus(progress, transferState),
+    requestCreatedAt: progress.requested_at,
+    successorPassportId: lifecycle.successor_passport_id ?? lifecycle.replacement_passport_id ?? null,
+  };
 }
 
 export function AcquireFlowProvider({
@@ -232,21 +249,25 @@ export function AcquireFlowProvider({
     clearStoredRequest(slug);
   }
 
-  function applyRequestResult(result: TransferRequestResult) {
-    setRequestId(result.request_id);
-    setRequestStatus(result.status);
-    setRequestCreatedAt(result.created_at);
-    setPhase(phaseFromStatus(result.status, view));
+  function applyRequestResult(result: LifecycleSnapshot) {
+    setRequestStatus(result.requestStatus);
+    setRequestCreatedAt(result.requestCreatedAt);
+    setPhase(phaseFromStatus(result.requestStatus, view));
 
-    if (result.status === "requested" || result.status === "authorized" || result.status === "payment_pending") {
-      writeStoredRequest(slug, result);
+    if (requestId && (result.requestStatus === "requested" || result.requestStatus === "authorized" || result.requestStatus === "payment_pending")) {
+      writeStoredRequest(slug, {
+        requestId,
+        requestStatus: result.requestStatus,
+        requestCreatedAt: result.requestCreatedAt,
+        successorPassportId: result.successorPassportId,
+      });
     } else {
       clearStoredRequest(slug);
     }
 
-    if (result.status === "completed") {
-      if (result.successor_passport_id) {
-        router.push(`/passport/${result.successor_passport_id}?view=full&from=gate`);
+    if (result.requestStatus === "completed") {
+      if (result.successorPassportId) {
+        router.push(`/passport/${result.successorPassportId}?view=full&from=gate`);
       } else {
         router.push(`/passport/${slug}?from=gate`);
       }
@@ -257,7 +278,7 @@ export function AcquireFlowProvider({
     if (mode !== "live" || !requestId) return;
     setRequestLoading(true);
     try {
-      const result = await fetchLiveTransferRequest(slug, requestId);
+      const result = await fetchLiveLifecycle(slug, requestId);
       applyRequestResult(result);
     } finally {
       setRequestLoading(false);
@@ -275,6 +296,7 @@ export function AcquireFlowProvider({
         view,
         mode,
         requestId,
+        setRequestId,
         requestStatus,
         requestCreatedAt,
         requestLoading,
@@ -625,7 +647,7 @@ function StepDot({ done, current }: { done: boolean; current: boolean }) {
 }
 
 function LiveRequestStep() {
-  const { slug, applyRequestResult } = useGate();
+  const { slug, setRequestId, applyRequestResult } = useGate();
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -636,12 +658,17 @@ function LiveRequestStep() {
     setSubmitting(true);
     setErrorMsg("");
     try {
-      const result = await createLiveTransferRequest(slug, {
-        requester_name: String(fd.get("name") ?? "").trim(),
-        requester_email: String(fd.get("email") ?? "").trim(),
+      const result = await createLiveAccessRequest(slug, {
+        buyer_name: String(fd.get("name") ?? "").trim(),
+        buyer_email: String(fd.get("email") ?? "").trim(),
         message: String(fd.get("message") ?? "").trim() || undefined,
       });
-      applyRequestResult(result);
+      setRequestId(result.access_request_id);
+      applyRequestResult({
+        requestStatus: result.status,
+        requestCreatedAt: result.created_at,
+        successorPassportId: null,
+      });
     } catch (error) {
       setErrorMsg(error instanceof Error ? error.message : "Submission failed. Try again.");
     } finally {

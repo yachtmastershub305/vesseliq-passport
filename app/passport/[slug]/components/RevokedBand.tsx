@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { PassportLifecycleResult } from "@/lib/backend";
 import { fmtDate } from "@/lib/format";
 import type { Passport } from "@/lib/passport-types";
 
@@ -7,9 +8,11 @@ export function RevokedBand({
   passport,
   isSample = false,
   demoEnabled = false,
+  lifecycle = null,
 }: {
   slug: string;
   passport: Passport;
+  lifecycle?: PassportLifecycleResult | null;
   isSample?: boolean;
   demoEnabled?: boolean;
 }) {
@@ -55,8 +58,8 @@ export function RevokedBand({
             }}
           >
             <Row k="Status" v="Revoked" />
-            <Row k="Revoked at" v={fmtDate(passport._meta.lifecycle?.revoked_at ?? passport._meta.lifecycle?.archived_at)} />
-            <Row k="Reason" v="Withdrawn from active use" />
+            <Row k="Revoked at" v={fmtDate(lifecycle?.revoked_at)} />
+            <Row k="Reason" v={lifecycle?.revoked_reason ?? "Withdrawn from active use"} />
             <Row k="Public endpoint" v="Returns 410 Gone" mono />
           </dl>
           <div className="mt-4 flex flex-wrap items-baseline gap-x-5 gap-y-2 no-print">

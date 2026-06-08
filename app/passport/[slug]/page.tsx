@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SiteNav } from "@/app/components/SiteNav";
 import { SiteFooter } from "@/app/components/SiteFooter";
+import { fetchPassportCompletion, fetchPassportLifecycle } from "@/lib/backend";
 import { getAllPassportSlugs, getPassportForRoute } from "@/lib/passport-data";
 import { parseViewState } from "@/lib/passport-view";
 import { PassportHeader } from "./components/PassportHeader";
@@ -45,6 +46,8 @@ export default async function PassportPage(props: PassportPageProps) {
   if (!data) notFound();
 
   const isSample = data._meta.is_sample === true;
+  const lifecycle = !isSample ? await fetchPassportLifecycle(slug).catch(() => null) : null;
+  const completion = !isSample ? await fetchPassportCompletion(slug).catch(() => null) : null;
   const demoEnabled = sp.demo === "1";
   const backendStatus = data._meta.status;
   // Sample Passport normally hides the acquire flow because nothing real
@@ -119,12 +122,13 @@ export default async function PassportPage(props: PassportPageProps) {
           </Link>
         </div>
 
-        <PassportHeader data={data} view={view} isSample={isSample} slug={slug} />
+        <PassportHeader data={data} view={view} isSample={isSample} slug={slug} completion={completion} />
 
         {view === "transfer" && (
           <TransferBand
             slug={slug}
             passport={data}
+            lifecycle={lifecycle}
             fromParty={isSample ? "Illustrative seller" : "Recorded holder"}
             toParty={isSample ? "Illustrative buyer" : "Acquiring party"}
             demoEnabled={demoEnabled}
@@ -132,11 +136,11 @@ export default async function PassportPage(props: PassportPageProps) {
         )}
 
         {view === "archived" && (
-          <ArchivedBand slug={slug} passport={data} isSample={isSample} demoEnabled={demoEnabled} />
+          <ArchivedBand slug={slug} passport={data} lifecycle={lifecycle} isSample={isSample} demoEnabled={demoEnabled} />
         )}
 
         {isRevoked && (
-          <RevokedBand slug={slug} passport={data} isSample={isSample} demoEnabled={demoEnabled} />
+          <RevokedBand slug={slug} passport={data} lifecycle={lifecycle} isSample={isSample} demoEnabled={demoEnabled} />
         )}
 
         {showAcquireFlow && <AcquirePanel />}

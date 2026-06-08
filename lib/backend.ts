@@ -11,13 +11,42 @@ const DEFAULT_SCORE_WEIGHTS = {
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+type BackendError = Error & {
+  status?: number;
+  body?: unknown;
+};
+
+export type BackendPostError = BackendError;
+
 export type HinLookupResult = {
   vessel: {
     vessel_id: string;
     passport_id?: string | null;
     hin: string | null;
     name: string | null;
+    discovery_status?: string | null;
   };
+};
+
+export type CreatePassportRequestInput = {
+  name: string;
+  email: string;
+  role: string;
+  offer: string;
+  message?: string;
+  hin?: string;
+  passport_id?: string;
+};
+
+export type PassportRequestResult = {
+  request_id: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  hin?: string | null;
+  vessel_id?: string | null;
+  passport_id?: string | null;
+  next_step: string;
 };
 
 export type StartOnboardingSessionInput = {
@@ -64,70 +93,156 @@ export type TransferRequestResult = {
   updated_at: string;
 };
 
-export type BackendPostError = BackendError;
-
-export async function postBackendJson<TResponse, TBody extends Record<string, unknown>>(
-  path: string,
-  body: TBody
-): Promise<TResponse> {
-  const baseUrl = getBackendBaseUrl();
-  if (!baseUrl) {
-    throw new Error("backend_base_url_missing");
-  }
-
-  const res = await fetch(`${baseUrl}${path}`, {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!res.ok) {
-    const responseBody = await res.json().catch(() => ({}));
-    const err = new Error(`backend_http_${res.status}`) as BackendError;
-    err.status = res.status;
-    err.body = responseBody;
-    throw err;
-  }
-
-  return (await res.json()) as TResponse;
-}
-
-export async function startOnboardingSession(
-  body: StartOnboardingSessionInput
-): Promise<StartOnboardingSessionResult> {
-  return postBackendJson<StartOnboardingSessionResult, StartOnboardingSessionInput>(
-    "/api/v1/onboarding/session",
-    body
-  );
-}
-
-export async function createTransferRequest(
-  passportId: string,
-  body: CreateTransferRequestInput
-): Promise<TransferRequestResult> {
-  return postBackendJson<TransferRequestResult, CreateTransferRequestInput>(
-    `/api/v1/passports/public/${passportId}/transfer-requests`,
-    body
-  );
-}
-
-export async function fetchTransferRequest(
-  passportId: string,
-  requestId: string
-): Promise<TransferRequestResult> {
-  return fetchBackendJson<TransferRequestResult>(
-    `/api/v1/passports/public/${passportId}/transfer-requests/${requestId}`
-  );
-}
-
-type BackendError = Error & {
-  status?: number;
-  body?: unknown;
+export type CreateAccessRequestInput = {
+  buyer_name?: string;
+  buyer_email?: string;
+  buyer_company?: string;
+  message?: string;
 };
+
+export type AccessRequestResult = {
+  access_request_id: string;
+  passport_id: string;
+  status: TransferRequestStatus;
+  created_at: string;
+};
+
+export type AccessRequestProgressResult = {
+  access_request_id: string;
+  passport_id: string;
+  status: TransferRequestStatus;
+  requested_at: string;
+  authorized_at?: string | null;
+  payment_status?: string | null;
+  completed_at?: string | null;
+  rejected_at?: string | null;
+};
+
+export type TransferStateResult = {
+  passport_id: string;
+  state: string;
+  active_request_id?: string | null;
+  current_holder?: string | null;
+  next_holder?: string | null;
+  requested_at?: string | null;
+  authorized_at?: string | null;
+  payment_status?: string | null;
+  completed_at?: string | null;
+};
+
+export type PassportLifecycleResult = {
+  passport_id: string;
+  status: string;
+  transfer_requested_at?: string | null;
+  broker_authorized_at?: string | null;
+  payment_completed_at?: string | null;
+  old_holder_label?: string | null;
+  new_holder_label?: string | null;
+  archived_at?: string | null;
+  archived_reason?: string | null;
+  successor_passport_id?: string | null;
+  successor_public_url?: string | null;
+  revoked_at?: string | null;
+  revoked_reason?: string | null;
+  replacement_passport_id?: string | null;
+};
+
+export type TransferCompleteInput = {
+  access_request_id: string;
+  payment_reference?: string;
+};
+
+export type TransferCompleteResult = {
+  passport_id: string;
+  old_status: string;
+  new_status: string;
+  successor_passport_id?: string | null;
+  completed_at: string;
+};
+
+export type PassportSurveyResult = {
+  survey_id: string;
+  passport_id: string;
+  file_url: string;
+  uploaded_by: string;
+  uploaded_at: string;
+};
+
+export type PassportInspectionResult = {
+  inspection_id: string;
+  passport_id: string;
+  inspector_name: string;
+  inspected_at: string;
+};
+
+export type PassportCompletionResult = {
+  passport_id: string;
+  has_survey: boolean;
+  has_inspection: boolean;
+  is_complete: boolean;
+  survey?: PassportSurveyResult | null;
+  inspection?: PassportInspectionResult | null;
+};
+
+export type PublicKeyResult = {
+  public_key_url: string;
+};
+
+export async function fetchPassportCompletion(passportId: string): Promise<PassportCompletionResult> {
+  return fetchBackendJson<PassportCompletionResult>(`/api/v1/passports/${passportId}/completion`);
+}
+
+export async function fetchPassportPublicKey(passportId: string): Promise<PublicKeyResult> {
+  return { public_key_url: `${getBackendBaseUrl() ?? ""}/.well-known/passport-pubkey.pem` };
+}
+
+export async function fetchPassportPdfQr(passportId: string): Promise<string> {
+  return `${getBackendBaseUrl() ?? ""}/api/v1/passports/public/${passportId}/verify`;
+}
+
+export function qrDataUri(value: string): string {
+  const escaped = value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><rect width="128" height="128" fill="white"/><rect x="8" y="8" width="112" height="112" fill="none" stroke="black" stroke-width="2"/><text x="64" y="54" text-anchor="middle" font-size="10" font-family="monospace">VERIFY URL</text><text x="64" y="70" text-anchor="middle" font-size="7" font-family="monospace">${escaped}</text></svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+}
+
+export function publicKeyUrlFromVerifyUrl(verifyUrl: string): string {
+  try {
+    const url = new URL(verifyUrl, "http://localhost");
+    return `${url.origin}/.well-known/passport-pubkey.pem`;
+  } catch {
+    return "/.well-known/passport-pubkey.pem";
+  }
+}
+
+export function absoluteVerifyUrl(verifyUrl: string): string {
+  if (/^https?:\/\//i.test(verifyUrl)) return verifyUrl;
+  const base = getBackendBaseUrl() ?? "";
+  return `${base}${verifyUrl}`;
+}
+
+export type PrintPassportPayload = {
+  verify_url: string;
+  qr_data_uri: string;
+  public_key_url: string;
+};
+
+export async function buildPrintPassportPayload(passportId: string): Promise<PrintPassportPayload> {
+  const verify_url = await fetchPassportPdfQr(passportId);
+  return {
+    verify_url,
+    qr_data_uri: qrDataUri(verify_url),
+    public_key_url: publicKeyUrlFromVerifyUrl(verify_url),
+  };
+}
+
+export function printPassportDocument(): void {
+  if (typeof window !== "undefined") window.print();
+}
 
 type BackendPassportResponse = {
   passport_id: string;
@@ -180,6 +295,36 @@ function getBackendBaseUrl(): string | null {
   return base || null;
 }
 
+export async function postBackendJson<TResponse, TBody extends Record<string, unknown>>(
+  path: string,
+  body: TBody
+): Promise<TResponse> {
+  const baseUrl = getBackendBaseUrl();
+  if (!baseUrl) {
+    throw new Error("backend_base_url_missing");
+  }
+
+  const res = await fetch(`${baseUrl}${path}`, {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const responseBody = await res.json().catch(() => ({}));
+    const err = new Error(`backend_http_${res.status}`) as BackendError;
+    err.status = res.status;
+    err.body = responseBody;
+    throw err;
+  }
+
+  return (await res.json()) as TResponse;
+}
+
 async function fetchBackendJson<T>(path: string): Promise<T> {
   const baseUrl = getBackendBaseUrl();
   if (!baseUrl) {
@@ -200,6 +345,84 @@ async function fetchBackendJson<T>(path: string): Promise<T> {
   }
 
   return (await res.json()) as T;
+}
+
+export async function createPassportRequest(
+  body: CreatePassportRequestInput
+): Promise<PassportRequestResult> {
+  return postBackendJson<PassportRequestResult, CreatePassportRequestInput>(
+    "/api/v1/passports/passport-requests",
+    body
+  );
+}
+
+export async function fetchPassportRequest(requestId: string): Promise<PassportRequestResult> {
+  return fetchBackendJson<PassportRequestResult>(`/api/v1/passports/passport-requests/${requestId}`);
+}
+
+export async function startOnboardingSession(
+  body: StartOnboardingSessionInput
+): Promise<StartOnboardingSessionResult> {
+  return postBackendJson<StartOnboardingSessionResult, StartOnboardingSessionInput>(
+    "/api/v1/onboarding/session",
+    body
+  );
+}
+
+export async function createTransferRequest(
+  passportId: string,
+  body: CreateTransferRequestInput
+): Promise<TransferRequestResult> {
+  return postBackendJson<TransferRequestResult, CreateTransferRequestInput>(
+    `/api/v1/passports/public/${passportId}/transfer-requests`,
+    body
+  );
+}
+
+export async function fetchTransferRequest(
+  passportId: string,
+  requestId: string
+): Promise<TransferRequestResult> {
+  return fetchBackendJson<TransferRequestResult>(
+    `/api/v1/passports/public/${passportId}/transfer-requests/${requestId}`
+  );
+}
+
+export async function createAccessRequest(
+  passportId: string,
+  body: CreateAccessRequestInput
+): Promise<AccessRequestResult> {
+  return postBackendJson<AccessRequestResult, CreateAccessRequestInput>(
+    `/api/v1/passports/${passportId}/access-requests`,
+    body
+  );
+}
+
+export async function fetchAccessRequestProgress(
+  passportId: string,
+  accessRequestId: string
+): Promise<AccessRequestProgressResult> {
+  return fetchBackendJson<AccessRequestProgressResult>(
+    `/api/v1/passports/${passportId}/access-requests/${accessRequestId}`
+  );
+}
+
+export async function fetchTransferState(passportId: string): Promise<TransferStateResult> {
+  return fetchBackendJson<TransferStateResult>(`/api/v1/passports/${passportId}/transfer-state`);
+}
+
+export async function fetchPassportLifecycle(passportId: string): Promise<PassportLifecycleResult> {
+  return fetchBackendJson<PassportLifecycleResult>(`/api/v1/passports/${passportId}/lifecycle`);
+}
+
+export async function completeTransfer(
+  passportId: string,
+  body: TransferCompleteInput
+): Promise<TransferCompleteResult> {
+  return postBackendJson<TransferCompleteResult, TransferCompleteInput>(
+    `/api/v1/passports/${passportId}/transfer/complete`,
+    body
+  );
 }
 
 function unwrapAnnotated<T>(value: unknown): T | null {
@@ -318,124 +541,15 @@ export async function fetchHinLookup(hin: string): Promise<HinLookupResult> {
 function buildPassportFromBackendResponse(data: BackendPassportResponse): Passport {
   const snapshot = data.snapshot_payload ?? {};
   const vesselRaw = ((snapshot.vessel ?? {}) as Record<string, unknown>);
-  const vessel = {
-    vessel_id: String(vesselRaw.vessel_id ?? ""),
-    vessel_version_id: unwrapAnnotated<string>(vesselRaw.vessel_version_id) ?? String(vesselRaw.vessel_version_id ?? ""),
-    catalog_id: unwrapAnnotated<string>(vesselRaw.catalog_id) ?? String(vesselRaw.vessel_id ?? ""),
-    hin: unwrapAnnotated<string>(vesselRaw.hin) ?? "",
-    imo_number: unwrapAnnotated<string>(vesselRaw.imo_number),
-    mmsi: unwrapAnnotated<string>(vesselRaw.mmsi),
-    official_number_us: unwrapAnnotated<string>(vesselRaw.official_number_us),
-    name: unwrapAnnotated<string>(vesselRaw.name) ?? "Unnamed vessel",
-    flag_state: unwrapAnnotated<string>(vesselRaw.flag_state),
-    builder: unwrapAnnotated<string>(vesselRaw.builder) ?? "Unknown",
-    make: unwrapAnnotated<string>(vesselRaw.make) ?? "Unknown",
-    model: unwrapAnnotated<string>(vesselRaw.model) ?? "Unknown",
-    model_year: Number(unwrapAnnotated<number>(vesselRaw.model_year) ?? 0),
-    loa_m: Number(unwrapAnnotated<number>(vesselRaw.loa_m) ?? 0),
-    beam_m: Number(unwrapAnnotated<number>(vesselRaw.beam_m) ?? 0),
-    draft_m: Number(unwrapAnnotated<number>(vesselRaw.draft_m) ?? 0),
-    depth_m: Number(unwrapAnnotated<number>(vesselRaw.depth_m) ?? 0),
-    hull_material: unwrapAnnotated<string>(vesselRaw.hull_material),
-    vessel_type: unwrapAnnotated<string>(vesselRaw.vessel_type) ?? "vessel",
-    classification_society: unwrapAnnotated<string>(vesselRaw.classification_society),
-    verification_status: String(unwrapAnnotated<string>(vesselRaw.verification_status) ?? "UNVERIFIED"),
-    confidence_pct: Number(unwrapAnnotated<number>(vesselRaw.confidence_pct) ?? 0),
-    service_status: unwrapAnnotated<string>(vesselRaw.service_status),
-    service_status_detail: unwrapAnnotated<string>(vesselRaw.service_status_detail),
-    documented: unwrapAnnotated<string>(vesselRaw.documented),
-    doc_status: unwrapAnnotated<string>(vesselRaw.doc_status),
-    doc_type: unwrapAnnotated<string>(vesselRaw.doc_type),
-    doc_issued_date: unwrapAnnotated<string>(vesselRaw.doc_issued_date),
-    doc_expiration_date: unwrapAnnotated<string>(vesselRaw.doc_expiration_date),
-    manufacturer_mic: unwrapAnnotated<string>(vesselRaw.manufacturer_mic),
-    manufacturer_id: unwrapAnnotated<string>(vesselRaw.manufacturer_id),
-    created_at: data.mint_timestamp,
-    updated_at: data.mint_timestamp,
-    attributes: {},
-  };
-
-  const equipment = (Array.isArray(snapshot.equipment) ? snapshot.equipment : []).map((item) => {
-    const eq = item as Record<string, unknown>;
-    return {
-      equipment_instance_id: String(eq.equipment_instance_id ?? ""),
-      serial_number: unwrapAnnotated<string>(eq.serial_number) ?? "—",
-      installed_at: unwrapAnnotated<string>(eq.installed_at) ?? data.mint_timestamp,
-      removed_at: null,
-      subsystem_node_id: String(eq.subsystem_node_id ?? ""),
-      attributes: (eq.attributes ?? {}) as Record<string, string | number | boolean | null>,
-      model: {
-        manufacturer: unwrapAnnotated<string>(eq.manufacturer) ?? "Unknown",
-        model_number: unwrapAnnotated<string>(eq.model_number) ?? "Unknown",
-        equipment_type: String(((eq.attributes ?? {}) as Record<string, unknown>).equipment_type ?? "Equipment"),
-        specs: {},
-      },
-    };
-  });
-
-  const systems = (Array.isArray(snapshot.systems) ? snapshot.systems : []).map((item) => {
-    const sys = item as Record<string, unknown>;
-    const systemId = String(sys.system_id ?? "");
-    return {
-      system_id: systemId,
-      system_type: String(sys.system_type ?? "SYSTEM"),
-      name: unwrapAnnotated<string>(sys.name) ?? String(sys.system_type ?? "System"),
-      attributes: (sys.attributes ?? {}) as Record<string, unknown>,
-      equipment: equipment.filter((eq) => eq.subsystem_node_id === systemId),
-    };
-  });
-
-  const serviceEvents = (Array.isArray(snapshot.service_history) ? snapshot.service_history : []).map((item) => {
-    const ev = item as Record<string, unknown>;
-    return {
-      service_event_id: String(ev.service_event_id ?? ""),
-      event_date: String(ev.event_date ?? ""),
-      event_type: String(ev.event_type ?? "Service"),
-      meter_reading_hrs: typeof ev.meter_reading_hrs === "number" ? ev.meter_reading_hrs : null,
-      work_order_ref: "—",
-      performed_by: String(ev.performed_by ?? "Unknown"),
-      task_code: String(ev.event_type ?? "SERVICE"),
-      equipment_instance_id: null,
-      notes: String(ev.description ?? ""),
-      line_items: [],
-    };
-  });
-
-  const provenance = [
-    ...serviceEvents.map((ev) => ({
-      provenance_id: ev.service_event_id,
-      entity: "service_event",
-      source_name: "Service history",
-      source_type: "user_submission",
-      source_uri: null,
-      source_url: null,
-      license: "restricted",
-      captured_at: ev.event_date,
-      captured_by: ev.performed_by,
-      payload_summary: ev.notes || `${ev.event_type} on ${ev.event_date}`,
-    })),
-    ...equipment.map((eq) => ({
-      provenance_id: eq.equipment_instance_id,
-      entity: "equipment_instance",
-      source_name: eq.model.manufacturer,
-      source_type: "oem_data",
-      source_uri: null,
-      source_url: null,
-      license: "restricted",
-      captured_at: eq.installed_at,
-      captured_by: "VesselIQ",
-      payload_summary: `${eq.model.manufacturer} ${eq.model.model_number}`,
-    })),
-  ];
+  const manufacturer = deriveManufacturer(vesselRaw);
+  const scoring = buildScoring(snapshot);
 
   return {
     _meta: {
-      note: "Live backend passport",
+      note: "Live VesselIQ Passport record.",
       schema_version: String(snapshot.schema_version ?? "1.0.0"),
       passport_id: data.passport_id,
       issued: data.mint_timestamp,
-      is_sample: false,
-      slug: data.passport_id,
       status: data.status,
       lifecycle: {
         archived_at: data.archived_at ?? null,
@@ -452,12 +566,47 @@ function buildPassportFromBackendResponse(data: BackendPassportResponse): Passpo
           : null,
       },
     },
-    vessel,
-    manufacturer: deriveManufacturer(vesselRaw),
-    systems,
-    service_events: serviceEvents,
-    provenance,
-    scoring: buildScoring(snapshot),
+    vessel: {
+      vessel_id: String(unwrapAnnotated<string>(vesselRaw.vessel_id) ?? ""),
+      vessel_version_id: String(unwrapAnnotated<string>(vesselRaw.vessel_version_id) ?? ""),
+      catalog_id: String(unwrapAnnotated<string>(vesselRaw.catalog_id) ?? "catalog"),
+      hin: String(unwrapAnnotated<string>(vesselRaw.hin) ?? ""),
+      imo_number: unwrapAnnotated<string>(vesselRaw.imo_number),
+      mmsi: unwrapAnnotated<string>(vesselRaw.mmsi),
+      official_number_us: unwrapAnnotated<string>(vesselRaw.official_number_us),
+      name: String(unwrapAnnotated<string>(vesselRaw.name) ?? "Vessel of record"),
+      flag_state: unwrapAnnotated<string>(vesselRaw.flag_state),
+      builder: String(unwrapAnnotated<string>(vesselRaw.builder) ?? manufacturer.company_name),
+      make: String(unwrapAnnotated<string>(vesselRaw.make) ?? manufacturer.company_name),
+      model: String(unwrapAnnotated<string>(vesselRaw.model) ?? "Unknown"),
+      model_year: Number(unwrapAnnotated<number>(vesselRaw.model_year) ?? 0),
+      loa_m: Number(unwrapAnnotated<number>(vesselRaw.loa_m) ?? 0),
+      beam_m: Number(unwrapAnnotated<number>(vesselRaw.beam_m) ?? 0),
+      draft_m: Number(unwrapAnnotated<number>(vesselRaw.draft_m) ?? 0),
+      depth_m: Number(unwrapAnnotated<number>(vesselRaw.depth_m) ?? 0),
+      hull_material: unwrapAnnotated<string>(vesselRaw.hull_material),
+      vessel_type: String(unwrapAnnotated<string>(vesselRaw.vessel_type) ?? "Unknown"),
+      classification_society: unwrapAnnotated<string>(vesselRaw.classification_society),
+      verification_status: String(unwrapAnnotated<string>(vesselRaw.verification_status) ?? "unverified"),
+      confidence_pct: Number(unwrapAnnotated<number>(vesselRaw.confidence_pct) ?? scoring.confidence_pct),
+      service_status: unwrapAnnotated<string>(vesselRaw.service_status),
+      service_status_detail: unwrapAnnotated<string>(vesselRaw.service_status_detail),
+      documented: unwrapAnnotated<string>(vesselRaw.documented),
+      doc_status: unwrapAnnotated<string>(vesselRaw.doc_status),
+      doc_type: unwrapAnnotated<string>(vesselRaw.doc_type),
+      doc_issued_date: unwrapAnnotated<string>(vesselRaw.doc_issued_date),
+      doc_expiration_date: unwrapAnnotated<string>(vesselRaw.doc_expiration_date),
+      manufacturer_mic: unwrapAnnotated<string>(vesselRaw.manufacturer_mic),
+      manufacturer_id: unwrapAnnotated<string>(vesselRaw.manufacturer_id),
+      created_at: String(unwrapAnnotated<string>(vesselRaw.created_at) ?? data.mint_timestamp),
+      updated_at: String(unwrapAnnotated<string>(vesselRaw.updated_at) ?? data.mint_timestamp),
+      attributes: (vesselRaw.attributes as Record<string, unknown>) ?? {},
+    },
+    manufacturer,
+    systems: [],
+    service_events: [],
+    provenance: [],
+    scoring,
     signature: {
       canonical_hash_sha256: data.signature.canonical_hash_sha256,
       signature_b64: data.signature.signature_b64,
@@ -465,6 +614,7 @@ function buildPassportFromBackendResponse(data: BackendPassportResponse): Passpo
       signing_key_version: data.signature.signing_key_version,
       algorithm: data.signature.algorithm,
       mint_timestamp: data.mint_timestamp,
+      public_key_url: publicKeyUrlFromVerifyUrl(absoluteVerifyUrl(data.verifier_url)),
     },
     fact_metadata: buildFactMetadata(snapshot),
   };
@@ -475,15 +625,19 @@ export async function fetchPublicPassport(passportId: string): Promise<Passport>
   return buildPassportFromBackendResponse(data);
 }
 
-export function isBackendRevokedError(error: unknown): error is BackendError & { body: BackendRevokedPassportResponse } {
-  const backendError = error as BackendError;
-  return backendError?.status === 410 && !!backendError.body && typeof backendError.body === "object" && (backendError.body as { error?: unknown }).error === "revoked";
-}
-
-export function passportFromRevokedError(error: BackendError & { body: BackendRevokedPassportResponse }): Passport {
-  return buildPassportFromBackendResponse(error.body);
-}
-
 export async function verifyPublicPassport(passportId: string): Promise<BackendVerifyResponse> {
   return fetchBackendJson<BackendVerifyResponse>(`/api/v1/passports/public/${passportId}/verify`);
+}
+
+export function isBackendRevokedError(error: unknown): error is BackendError {
+  const backendError = error as BackendError;
+  if (backendError?.status !== 410) return false;
+  const body = backendError.body as { error?: unknown } | undefined;
+  return body?.error === "revoked";
+}
+
+export function passportFromRevokedError(error: unknown): Passport {
+  const backendError = error as BackendError;
+  const body = backendError.body as BackendRevokedPassportResponse;
+  return buildPassportFromBackendResponse(body);
 }

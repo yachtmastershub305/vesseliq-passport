@@ -9,10 +9,11 @@ type Role = "Broker" | "Buyer" | "Insurer" | "Builder" | "Other";
 type AccessSuccess = {
   ok: true;
   offer: OfferKey;
-  session_id: string;
+  request_id: string;
   vessel_id: string | null;
-  state: string;
-  status: string | null;
+  passport_id: string | null;
+  status: string;
+  next_step: string;
 };
 
 const SUCCESS_COPY: Record<OfferKey, { eyebrow: string; headline: string; body: string }> = {
@@ -60,7 +61,7 @@ export function AccessForm({
   function isAccessSuccess(body: unknown): body is AccessSuccess {
     if (!body || typeof body !== "object") return false;
     const candidate = body as Partial<AccessSuccess>;
-    return candidate.ok === true && typeof candidate.session_id === "string" && typeof candidate.state === "string";
+    return candidate.ok === true && typeof candidate.request_id === "string" && typeof candidate.status === "string";
   }
 
   function attachedPassportHref() {
@@ -119,12 +120,12 @@ export function AccessForm({
         <p className="mt-4 text-[15px] text-ink/70 max-w-md">{successCopy.body}</p>
         <dl className="mt-6 border-t border-b py-3 space-y-2" style={{ borderColor: "var(--brand-line)" }}>
           <div className="flex items-baseline justify-between gap-4">
-            <dt className="label">Session</dt>
-            <dd className="font-mono text-[12px] text-ink">{success.session_id}</dd>
+            <dt className="label">Request</dt>
+            <dd className="font-mono text-[12px] text-ink">{success.request_id}</dd>
           </div>
           <div className="flex items-baseline justify-between gap-4">
-            <dt className="label">State</dt>
-            <dd className="text-[13px] text-ink">{success.state}</dd>
+            <dt className="label">Status</dt>
+            <dd className="text-[13px] text-ink">{success.status}</dd>
           </div>
           <div className="flex items-baseline justify-between gap-4">
             <dt className="label">Vessel</dt>

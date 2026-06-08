@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { PassportLifecycleResult } from "@/lib/backend";
 import { fmtDate, titleCase } from "@/lib/format";
 import type { Passport } from "@/lib/passport-types";
 
@@ -8,17 +9,20 @@ export function TransferBand({
   fromParty = "Recorded holder",
   toParty = "Acquiring party",
   demoEnabled = false,
+  lifecycle = null,
 }: {
   slug: string;
   passport: Passport;
+  lifecycle?: PassportLifecycleResult | null;
   fromParty?: string;
   toParty?: string;
   demoEnabled?: boolean;
 }) {
   const demoSuffix = demoEnabled ? "&demo=1" : "";
-  const transfer = passport._meta.lifecycle?.transfer_request ?? null;
-  const transferStatus = transfer ? titleCase(transfer.status) : "Transfer pending";
-  const initiatedAt = transfer?.created_at ?? passport._meta.lifecycle?.archived_at ?? passport._meta.issued;
+  const transferStatus = lifecycle?.status ? titleCase(lifecycle.status.replaceAll("_", " ")) : "Transfer pending";
+  const initiatedAt = lifecycle?.transfer_requested_at ?? passport._meta.lifecycle?.archived_at ?? passport._meta.issued;
+  const lifecycleFrom = lifecycle?.old_holder_label ?? fromParty;
+  const lifecycleTo = lifecycle?.new_holder_label ?? toParty;
 
   return (
     <section
@@ -45,8 +49,8 @@ export function TransferBand({
             style={{ borderColor: "var(--brand-line-strong)", backgroundColor: "var(--brand-paper-2)" }}
           >
             <Row k="Status" v={transferStatus} />
-            <Row k="From" v={fromParty} />
-            <Row k="To" v={toParty} mono />
+            <Row k="From" v={lifecycleFrom} />
+            <Row k="To" v={lifecycleTo} mono />
             <Row k="Initiated" v={fmtDate(initiatedAt)} />
             <Row k="Asset" v="Read only" />
           </dl>

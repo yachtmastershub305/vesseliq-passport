@@ -1,10 +1,12 @@
 import Image from "next/image";
+import type { PassportCompletionResult } from "@/lib/backend";
 import type { Passport } from "@/lib/passport-types";
 import type { ViewState } from "@/lib/passport-view";
 import { fmtDate } from "@/lib/format";
 import { SealStamp } from "@/app/components/SealStamp";
 import { StateChip } from "./StateChip";
 import { VerificationBlock } from "./VerificationBlock";
+import { PrintTools } from "./PrintTools";
 
 const VESSEL_TYPE_DISPLAY: Record<string, string> = {
   powerboat: "Motor Yacht",
@@ -19,11 +21,13 @@ export function PassportHeader({
   view,
   isSample = false,
   slug,
+  completion,
 }: {
   data: Passport;
   view: ViewState;
   isSample?: boolean;
   slug: string;
+  completion?: PassportCompletionResult | null;
 }) {
   const v = data.vessel;
   const typeDisplay = VESSEL_TYPE_DISPLAY[v.vessel_type] ?? "Vessel of record";
@@ -54,6 +58,9 @@ export function PassportHeader({
             <div className="flex items-center gap-3 flex-wrap">
               <span className="label">{typeDisplay}</span>
               <StateChip state={view} />
+              {completion?.is_complete && (
+                <span className="stamp-chip">Complete · Survey + Inspection</span>
+              )}
               {isSample && (
                 <span
                   className="stamp-chip"
@@ -140,6 +147,7 @@ export function PassportHeader({
               {data.signature && (
                 <VerificationBlock slug={slug} signature={data.signature} />
               )}
+              {!isSample && isUuidLikeSlug(slug) && <PrintTools passportId={slug} />}
             </div>
           </div>
         </div>
@@ -219,6 +227,10 @@ function ScoreWeighting({
       </dl>
     </div>
   );
+}
+
+function isUuidLikeSlug(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
 function SnapshotAnchor({ data }: { data: Passport }) {

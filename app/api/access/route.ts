@@ -1,16 +1,15 @@
 import type { NextRequest } from "next/server";
+import { createPassportRequest, type BackendPostError } from "@/lib/backend";
 import { OFFER_LEAD_TYPES, type OfferKey } from "@/lib/pricing";
-import { startOnboardingSession, type BackendPostError } from "@/lib/backend";
-
-const PASSPORT_ACCESS_USER_ID = "00000000-0000-0000-0000-000000000001";
 
 type AccessSuccessBody = {
   ok: true;
   offer: OfferKey;
-  session_id: string;
+  request_id: string;
   vessel_id: string | null;
-  state: string;
-  status: string | null;
+  passport_id: string | null;
+  status: string;
+  next_step: string;
 };
 
 function responseErrorMessage(body: unknown, fallback: string): string {
@@ -20,35 +19,15 @@ function responseErrorMessage(body: unknown, fallback: string): string {
   return fallback;
 }
 
-function buildOnboardingPayload(input: {
-  hin?: string;
-  message?: string;
-  passportSlug?: string;
-}) {
-  const text = input.message?.trim() ?? "";
-  const lines = [
-    text,
-    input.passportSlug ? `passport_reference=${input.passportSlug}` : "",
-  ].filter(Boolean);
-
-  return {
-    hin: input.hin?.trim() || undefined,
-    builder: undefined,
-    make: undefined,
-    model: lines.length ? lines.join("\n") : undefined,
-    imo_number: undefined,
-    user_id: PASSPORT_ACCESS_USER_ID,
-  };
-}
-
-function successBody(offer: OfferKey, response: Awaited<ReturnType<typeof startOnboardingSession>>): AccessSuccessBody {
+function successBody(offer: OfferKey, response: Awaited<ReturnType<typeof createPassportRequest>>): AccessSuccessBody {
   return {
     ok: true,
     offer,
-    session_id: response.session_id,
+    request_id: response.request_id,
     vessel_id: response.vessel_id ?? null,
-    state: response.state,
-    status: response.status ?? null,
+    passport_id: response.passport_id ?? null,
+    status: response.status,
+    next_step: response.next_step,
   };
 }
 
@@ -97,15 +76,17 @@ export async function POST(request: NextRequest) {
       : "create";
 
   try {
-    const onboarding = await startOnboardingSession(
-      buildOnboardingPayload({
-        hin: typeof hin === "string" ? hin.trim().toUpperCase() : undefined,
-        message: typeof message === "string" ? message : undefined,
-        passportSlug: typeof passportSlug === "string" ? passportSlug : undefined,
-      })
-    );
+    const requestRow = await createPassportRequest({
+      name: String(name).trim(),
+      email: String(email).trim(),
+      role: String(role),
+      offer: offerKey,
+      message: typeof message === "string" && message.trim() ? message.trim() : undefined,
+      hin: typeof hin === "string" ? hin.trim().toUpperCase() : undefined,
+      passport_id: typeof passportSlug === "string" && /^[0-9a-f-]{36}$/i.test(passportSlug) ? passportSlug : undefined,
+    });
 
-    return Response.json(successBody(offerKey, onboarding), { status: 200 });
+    return Response.json(successBody(offerKey, requestRow), { status: 200 });
   } catch (error) {
     const backendError = error as BackendPostError;
     const status = backendError.status ?? 502;
